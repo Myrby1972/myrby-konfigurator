@@ -1675,6 +1675,26 @@ body.pub #wiz .cfg-steps{margin-left:28px;margin-right:auto}
 #wiz .wiz-top{background:#2a402c!important}
 /* v116: ingen logga i topraden (Carl) */
 #wiz .wiz-top .publogo{display:none!important}
+
+/* v117: spara & fortsätt (hemsidan) */
+#wiz .pubsave{margin-left:10px}
+@media (max-width:600px){#wiz .pubsave{margin-left:6px}}
+.pubmodal{position:fixed;inset:0;z-index:2147483000;background:rgba(20,32,24,.55);display:grid;place-items:center;padding:16px;opacity:0;transition:opacity .22s}
+.pubmodal.on{opacity:1}
+.pubmodal .pm-card{position:relative;width:min(480px,100%);max-height:calc(100dvh - 32px);overflow:auto;background:#fbf8f2;color:#1f3328;border-radius:22px;padding:28px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.28);display:grid;gap:12px;transform:translateY(10px);transition:transform .22s}
+.pubmodal.on .pm-card{transform:none}
+.pubmodal h2{margin:0;font-family:var(--serif,Georgia,serif);font-size:1.6rem;font-weight:500;color:#2a402c}
+.pubmodal p{margin:0;line-height:1.5;color:#3d4a40}
+.pubmodal .pm-ic{width:52px;height:52px;border-radius:50%;background:#2a402c;color:#edd8bc;display:grid;place-items:center}
+.pubmodal .pm-ic svg{width:24px;height:24px}
+.pubmodal .pm-x{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:transparent;color:#2a402c;display:grid;place-items:center;cursor:pointer}
+.pubmodal .pm-x:hover{background:#eee6d8}
+.pubmodal .pm-link{display:flex;gap:8px}
+.pubmodal .pm-link .input{flex:1;min-width:0;font-size:.92rem}
+.pubmodal .pm-link .btn{flex:none}
+.pubmodal .pm-lbl{font-weight:700;font-size:.92rem;margin-top:6px}
+.pubmodal .pm-btns{display:grid;gap:10px;margin-top:6px}
+.pubmodal .btn.block{width:100%;justify-content:center}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -3003,10 +3023,10 @@ function renderWiz(){
   const foot=`<div class="wiz-foot"><div class="in">${priceFoot(lvl)}${s>0?`<button class="btn ghost lg" data-wprev aria-label="Tillbaka">${svg("back",20)}</button>`:""}
     ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min stallinredning till Myrby":S.role==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund")?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
   const keepP=$("#cfgplan")?.scrollTop||0,prevLvl=+($("#cfgcanvas")?.dataset.lvl??-1),prevSet=new Set([...($("#cfgcanvas svg")?.querySelectorAll(INK_SEL)||[])].map(e=>e.outerHTML)),dirCls=renderWiz.dir>0?"in-r":renderWiz.dir<0?"in-l":"";renderWiz.dir=0;
-  $("#wiz").innerHTML=`<div class="wiz-top cfg-top">${isPublic()?`<span class="logo publogo" role="img" aria-label="Myrby"></span>`:`<button class="icon-btn" data-wclose aria-label="Stäng">${svg("close")}</button>`}${step}<span class="cfg-count faint small">${D.ui.kind?`Steg ${secIdx+1} av ${secs.length}`:""}</span>${isPublic()?pubCloseBtn():""}${D.ui.kind&&!isPublic()?`<button type="button" class="btn sm ghost wsave" data-wsave title="Spara och fortsätt senare">${svg("doc",16)}<span>${D.ui.code?"Sparad":"Spara & fortsätt senare"}</span></button>`:""}</div><div class="cfg-prog"><i style="width:${(s+1)/PG.length*100}%"></i></div>
+  $("#wiz").innerHTML=`<div class="wiz-top cfg-top">${isPublic()?`<span class="logo publogo" role="img" aria-label="Myrby"></span>`:`<button class="icon-btn" data-wclose aria-label="Stäng">${svg("close")}</button>`}${step}<span class="cfg-count faint small">${D.ui.kind?`Steg ${secIdx+1} av ${secs.length}`:""}</span>${isPublic()?(D.ui.kind?pubSaveBtn():"")+pubCloseBtn():""}${D.ui.kind&&!isPublic()?`<button type="button" class="btn sm ghost wsave" data-wsave title="Spara och fortsätt senare">${svg("doc",16)}<span>${D.ui.code?"Sparad":"Spara & fortsätt senare"}</span></button>`:""}</div><div class="cfg-prog"><i style="width:${(s+1)/PG.length*100}%"></i></div>
    ${adv?`<div class="wiz-scroll" id="wizscroll"><div class="wiz-step q1 wide"><div class="qblock" id="q-s-klar"><h2>Finjustera skissen</h2><p class="lead">Ändra enskilda boxar, dörrar och fönster, eller dra delarna i ritningen.</p>${drwEditor3(dr)}<button type="button" class="btn ghost" data-wadv="0" style="justify-self:start">${svg("back",18)} Tillbaka</button></div></div></div>${foot}`:
    `<div class="cfg ${lvl<1?"nolvl":""}"><section class="cfg-q"><div class="wiz-scroll" id="wizscroll"><div class="wiz-step q1 cfgstep ${dirCls}" data-pg="${esc(pg.key||"")}">${(()=>{const sib=PG.filter(p=>p.sec===pg.sec&&p.list[0].sub);return sib.length>1?`<div class="mini">${sib.map(p=>`<span class="${p===pg?"on":PG.indexOf(p)<s?"done":""}">${esc(p.list[0].sub)}</span>`).join("")}</div>`:""})()}${pg.list.map(x=>`<section class="qblock" id="q-${x.id}">${x.html()}</section>`).join("")}</div></div>${foot}</section><aside class="cfg-plan pg-${esc(pg.key||"")} ${lvl<1||pg.key==="start"?"start":""}" id="cfgplan">${cfgPanel(lvl)}</aside></div>`}`;
-  const cp=$("#cfgplan");if(cp)cp.scrollTop=keepP;animTotals();
+  const cp=$("#cfgplan");if(cp)cp.scrollTop=keepP;animTotals();if(isPublic())pubStore();
   const cv=$("#cfgcanvas");if(cv&&prevLvl>=0&&lvl>prevLvl){if(!inkIn(cv,prevSet)){cv.classList.add("grow");setTimeout(()=>cv.classList.remove("grow"),900)}}
   if(D.ui.kind&&!HIST.stack.length)histPush();
   $(".cstep.cur")?.scrollIntoView({block:"nearest",inline:"center"});
@@ -4082,6 +4102,7 @@ document.addEventListener("click",async e=>{
   if(d.windel){D.drawing.wins=wins(D.drawing).filter(x=>x.id!==d.windel);saveD();wizRefresh();return}
   if(d.ingang){D.ui.measured=true;toggleExtra(D.drawing,d.ingang);if(extraFind(D.drawing,d.ingang)&&/[NS]$/.test(d.ingang))centerDoor(D.drawing,d.ingang);if(extraFind(D.drawing,d.ingang)&&/[WE]$/.test(d.ingang))centerGableDoor(D.drawing,d.ingang);saveD();wizRefresh();return}
   if(d.sx){toggleExtra(D.drawing,d.sx);saveD();wizRefresh();return}
+  if(d.pubsave!==undefined){pubSaveOpen();return}
   if(d.pubclose!==undefined){publicClose();return}
   if(d.pubrm!==undefined){(window.__pubFiles||[]).splice(+d.pubrm,1);wizRefresh();return}
   if(d.sumgo){D.ui.fromSum=true;saveD();wizJump(d.sumgo);const pg=wizPages()[S.wizStep];if(pg&&pg.list[0].id===d.sumgo)$("#wizscroll").scrollTop=0;return}
@@ -4219,12 +4240,66 @@ function pubTakeover(){try{const fe=window.frameElement,cfg=window.MYRBY_PUBLIC|
   fe.setAttribute("style","position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;height:100dvh;max-width:none;min-height:0;margin:0;border:0;z-index:2147483646;background:#ebe4d4;display:block");
   pd.documentElement.style.overflow="hidden";pd.body.style.overflow="hidden";
   pd.querySelectorAll("iframe").forEach(f=>{if(f!==fe&&/weply/.test(f.getAttribute("src")||""))f.style.setProperty("visibility","hidden","important")})}catch(e){}}
+
+/* ===== v117: spara & fortsätt på hemsidan (Carl) ===== */
+const PUB_KEY="myrby.pub";
+function pubBoot(){}
+function pubHasWork(){return !!(D&&D.ui&&D.ui.kind&&(S.wizStep||0)>0)}
+function pubStore(){if(!isPublic())return;try{if(S.pubDone||!pubHasWork()){if(S.pubDone)localStorage.removeItem(PUB_KEY);return}
+  localStorage.setItem(PUB_KEY,JSON.stringify({d:pubSlim(D),step:S.wizStep||0,t:Date.now()}))}catch(e){}}
+function pubLoad(){try{const o=JSON.parse(localStorage.getItem(PUB_KEY)||"null");if(o&&o.d&&o.d.ui&&o.d.ui.kind&&o.step>0&&Date.now()-(o.t||0)<180*864e5)return o}catch(e){}return null}
+function pubSlim(d){return JSON.parse(JSON.stringify(d,(k,v)=>typeof v==="string"&&v.length>3000&&v.startsWith("data:")?undefined:v))}
+function pubRestore(o){D=o.d;D.ui=D.ui||{};D.extra=D.extra||{};D.items=D.items||[];D.customer=D.customer||{};D.project=D.project||{};
+  ls.set("myrby.draft2",D);S.wizStep=o.step||0;renderWiz.dir=0;renderWiz();const ws=$("#wizscroll");if(ws)ws.scrollTop=0;pubStore()}
+function pubHashGet(){let h="";try{h=window.top.location.hash}catch(e){h=location.hash}if(!h)h=location.hash;const m=/[#&]rita=([A-Za-z0-9_\-]+)/.exec(h||"");return m?m[1]:""}
+function pubHashClear(){const f=w=>{try{const l=w.location;if(/rita=/.test(l.hash))w.history.replaceState(null,"",l.pathname+l.search)}catch(e){}};f(window.top);f(window)}
+function pubBaseUrl(){const c=window.MYRBY_PUBLIC||{};if(c.shareUrl)return c.shareUrl;try{const l=window.top.location;if(l.protocol.startsWith("http"))return l.origin+l.pathname}catch(e){}return location.href.split("#")[0]}
+const b64u={enc:u=>{let s="";for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")},
+  dec:t=>{const s=atob(t.replace(/-/g,"+").replace(/_/g,"/"));const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u}};
+async function pubEncode(){const txt=JSON.stringify({v:1,d:pubSlim(D),step:S.wizStep||0});const raw=new TextEncoder().encode(txt);
+  if(window.CompressionStream){try{const buf=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer();return "z"+b64u.enc(new Uint8Array(buf))}catch(e){}}
+  return "j"+b64u.enc(raw)}
+async function pubDecode(t){const kind=t[0],u=b64u.dec(t.slice(1));let txt;
+  if(kind==="z"){const buf=await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer();txt=new TextDecoder().decode(buf)}
+  else txt=new TextDecoder().decode(u);
+  const o=JSON.parse(txt);if(!o||!o.d||!o.d.ui)throw new Error("bad");return o}
+function pubSaveBtn(){return `<button type="button" class="pubclose pubsave" data-pubsave aria-label="Spara">${PUB_SAVE_IC}<span>Spara</span></button>`}
+const PUB_SAVE_IC=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>`;
+function pubModal(html){const old=$("#pubmodal");if(old)old.remove();const m=document.createElement("div");m.id="pubmodal";m.className="pubmodal";
+  m.innerHTML=`<div class="pm-card" role="dialog" aria-modal="true">${html}</div>`;document.body.appendChild(m);requestAnimationFrame(()=>m.classList.add("on"));
+  m.addEventListener("click",e=>{if(e.target===m||e.target.closest("[data-pmclose]"))pubModalClose()});return m}
+function pubModalClose(){const m=$("#pubmodal");if(!m)return;m.classList.remove("on");setTimeout(()=>m.remove(),250)}
+function pubWelcome(o){const when=new Date(o.t||Date.now()).toLocaleDateString("sv-SE",{day:"numeric",month:"long"});
+  const m=pubModal(`<div class="pm-ic">${PUB_SAVE_IC}</div><h2>Välkommen tillbaka!</h2><p>Du har en påbörjad stallritning från ${esc(when)}. Vill du fortsätta där du slutade?</p>
+   <div class="pm-btns"><button type="button" class="btn gold lg" data-pmgo>Fortsätt där jag slutade ${svg("chev",18)}</button><button type="button" class="btn ghost lg" data-pmnew>Börja om</button></div>`);
+  m.querySelector("[data-pmgo]").onclick=()=>{pubModalClose();pubRestore(o)};
+  m.querySelector("[data-pmnew]").onclick=()=>{pubModalClose();try{localStorage.removeItem(PUB_KEY)}catch(e){}}}
+async function pubSaveOpen(){pubStore();let link="";try{link=pubBaseUrl()+"#rita="+await pubEncode()}catch(e){}
+  const share=!!navigator.share&&matchMedia("(max-width:900px)").matches;
+  const m=pubModal(`<button type="button" class="pm-x" data-pmclose aria-label="Stäng">${svg("close",18)}</button><div class="pm-ic">${PUB_SAVE_IC}</div><h2>Din ritning är sparad</h2>
+   <p>Allt sparas automatiskt i den här webbläsaren. Vill du fortsätta på en annan dator eller mobil, eller visa någon? Spara din personliga länk.</p>
+   ${link?`<div class="pm-link"><input class="input" readonly value="${esc(link)}" aria-label="Din personliga länk"><button type="button" class="btn" data-pmcopy>${svg("copy",16)} Kopiera</button></div>
+   <label class="pm-lbl" for="pmmail">Mejla länken till mig</label><div class="pm-link"><input class="input" id="pmmail" type="email" inputmode="email" autocomplete="email" placeholder="din@epost.se"><button type="button" class="btn gold" data-pmmail>Skicka</button></div>
+   ${share?`<button type="button" class="btn ghost lg block" data-pmshare>Dela länken (sms, mejl …)</button>`:""}`:`<p class="faint">Länken kunde inte skapas i den här webbläsaren, men ritningen finns kvar här när du kommer tillbaka.</p>`}
+   <button type="button" class="btn ghost lg block" data-pmclose>Fortsätt rita</button>`);
+  if(!link)return;const inp=m.querySelector(".pm-link input");
+  m.querySelector("[data-pmcopy]").onclick=async()=>{try{await navigator.clipboard.writeText(link)}catch(e){inp.select();try{document.execCommand("copy")}catch(e2){}}toast("Länken är kopierad")};
+  m.querySelector("[data-pmmail]").onclick=()=>{const to=(m.querySelector("#pmmail").value||"").trim();
+    const body=`Hej!\n\nHär är din stallritning hos Myrby. Klicka på länken för att fortsätta där du slutade:\n\n${link}\n\nVälkommen tillbaka!\nMyrby Stallinredning, 0171-857 90`;
+    const href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent("Min stallritning hos Myrby")}&body=${encodeURIComponent(body)}`;
+    try{window.top.location.href=href}catch(e){location.href=href}toast("Ditt mejlprogram öppnas")};
+  const sh=m.querySelector("[data-pmshare]");if(sh)sh.onclick=()=>{navigator.share({title:"Min stallritning hos Myrby",url:link}).catch(()=>{})}}
 function publicBoot(){pubTakeover();
   document.body.classList.add("pub");document.title="Bygg din stallinredning · Myrby";
   S.dbReady=true;S.db=null;S.assets=null;
-  D=emptyDraft();ls.set("myrby.draft2",D);D.ui=D.ui||{};S.wizStep=0;
+  D=emptyDraft();ls.set("myrby.draft2",D);D.ui=D.ui||{};S.wizStep=0;S.pubDone=false;
   const w=$("#wiz");w.setAttribute("aria-label","Bygg din stallinredning");w.hidden=false;w.classList.add("on");
+  const saved=pubLoad();
   renderWiz();
+  if(!pubBoot.timer){pubBoot.timer=setInterval(pubStore,3000);window.addEventListener("pagehide",pubStore);document.addEventListener("visibilitychange",()=>{if(document.hidden)pubStore()})}
+  const h=pubHashGet();
+  if(h){pubHashClear();pubDecode(h).then(o=>{pubRestore(o);toast("Välkommen tillbaka, din ritning är öppnad")}).catch(()=>{toast("Länken kunde inte läsas, börja gärna om");if(saved)pubWelcome(saved)})}
+  else if(saved)pubWelcome(saved);
 }
 function publicName(d){const c=d.customer||{};return (c.company||c.name||"").trim()}
 function publicLines(d){
@@ -4307,7 +4382,7 @@ function publicClose(){const cfg=window.MYRBY_PUBLIC||{};try{ls.set("myrby.draft
   if(window.parent&&window.parent!==window){let ok=false;const h=e=>{if(e.data&&e.data.type==="myrby-konfigurator-ok"){ok=true;window.removeEventListener("message",h)}};window.addEventListener("message",h);
     window.parent.postMessage({type:"myrby-konfigurator-stang"},"*");setTimeout(()=>{if(!ok)go()},400);return}
   go()}
-function publicThanks(o){
+function publicThanks(o){S.pubDone=!!o.sent;if(o.sent){try{localStorage.removeItem("myrby.pub")}catch(e){}}
   window.__pubPdf=o.pdf;const cfg=window.MYRBY_PUBLIC||{},fail=o.tried&&!o.sent,hero=img("hero-home");
   const bg=cfg.video?`<video class="th-media" autoplay muted loop playsinline poster="${esc(hero)}"><source src="${esc(cfg.video)}" type="video/mp4"></video>`:`<div class="th-media kb" style="background-image:url('${esc(hero)}')"></div>`;
   const tick=t=>`<li><span>${svg("check",14)}</span>${t}</li>`;
