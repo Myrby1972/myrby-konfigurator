@@ -2237,7 +2237,11 @@ function extraMod(dr,key){return extraFind(dr,key)?.m}
 function setExtraW(dr,key,v){const f=extraFind(dr,key);if(!f)return;f.m.w=Math.max(800,Math.min(8000,Math.round(v)));if(f.door){f.m.p=doorClamp(dr,f.k,f.m.p,f.m.w);if(f.m.ctr)gableRecenter(dr);return}autoFill(dr,f.k)}
 const hasExtra=(dr,key)=>!!extraFind(dr,key);
 /* Om boxarna inte får plats (t.ex. efter att ett rum lagts till): färre boxar på den väggen, aldrig utanför stallet */
-function fitBoxes(dr){const fixed=[];["W","E","N","S"].forEach(k=>{const c=dr.cfg?.[k];if(!c||!c.auto)return;let n0=c.n,guard=0;while(c.err&&c.n>0&&(c.rest||0)<0&&guard++<20){c.n--;autoFill(dr,k)}if(c.n!==n0)fixed.push(`${WALL_NAMES[k]}: ${c.n} boxar`)});
+function fitBoxes(dr){const K=["W","E","N","S"],n0={};K.forEach(k=>n0[k]=dr.cfg?.[k]?.n);
+  /* v123: gavlarnas längd beror på långsidorna och tvärtom (L-form), så räkna om allt tills inget sticker ut */
+  const over=k=>{const c=dr.cfg?.[k];if(!c||!c.auto||!(c.n>0))return false;const ro=rowOff(dr),len=(k==="N"||k==="S")?dr.L-ro.a-ro.b:gableSpan(dr,k).len;return used(dr,k)>len+1||(!!c.err&&(c.rest||0)<0)};
+  for(let guard=0;guard<60;guard++){autoAll(dr);const k=K.find(over);if(!k)break;dr.cfg[k].n--}
+  const fixed=K.filter(k=>dr.cfg?.[k]&&n0[k]!=null&&dr.cfg[k].n!==n0[k]).map(k=>`${WALL_NAMES[k]}: ${dr.cfg[k].n} boxar`);
   if(fixed.length&&typeof toast==="function")toast("Färre boxar så att allt får plats. "+fixed.join(", "))}
 function toggleExtra(dr,key){const f=extraFind(dr,key);
   if(f&&f.door){doors(dr).splice(f.i,1)}
@@ -2528,7 +2532,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   G.push(`<defs><radialGradient id="wklt" cx=".5" cy=".7" r=".8"><stop offset="0" stop-color="#fff8e4"/><stop offset="1" stop-color="#f1dfae"/></radialGradient><linearGradient id="wkbeam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff4d6" stop-opacity="0"/><stop offset=".5" stop-color="#fff4d6" stop-opacity=".6"/><stop offset="1" stop-color="#fff4d6" stop-opacity="0"/></linearGradient>${BRASS("wk")}</defs>`);
   if(hasE){G.push(`<rect x="${fx(d1[0])}" y="${fx(d2[1])}" width="${fx(d2[0]-d1[0])}" height="${fx(d1[1]-d2[1])}" fill="url(#wklt)" stroke="${ink}" stroke-width="2"/>`);G.push(poly([[L,0,camZ-900],[L,0,camZ+900],[near+2500,0,camZ+500],[near+2500,0,camZ-500]],`fill="url(#wkbeam)"`))}
   else{const w1=pr(L,1200,camZ-700),w2=pr(L,2100,camZ+700);G.push(`<rect x="${fx(w1[0])}" y="${fx(w2[1])}" width="${fx(w2[0]-w1[0])}" height="${fx(w1[1]-w2[1])}" fill="url(#wklt)" stroke="${ink}" stroke-width="1.6"/><line x1="${fx((w1[0]+w2[0])/2)}" y1="${fx(w2[1])}" x2="${fx((w1[0]+w2[0])/2)}" y2="${fx(w1[1])}" stroke="${ink}" stroke-width="1.2"/>`)}
-  for(let x=Math.ceil((near+200)/1800)*1800;x<L;x+=1800)G.push(poly([[x,CEIL,0],[x+140,CEIL,0],[x+140,CEIL,W],[x,CEIL,W]],`fill="#d8ccb0" stroke="${ink}" stroke-width=".7"`));
+  for(let x=Math.ceil((near+200)/1800)*1800;x<L;x+=1800)G.push(poly([[x,CEIL,zA],[x+140,CEIL,zA],[x+140,CEIL,zB],[x,CEIL,zB]],`fill="#d8ccb0" stroke="${ink}" stroke-width=".7"`));
   layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="door"&&o.start+(+o.m.w)>near).forEach(o=>{const z=o.k==="N"?0:W,x0=Math.max(near,o.start),x1=o.start+(+o.m.w);G.push(poly([[x0,0,z],[x1,0,z],[x1,2400,z],[x0,2400,z]],`fill="url(#wklt)" stroke="${ink}" stroke-width="1.4"`))});
   allWins(dr).filter(x=>(x.k==="N"||x.k==="S")&&x.p+x.w/2>near+100).forEach(x=>{const z=x.k==="N"?0:W,x0=Math.max(near+100,x.p-x.w/2),x1=x.p+x.w/2,mid=(x0+x1)/2;G.push(poly([[x0,1500,z],[x1,1500,z],[x1,2300,z],[x0,2300,z]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.3"`)+ln([mid,1500,z],[mid,2300,z],`stroke="${ink}" stroke-width=".8"`)+ln([x0,1900,z],[x1,1900,z],`stroke="${ink}" stroke-width=".8"`))});
   const fr0=frameCol(dr,dr.front),wallName=w=>w||dr.wall;
@@ -3831,6 +3835,9 @@ function autoAll(dr){["N","S"].forEach(k=>autoFill(dr,k));gableRecenter(dr);["W"
 const _autoFill0=autoFill;autoFill=function(dr,k){_autoFill0(dr,k);if(k==="N"||k==="S")gableRecenter(dr)};
 const _autoFill1=autoFill;autoFill=function(dr,k){const ms=dr.walls[k]=dr.walls[k]||[];for(let i=ms.length-1;i>=0;i--)if(ms[i].autoRest)ms.splice(i,1);_autoFill1(dr,k);
   const c=dr.cfg?.[k];if(c&&c.auto&&c.align==="end"&&(c.rest||0)>0&&(k==="N"||k==="S")){const i=ms.findIndex(m=>m.t==="box");if(i>=0)ms.splice(i,0,{id:uid2(),t:"gap",w:c.rest,autoRest:true})}};
+const _autoFill2=autoFill;autoFill=function(dr,k){const ms=dr.walls[k]=dr.walls[k]||[];
+  for(let i=ms.length-1;i>=0;i--){const m=ms[i];if(m.gapRoom&&!(ms[i+1]&&ms[i+1].id===m.gapRoom))ms.splice(i,1)} /* fyllnad utan sitt rum direkt efter tas bort */
+  _autoFill2(dr,k);const c=dr.cfg?.[k];if(c&&c.auto&&(c.err||(c.rest||0)<0)&&ms.some(m=>m.gapRoom)){for(let i=ms.length-1;i>=0;i--)if(ms[i].gapRoom)ms.splice(i,1);_autoFill2(dr,k)}};
 function gableRecenter(dr){const mid=(depthMax(dr,"N")+dr.W-depthMax(dr,"S"))/2;doors(dr).forEach(d=>{if(d.ctr&&(d.k==="W"||d.k==="E"))d.p=doorClamp(dr,d.k,mid-(+d.w||0)/2,d.w);else d.p=doorClamp(dr,d.k,+d.p||0,d.w)})}
 function onFrontChange(dr){let snapped=0;
   for(const k of ["N","S","W","E"]){const c=dr.cfg?.[k];if(c&&c.auto)continue;(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"&&!sizeOK(m.w,dr.front)){m.w=nearestSize(m.w,dr.front);snapped++}})}
@@ -4279,13 +4286,18 @@ function enableDrag(host,getDr,onLive,onEnd){if(!host)return;let st=null;
     const d={N:Math.abs(p.y),S:Math.abs(dr.W-p.y),W:Math.abs(p.x),E:Math.abs(dr.L-p.x)};let to=Object.keys(d).sort((a,b)=>d[a]-d[b])[0];
     {const gs=gableSpan(dr,"W");if((to==="W"||to==="E")&&(p.y<gs.y0+400||p.y>gs.y1-400))to=d.N<=d.S?"N":"S"} /* hörnet tillhör långsidan */
     let from=null,fi=-1;for(const k of ["N","S","W","E"]){const j=(dr.walls[k]||[]).findIndex(m=>m.id===st.id);if(j>=0){from=k;fi=j;break}}if(!from)return;
-    const mod=dr.walls[from][fi],pos=(to==="N"||to==="S")?p.x:p.y-gableSpan(dr,to).y0;mod.ctr=false;
-    const rest=(dr.walls[to]||[]).filter(m=>m.id!==st.id);let acc=0,idx=0;for(const m of rest){if(acc+(+m.w||0)/2<pos-(+mod.w||0)/2)idx++;acc+=+m.w||0}
-    if(to===from&&rest.indexOf(dr.walls[from][fi+1])===idx&&idx===fi)return;
-    if(to===from&&idx===fi)return;
-    dr.walls[from].splice(fi,1);dr.walls[to]=dr.walls[to]||[];dr.walls[to].splice(idx,0,mod);
+    const mod=dr.walls[from][fi],ro=rowOff(dr),lng=to==="N"||to==="S",pos=lng?p.x-ro.a:p.y-gableSpan(dr,to).y0;mod.ctr=false;
+    /* v123: ledig yta efter sista boxen – rummet hamnar där man släpper det (fyllnad gapRoom framför), inte bara efter sista boxen */
+    const isOwnGap=m=>m.gapRoom===st.id,gw0=(dr.walls[from]||[]).filter(isOwnGap).reduce((a,m)=>a+(+m.w||0),0);
+    const rest=(dr.walls[to]||[]).filter(m=>m.id!==st.id&&!isOwnGap(m));let acc=0,idx=0;for(const m of rest){if(acc+(+m.w||0)/2<pos-(+mod.w||0)/2)idx++;acc+=+m.w||0}
+    let gw=0;if(lng&&idx===rest.length){const free=dr.L-ro.a-ro.b-acc-(+mod.w||0);gw=Math.max(0,Math.min(free,Math.round((pos-(+mod.w||0)/2-acc)/100)*100));if(gw<300)gw=0}
+    const fiR=(dr.walls[from]||[]).filter((m,j)=>j<fi&&!isOwnGap(m)).length;
+    if(to===from&&idx===fiR&&Math.abs(gw-gw0)<100)return;
+    for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[];for(let j=ms.length-1;j>=0;j--)if(isOwnGap(ms[j]))ms.splice(j,1)}
+    dr.walls[from].splice(dr.walls[from].indexOf(mod),1);dr.walls[to]=dr.walls[to]||[];dr.walls[to].splice(idx,0,mod);
+    if(gw>0)dr.walls[to].splice(idx,0,{id:uid2(),t:"gap",w:gw,gapRoom:mod.id});
     dr.cfg=dr.cfg||{};[from,to].forEach(k=>{if(dr.cfg[k]&&dr.cfg[k].auto)autoFill(dr,k)});
-    if(typeof DSEL!=="undefined"&&DSEL)DSEL={k:to,i:idx};onLive()};
+    if(typeof DSEL!=="undefined"&&DSEL)DSEL={k:to,i:dr.walls[to].indexOf(mod)};onLive()};
   const end=e=>{if(!st)return;const moved=st.moved,wasFan=st.fan!=null||st.win!=null||(st.door!=null&&!moved);st=null;if(wasFan&&!moved)return;host.classList.remove("dragging");if(moved){onEnd();toast("Flyttad")}};
   host.onpointerup=end;host.onpointercancel=end}
 
