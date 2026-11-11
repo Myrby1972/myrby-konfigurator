@@ -1658,6 +1658,13 @@ body.pub .wiz{transform:none;transition:none}
 #wiz .pubconsent input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--green)}
 #wiz .pubconsent.need{box-shadow:inset 0 0 0 2.5px #a3392b;animation:hintp 1s 2}
 body.pub #wiz .cfg-steps{margin-left:28px;margin-right:auto}
+#wiz .st-go{width:100%;justify-content:center;margin:18px 0 4px}
+.htip{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:10px 12px 10px 14px;border-radius:12px;background:#e5eedf;color:#23412a;box-shadow:inset 0 0 0 1px #c7d8c0}
+.htip p{flex:1;margin:0;font-size:.92rem;line-height:1.35}
+.htip-i{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#23412a;color:#e5cb7e}
+.htip-x{flex:none;display:grid;place-items:center;width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:#23412a;cursor:pointer}
+.htip-x:hover{background:rgba(35,65,42,.1)}
+#wiz .pubreset[data-armed]{background:#e5cb7e;color:#23412a;box-shadow:none}
 #wiz .pubclose{flex:none;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px 0 14px;margin-left:14px;border-radius:999px;border:0;background:transparent;color:#edd8bc;font-weight:700;font-size:.98rem;box-shadow:inset 0 0 0 1.5px rgba(237,216,188,.6);cursor:pointer}
 #wiz .pubclose:hover{background:#edd8bc;color:#1f3328}
 @media (max-width:600px){#wiz .pubclose{padding:0;width:40px;height:40px;justify-content:center;margin-left:6px}#wiz .pubclose span{display:none}}
@@ -2190,7 +2197,7 @@ function renderSearch(q){
 
 /* ============ WIZARD: NY FÖRFRÅGAN ============ */
 const FINISH=["Varmförzinkad","Pulverlack (RAL)","Förzinkad + pulverlack"];
-const FILL=["Gran","Toffee","Ek","Plast Ash Grey","Plast Canyon Brown","Plast Sand Beige","Plast svart"];
+const FILL=["Gran","Toffee","Ek","Plast Ash Grey","Plast Mineral Grey","Plast Canyon Brown","Plast Sand Beige","Plast svart"];
 function emptyDraft(){return{customer:{type:"",country:""},project:{mount:"",kind:"Nybygge"},ui:{},items:[],notes:"",prio:"Normal",attachments:[],leadId:"",extra:{}}}
 let D=ls.get("myrby.draft2",null)||emptyDraft();if(D.spec&&D.spec.fill==="Mörk bambu")D.spec.fill="Toffee";if(D.drawing&&D.drawing.fill==="Mörk bambu")D.drawing.fill="Toffee";
 const saveD=()=>{ls.set("myrby.draft2",D);renderResume();if(typeof saveRemoteSoon==="function")saveRemoteSoon();if(typeof histPush==="function")histPush()};
@@ -2204,9 +2211,9 @@ const opt=(group,val,cur)=>`<button type="button" class="opt" data-dset="${group
 const inp=(path,label,{type="text",ph="",auto="",big=false}={})=>{const v=path.split(".").reduce((a,k)=>a?.[k],D)??"";return `<label class="field ${big?"big":""}"><span>${label}</span><input class="input" type="${type}" id="w-${path.replace(/\./g,"-")}" data-dpath="${path}" value="${esc(v)}" placeholder="${esc(ph)}" ${auto?`autocomplete="${auto}"`:""}></label>`};
 /* Stora val-kort: ett tryck = svar + nästa fråga */
 const choice=(path,items,cur)=>`<div class="qcards">${[...items,...((S.noOv?[]:(FM().extraOpts||{})[path])||[]).map(v=>({v}))].map(it=>`<button type="button" class="qc" data-pick1="${path}" data-v="${esc(it.v)}" aria-pressed="${cur===it.v}">${it.ic?`<span class="qic">${it.ic}</span>`:""}${it.info?ib(it.info,1):""}<b>${esc(it.t||it.v)}</b>${it.s?`<small>${esc(it.s)}</small>`:""}${it.p&&(SHOW_PRICES||it.np)?`<em class="ptag ${it.lo?"lo":""}">${esc(it.p)}</em>`:""}</button>`).join("")}</div>`;
-const SWATCH={"Gran":"linear-gradient(90deg,#e9cf9d 0 46%,#d9b97f 46% 50%,#e9cf9d 50% 96%,#d9b97f 96%)","Spontad gran":"#e9cf9d","Hyvlad gran":"#ecd6ab","Toffee":"repeating-linear-gradient(90deg,#6b4a2b 0 10px,#5a3c22 10px 12px)","Ek":"repeating-linear-gradient(90deg,#b88a55 0 14px,#a7794a 14px 16px)","Plast Ash Grey":"#8d9192","Plast Canyon Brown":"#6e4b36","Plast Sand Beige":"#cdb994","Plast svart":"#232323"};
-const FILL_SUB={"Gran":"Klassiskt trä, behandlas före montering","Toffee":"Hård och fuktresistent","Ek":"Exklusivt, mycket slitstarkt","Plast Ash Grey":"Underhållsfri, alltid i lager","Plast Canyon Brown":"Underhållsfri, alltid i lager","Plast Sand Beige":"Underhållsfri","Plast svart":"Underhållsfri"};
-const EXTRAS=[["Spolspilta","room",2500],["Sadelkammare","room",3500],["Foderkammare","room",3500],["Torkrum","room",2000],["door-W","door",2000,"Ytterdörr"],["door-E","door",2400,"Port"],["door-N","door",2400,"Port långsida A"],["door-S","door",2400,"Port långsida B"]];
+const SWATCH={"Gran":"linear-gradient(90deg,#e9cf9d 0 46%,#d9b97f 46% 50%,#e9cf9d 50% 96%,#d9b97f 96%)","Spontad gran":"#e9cf9d","Hyvlad gran":"#ecd6ab","Toffee":"repeating-linear-gradient(90deg,#6b4a2b 0 10px,#5a3c22 10px 12px)","Ek":"repeating-linear-gradient(90deg,#b88a55 0 14px,#a7794a 14px 16px)","Plast Ash Grey":"#6c7173","Plast Mineral Grey":"#8d9192","Plast Canyon Brown":"#6e4b36","Plast Sand Beige":"#cdb994","Plast svart":"#232323"};
+const FILL_SUB={"Gran":"Klassiskt trä, behandlas före montering","Toffee":"Hård och fuktresistent","Ek":"Exklusivt, mycket slitstarkt","Plast Ash Grey":"Underhållsfri, alltid i lager","Plast Mineral Grey":"Underhållsfri, ljusare grå","Plast Canyon Brown":"Underhållsfri, alltid i lager","Plast Sand Beige":"Underhållsfri","Plast svart":"Underhållsfri"};
+const EXTRAS=[["Spolspilta","room",2500],["Sadelkammare","room",3500],["Foderkammare","room",3500],["Torkrum","room",2000],["door-W","door",2000,"Ytterdörr gavel vänster"],["door-E","door",2400,"Ytterdörr gavel höger"],["door-N","door",2400,"Ytterdörr långsida A"],["door-S","door",2400,"Ytterdörr långsida B"]];
 function extraFind(dr,key){for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[];let i=ms.findIndex(m=>m.xk===key);if(i<0)i=key.startsWith("door-")?(k===key.slice(5)?ms.findIndex(m=>m.t==="door"&&!m.xk):-1):ms.findIndex(m=>m.t==="room"&&m.name===key&&!m.xk);if(i>=0)return {k,i,m:ms[i]}}return null}
 function extraMod(dr,key){return extraFind(dr,key)?.m}
 function setExtraW(dr,key,v){const f=extraFind(dr,key);if(!f)return;f.m.w=Math.max(800,Math.min(8000,Math.round(v)));autoFill(dr,f.k)}
@@ -2231,21 +2238,21 @@ function boxCountScreen(k,title){const dr=D.drawing,c=dr.cfg[k],bx=(dr.walls[k]|
    <div class="resline ${c.err||(bx.length&&aw<2500)?"bad":""}">${c.err?esc(c.err):bx.length?`<b>${bx.length} boxar à ${ws.map(mm).join(" / ")} mm</b> · ${mm(rest)} mm kvar mot väggen${rest>=Math.max(minW,2900)?", det får plats en box till":""}`:"Inga boxar längs den här väggen"}${bx.length?(aw<2500?` · ${aw<=0?"Boxarna på långsidorna möts, minska djupet.":`Stallgången blir bara ${mm(aw)} mm, minst 2 500 mm rekommenderas.`}`:c.err?"":` · <span style="white-space:nowrap">stallgång ${mm(aw)} mm</span>`):""}</div>`}
 /* Standarddjup = Monitors mellanväggsartiklar: intervall om 100 mm i steg om 85 mm (545 till 645 … 4285 till 4385). Nominellt mått = mitten. */
 const MV_STD=Array.from({length:23},(_,i)=>2465+85*i); // 2465 … 4335 (2415 till 2515 … 4285 till 4385)
-const MV_POP=[2975,3230,3485,3740,3995];
+const MV_POP=[3000,3500,4000]; /* snabbval för kunden (Nikki 11/11), övriga mått skrivs in */
 const mvSpan=v=>{const k=Math.max(0,Math.round((v-595)/85)),mid=595+85*k;return Math.abs(v-mid)<=50?[mid-50,mid+50]:null};
 function depthPick(k,cur){cur=+cur;const sp=mvSpan(cur),open=!!(D.ui.dopen||{})[k];
   const chip=v=>`<button type="button" data-sd="${k}" data-v="${v}" aria-pressed="${cur===v}"><b>${mm(v)}</b></button>`;
-  return `<div class="bwpick"><span class="bwl">Djup på boxarna</span><div class="bwchips"><div class="sizechips">${MV_POP.map(chip).join("")}<button type="button" class="dmore" data-dopen="${k}" aria-expanded="${open}">${open?"Färre":"Alla standardmått"}</button></div>
-  ${open?`<div class="sizechips dall">${MV_STD.filter(v=>!MV_POP.includes(v)).map(chip).join("")}</div>`:""}
-  <div class="mf bwin"><label>Eget djup</label><input type="text" inputmode="numeric" data-sdin="${k}" value="${MV_STD.includes(cur)?"":esc(cur||"")}" placeholder="t.ex. 3600" aria-label="Eget boxdjup i mm"><em>mm</em></div></div>
-  <p class="hint3">Från fronten in mot ytterväggen. ${sp?`Standardmellanvägg <b>${mm(sp[0])}–${mm(sp[1])} mm</b>${cur>=4285?" (förstärkt)":""}.`:"Standardmåtten följer era mellanväggsartiklar i Monitor."}</p></div>`}
+  return `<div class="bwpick"><span class="bwl">Djup på boxarna</span><div class="bwchips"><div class="sizechips">${MV_POP.map(chip).join("")}</div>
+  <div class="mf bwin"><label>Eget djup</label><input type="text" inputmode="numeric" data-sdin="${k}" value="${MV_POP.includes(cur)?"":esc(cur||"")}" placeholder="t.ex. 3600" aria-label="Eget boxdjup i mm"><em>mm</em></div></div>
+  <p class="hint3">Från fronten in mot ytterväggen.</p></div>`}
 function setBoxD(k,v){const dr=D.drawing;if(!dr||!(v>0))return;v=Math.round(v);const cl=Math.max(2000,Math.min(5000,v));if(cl!==v)toast(`Boxdjup ${mm(2000)}–${mm(5000)} mm`);v=cl;
   dr.cfg=dr.cfg||{};dr.cfg[k]=dr.cfg[k]||{n:0,mode:"lika",std:3500,auto:true};dr.cfg[k].d=v;(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"||(m.t==="room"&&!m.dset))m.d=v});saveD();wizRefresh()}
 function setBoxW(k,i,v){const dr=D.drawing,c=dr.cfg[k],r=sizeRule(dr.front);if(r.type!=="fixed"){const cl=Math.max(r.min,Math.min(r.max,v));if(cl!==v)toast(`${prod(dr.front)?.name} görs ${mm(r.min)}–${mm(r.max)} mm`);v=cl}
   if(c.mode!=="per")c.ws=(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>m.w);c.mode="per";c.auto=true;c.ws=c.ws||[];c.ws[i]=v;autoFill(dr,k);saveD();wizRefresh()}
 function widthPick(target,cur,f){const r=sizeRule(f);
-  if(r.type==="fixed")return `<div class="sizechips">${r.list.map(v=>`<button type="button" data-d3size="${target}" data-v="${v}" aria-pressed="${+cur===v}">${mm(v)}</button>`).join("")}</div>`;
-  const pre=[3000,3200,3500,3800,4000,4200].filter(v=>v>=r.min&&v<=r.max);
+  if(r.type==="fixed"){const pre=[...new Set([3000,3500,4000].map(v=>nearestSize(v,f)))],open=!!(D.ui.wopen||{})[target],chip=v=>`<button type="button" data-d3size="${target}" data-v="${v}" aria-pressed="${+cur===v}">${mm(v)}</button>`;
+    return `<div class="bwchips"><div class="sizechips">${pre.map(chip).join("")}<button type="button" class="dmore" data-wopen="${target}" aria-expanded="${open}">${open?"Färre":"Alla storlekar"}</button></div>${open?`<div class="sizechips dall">${r.list.filter(v=>!pre.includes(v)).map(chip).join("")}</div>`:""}</div>`}
+  const pre=[3000,3500,4000].filter(v=>v>=r.min&&v<=r.max);
   return `<div class="bwchips"><div class="sizechips">${pre.map(v=>`<button type="button" data-d3size="${target}" data-v="${v}" aria-pressed="${+cur===v}">${mm(v)}</button>`).join("")}</div><div class="mf bwin"><label>Egen bredd</label><input type="text" inputmode="numeric" data-d3sizein="${target}" value="${pre.includes(+cur)?"":esc(cur)}" placeholder="t.ex. 3650"><em>mm</em></div></div>`}
 /* ============ KONFIGURATORN, "bygg ditt stall": en fråga i taget, ritningen växer fram ============ */
 const SPEC_KEYS=["front","wall","post","cornerPost","decor","fill","finish","ral"];
@@ -2351,13 +2358,13 @@ const INK_SEL="line,path,polyline,polygon,rect,circle,text";
 function inkIn(cv,prev){const svg=cv.querySelector("svg.pretty");if(!svg||!prev.size)return false;let n=0;svg.querySelectorAll(INK_SEL).forEach(e=>{if(e.closest("defs")||prev.has(e.outerHTML)||n>700)return;n++;const tg=e.tagName;
   if((tg==="line"||tg==="path"||tg==="polyline")&&!e.getAttribute("stroke-dasharray")){e.setAttribute("pathLength","1000");e.classList.add("ink")}else e.classList.add("inkf")});return n>0}
 /* ===== Stallbyggaren: material, hästnamn, 3D, stallgång, ångra, byggklossar, avslutning ===== */
-const FILLC={"Gran":["#dcb67e","#b88f55","#ecd2a2"],"Toffee":["#6e4a2c","#4f331d","#8a6040"],"Ek":["#b88a55","#93693a","#cfa575"],"Plast Ash Grey":["#8b8f91","#73777a","#a3a7a9"],"Plast Canyon Brown":["#6d4a3a","#56392c","#86604f"],"Plast Sand Beige":["#cdb68f","#b39b72","#ddc9a6"],"Plast svart":["#2c2c2c","#1b1b1b","#444"]};
+const FILLC={"Gran":["#dcb67e","#b88f55","#ecd2a2"],"Toffee":["#6e4a2c","#4f331d","#8a6040"],"Ek":["#b88a55","#93693a","#cfa575"],"Plast Ash Grey":["#6c7173","#5a5e60","#808587"],"Plast Mineral Grey":["#8b8f91","#73777a","#a3a7a9"],"Plast Canyon Brown":["#6d4a3a","#56392c","#86604f"],"Plast Sand Beige":["#cdb68f","#b39b72","#ddc9a6"],"Plast svart":["#2c2c2c","#1b1b1b","#444"]};
 const fillC=f=>FILLC[f]||null;
 const hasDecor=(dr,f)=>f==="stromsholm"||(dr.decor==="med"&&["janslund","fagelbro","faro","baryard","stromsholm","emmaboda"].includes(f));
 const FRONT_GEO={optimal:{arch:0,h:2320},janslund:{arch:.18,h:2320},fagelbro:{arch:.22,h:2320},faro:{arch:.32,h:2320},baryard:{arch:.28,h:2320},stromsholm:{arch:.3,h:2320},emmaboda:{arch:.3,h:2320},dala:{arch:0,h:1500},rotbrunna:{arch:.22,h:2320}};
 const fGeo=f=>FRONT_GEO[f]||{arch:0,h:2320};
 /* --- fronternas verkliga form, färg och detaljer (efter Myrbys produktbilder) --- */
-const RALC={"RAL 9005":["Svart","#141516"],"RAL 6009":["Grangrön","#273a2d"],"RAL 7016":["Antracit","#383e42"],"RAL 9010":["Vit","#efeee7"],"RAL 3005":["Vinröd","#5a1c22"],"RAL 5011":["Stålblå","#1c2b45"]};
+const RALC={"RAL 9005":["Svart","#141516"],"RAL 6009":["Myrbygrön","#273a2d"],"RAL 7016":["Antracit","#383e42"],"RAL 9010":["Vit","#efeee7"],"RAL 3005":["Vinröd","#5a1c22"],"RAL 5011":["Stålblå","#1c2b45"]};
 const shade=(h,p)=>{const n=parseInt(h.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(p<0?v*(1+p):v+(255-v)*p)));return "#"+[f(r),f(g),f(b)].map(v=>v.toString(16).padStart(2,"0")).join("")};
 function frameCol(dr,f){const fin=dr.finish||"";
   if(/ulverlack/.test(fin)){const c=(RALC[dr.ral]||RALC["RAL 9005"])[1];return {a:c,b:shade(c,-.3),c:shade(c,.3),lack:true}}
@@ -2465,7 +2472,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
     o.fr=frameCol(dr,dr.front);F.push({d:dep(mid[0],mid[1]),s:panel([a0[0],a0[1]],[a1[0],a1[1]],o)})});
   const walls=[[[0,0],[L,0],"N"],[[L,0],[L,W],"E"],[[L,W],[0,W],"S"],[[0,W],[0,0],"W"]];
   walls.forEach(([p,q,wk])=>{const mx=(p[0]+q[0])/2,mz=(p[1]+q[1])/2,far=dep(mx,mz)<dep(cx,cz)-1,h=far?2900:450;const dd=far?-1e10:dep(mx,mz)+1e6;allWins(dr).filter(x=>x.k===wk).forEach(x=>{const T=wk==="N"?(a,b)=>[a,b]:wk==="S"?(a,b)=>[a,W-b]:wk==="W"?(a,b)=>[b,a]:(a,b)=>[L-b,a];const a=T(x.p-x.w/2,0),b=T(x.p+x.w/2,0),y0=far?1500:0,y1=far?2300:h;F.push({d:dd+1,s:poly([[a[0],y0,a[1]],[b[0],y0,b[1]],[b[0],y1,b[1]],[a[0],y1,a[1]]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.2"`)+(far?ln([(a[0]+b[0])/2,1500,(a[1]+b[1])/2],[(a[0]+b[0])/2,2300,(a[1]+b[1])/2],`stroke="${ink}" stroke-width=".8"`):"")})});
-    lay.filter(o=>o.k===wk&&o.m.t==="door").forEach(o=>{const a=o.tf(0,0),b=o.tf(+o.m.w,0),hh=Math.min(h,2400),m=o.tf(+o.m.w/2,0);F.push({d:dd+1,s:poly([[a[0],0,a[1]],[b[0],0,b[1]],[b[0],hh,b[1]],[a[0],hh,a[1]]],`fill="#f8f3e6" stroke="${ink}" stroke-width="1.6"`)+(far&&o.m.pair?ln([m[0],0,m[1]],[m[0],hh,m[1]],`stroke="${ink}" stroke-width="1"`):"")+(far?ln([a[0],1050,a[1]],[a[0]+(b[0]-a[0])*.08,1050,a[1]+(b[1]-a[1])*.08],`stroke="${ink}" stroke-width="2.2"`):"")})});F.push({d:dd,s:poly([[p[0],0,p[1]],[q[0],0,q[1]],[q[0],h,q[1]],[p[0],h,p[1]]],`fill="${far?"#ede5d3":"#d6cdb8"}" stroke="${ink}" stroke-width="2"`)})});
+    lay.filter(o=>o.k===wk&&o.m.t==="door").forEach(o=>{const a=o.tf(0,0),b=o.tf(+o.m.w,0),hh=Math.min(h,2400),m=o.tf(doorLeaves(o.m.w)[0],0);F.push({d:dd+1,s:poly([[a[0],0,a[1]],[b[0],0,b[1]],[b[0],hh,b[1]],[a[0],hh,a[1]]],`fill="#f8f3e6" stroke="${ink}" stroke-width="1.6"`)+(far&&doorLeaves(o.m.w).length>1?ln([m[0],0,m[1]],[m[0],hh,m[1]],`stroke="${ink}" stroke-width="1"`):"")+(far?ln([a[0],1050,a[1]],[a[0]+(b[0]-a[0])*.08,1050,a[1]+(b[1]-a[1])*.08],`stroke="${ink}" stroke-width="2.2"`):"")})});F.push({d:dd,s:poly([[p[0],0,p[1]],[q[0],0,q[1]],[q[0],h,q[1]],[p[0],h,p[1]]],`fill="${far?"#ede5d3":"#d6cdb8"}" stroke="${ink}" stroke-width="2"`)})});
   F.sort((p,q)=>p.d-q.d);const body=F.map(x=>x.s).join("");const pad=30,vb=[bx[0]-pad,bx[1]-pad,bx[2]-bx[0]+2*pad,bx[3]-bx[1]+2*pad].map(fx).join(" ");
   return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stallet i 3D" class="v3d"><defs>${BRASS("i3")}</defs><ellipse cx="0" cy="${fx((bx[1]+bx[3])/2+20)}" rx="${fx((bx[2]-bx[0])*.48)}" ry="${fx((bx[3]-bx[1])*.3)}" fill="#1e3932" opacity=".07"/>${body}</svg>`}
 
@@ -2591,7 +2598,8 @@ const INFO={
  "fill:Gran":{t:"Gran",k:"Fyllning · trä",q:"Klassiskt, varmt och svenskt",d:"Spontad gran ger stallet den klassiska, ljusa känslan. Ett naturmaterial som åldras vackert och är lätt att byta plank i.",b:["Svenskt trä med varm lyster","Lätt att komplettera och byta plank","Behandlas före montering för lång livslängd"]},
  "fill:Toffee":{t:"Toffee",k:"Fyllning · bambu",q:"Hårdare än ek och vacker i mörkt",d:"Bambu är ett av de hårdaste naturmaterialen och står emot fukt och bett. Den mörka tonen ger ett exklusivt och lugnt intryck.",b:["Mycket hård och tålig yta","Fuktresistent, trivs i stallmiljö","Exklusiv mörk ton som håller sig"]},
  "fill:Ek":{t:"Ek",k:"Fyllning · trä",q:"Det exklusiva valet som håller i generationer",d:"Ekplank ger ett påkostat, varmt uttryck och är mycket slitstark. För dig som vill ha det bästa.",b:["Mycket slitstark","Varm, exklusiv känsla","Åldras med karaktär"]},
- "fill:Plast Ash Grey":{t:"Ash Grey",k:"Fyllning · plast",q:"Underhållsfritt och alltid snyggt",d:"Plastplank kräver inget underhåll, ruttnar inte och är lätt att hålla ren. Ash Grey ger ett modernt, ljust stall.",b:["Inget underhåll, aldrig olja eller måla","Lätt att spola rent","Finns alltid i lager"]},
+ "fill:Plast Ash Grey":{t:"Ash Grey",k:"Fyllning · plast",q:"Underhållsfritt och alltid snyggt",d:"Plastplank kräver inget underhåll, ruttnar inte och är lätt att hålla ren. Ash Grey ger ett modernt stall i varmt mörkgrått.",b:["Inget underhåll, aldrig olja eller måla","Lätt att spola rent","Finns alltid i lager"]},
+ "fill:Plast Mineral Grey":{t:"Mineral Grey",k:"Fyllning · plast",q:"Underhållsfritt och alltid snyggt",d:"Plastplank kräver inget underhåll, ruttnar inte och är lätt att hålla ren. Mineral Grey ger ett ljust, modernt stall.",b:["Inget underhåll, aldrig olja eller måla","Lätt att spola rent","Finns alltid i lager"]},
  "fill:Plast Canyon Brown":{t:"Canyon Brown",k:"Fyllning · plast",q:"Träkänsla utan underhåll",d:"Varm brun ton som påminner om trä, men med plastens fördelar: inget underhåll och lätt att hålla ren.",b:["Inget underhåll","Varm träliknande ton","Finns alltid i lager"]},
  "fill:Plast Sand Beige":{t:"Sand Beige",k:"Fyllning · plast",q:"Ljust, luftigt och underhållsfritt",d:"En ljus, mjuk ton som gör stallet ljusare. Med plastens fördelar.",b:["Ljust och luftigt intryck","Inget underhåll","Lätt att hålla ren"]},
  "fill:Plast svart":{t:"Svart",k:"Fyllning · plast",q:"Stramt, modernt och tidlöst",d:"Svart plastplank ger en stram, modern stil som passar perfekt med varmförzinkat eller svartlackerat stål.",b:["Modern och stilren","Inget underhåll","Döljer smuts och slitage"]},
@@ -2845,7 +2853,8 @@ function wizScreens(){
   const big=(v,t,s,ic,path,cur)=>`<button type="button" class="bigopt" data-pick1="${path}" data-v="${esc(v)}" aria-pressed="${cur===v}"><span class="bo-ic">${ic}</span><span class="bo-t"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="bo-ck">${svg("check",18)}</span></button>`;
   const L=[
    {id:"s-fraga",pg:"start",sec:"Start",html:()=>`<p class="kick">Myrby · handbyggt i Enköping sedan 1972</p><h2 class="h-start">Bygg din stallinredning</h2>
-     <ol class="st-steps"><li><span>1</span><div><b>Ange stallets mått</b><small>Längd och bredd på insidan. Ett ungefär räcker.</small></div></li><li><span>2</span><div><b>Välj front, material och rum</b><small>Du ser allt växa fram i ritning och 3D.</small></div></li><li><span>3</span><div><b>Skicka din stallinredning</b><small>${NK("Nikki","Vi")} återkommer inom en arbetsdag med ett skräddarsytt förslag. Inget är bindande.</small></div></li></ol>
+     <ol class="st-steps"><li><span>1</span><div><b>Ange stallets mått</b><small>Längd och bredd på insidan. Ett ungefär räcker.</small></div></li><li><span>2</span><div><b>Välj front, material och rum</b><small>Du ser allt växa fram i ritning och 3D.</small></div></li><li><span>3</span><div><b>Skicka din ritning</b><small>${NK("Nikki","Vi")} återkommer inom en arbetsdag med ett skräddarsytt förslag. Inget är bindande.</small></div></li></ol>
+     <button type="button" class="btn lg st-go" data-wnext>Börja rita ditt stall ${svg("chev",20)}</button>
      <div class="st-kv"><div><b>3 min</b><small>från tomma väggar till färdig ritning</small></div><div><b>1 mm</b><small>så noga måttanpassar vi</small></div><div><b>0 kr</b><small>inget är bindande</small></div></div>
      ${S.db?`<details class="resumecode st-code"><summary>Har du en kod? Fortsätt där du slutade</summary><div class="rc-in"><div class="mf"><label for="wcodein">Kod</label><input id="wcodein" type="text" autocomplete="off" placeholder="T.ex. K7P 2QM" style="text-transform:uppercase"></div><button type="button" class="btn" data-wcode>Fortsätt</button></div></details>`:""}
      ${!isPublic()?`<p class="more st-more">Bara andra produkter, utan stallinredning? <button type="button" class="linkbtn" data-pick1="ui.kind" data-v="ovrigt">Välj produkter ›</button></p>`:""}`},
@@ -2854,8 +2863,8 @@ function wizScreens(){
      <div class="dimin"><div class="mf"><label for="wm-L">Längd</label><input id="wm-L" type="text" inputmode="numeric" data-wm="L" value="${dr.L}" placeholder="t.ex. 24000"><em>mm</em></div><span class="dimx">×</span><div class="mf"><label for="wm-W">Bredd</label><input id="wm-W" type="text" inputmode="numeric" data-wm="W" value="${dr.W}" placeholder="t.ex. 11500"><em>mm</em></div></div>
      <p class="hintline">Golvyta <b id="areaout">${(dr.L*dr.W/1e6).toLocaleString("sv-SE",{maximumFractionDigits:1})} m²</b></p>
      <details class="more3"><summary>Takhöjd (normalt minst 2 700 mm)</summary><div class="mf" style="margin-top:8px;max-width:240px"><label for="wm-ceil">Takhöjd</label><input id="wm-ceil" type="text" inputmode="numeric" data-wm="ceil" value="${dr.ceil}"><em>mm</em></div></details>`},
-   {id:"s-ing",pg:"ing",sec:"Stallet",sub:"Ingångar",html:()=>`<h2>Var kommer man in i stallet?</h2><p class="lead">Tryck på de väggar som har en port eller dörr. De ritas in direkt, och du kan dra dem i ritningen.</p>
-     <div class="xlist entr">${[["door-W","Gaveln till vänster","Ytterdörr"],["door-N","Långsida A","Port"],["door-S","Långsida B","Port"],["door-E","Gaveln till höger","Port"]].map(([k,t,sub])=>{const f=extraFind(dr,k),on=!!f;return `<div class="xrow ${on?"on":""}"><button type="button" class="xtog" data-ingang="${k}" aria-pressed="${on}"><span class="tick">${svg("check",14)}</span><b>${t}</b></button>${ib("room:"+k,1)}${on?xFields(k,f.m,t,true):`<span class="xdef">${sub}</span>`}</div>`}).join("")}</div>`},
+   {id:"s-ing",pg:"ing",sec:"Stallet",sub:"Ingångar",html:()=>`<h2>Var kommer man in i stallet?</h2><p class="lead">Tryck på de väggar som har en ytterdörr. De ritas in direkt, och du kan dra dem i ritningen.</p>
+     <div class="xlist entr">${[["door-W","Gaveln till vänster","Ytterdörr"],["door-N","Långsida A","Ytterdörr"],["door-S","Långsida B","Ytterdörr"],["door-E","Gaveln till höger","Ytterdörr"]].map(([k,t,sub])=>{const f=extraFind(dr,k),on=!!f;return `<div class="xrow ${on?"on":""}"><button type="button" class="xtog" data-ingang="${k}" aria-pressed="${on}"><span class="tick">${svg("check",14)}</span><b>${t}</b></button>${ib("room:"+k,1)}${on?xFields(k,f.m,t,true):`<span class="xdef">${sub}</span>`}</div>`}).join("")}</div>`},
    {id:"s-boxA",pg:"boxA",sec:"Boxar",sub:"Långsida A",html:()=>boxCountScreen("N","Hur många boxar längs långsida A?")},
    {id:"s-boxB",pg:"boxB",sec:"Boxar",sub:"Långsida B",html:()=>boxCountScreen("S","…och längs långsida B?")},
    {id:"s-win",pg:"win",sec:"Boxar",sub:"Fönster",html:()=>`<h2>Var sitter fönstren idag?</h2><p class="lead">Fönstren sitter oftast mitt i boxens yttervägg. Markera var de finns, så syns ljuset i ritningen och du får förslag på nya fönster senare. Helt frivilligt.</p>
@@ -2873,7 +2882,7 @@ function wizScreens(){
      <div class="fgal small">${WALLS().map(p=>card(p.id,`<span class="fgimg" ${ph(img(p.id))}></span>${ib(p.id)}${badge(p.id)}<span class="fgt"><b>${esc(p.name.replace(" mellanvägg",""))}</b></span>`)).join("")}${card("egen",`<span class="fgimg egen">${EGEN_SVG}</span><span class="fgt"><b>Egen vägg</b><small>Platsbyggd, ni bygger själva</small></span>`)}</div>
      ${(sp.wall==="egen"||(mx&&WL.includes("egen")))?`<div class="dbox"><p class="mbox-h">${svg("check",16)} Den egna väggen</p><div class="fgrid"><label class="field"><span>Material</span><select class="input" data-dpath="spec.egenMat"><option value="" ${sp.egenMat?"":"selected"}>Välj material</option>${["Trä","Betong","Lättbetong","Murat (tegel/block)","Stål/plåt","Annat"].map(x=>`<option ${sp.egenMat===x?"selected":""}>${x}</option>`).join("")}</select></label><div class="mf"><label for="egth">Tjocklek</label><input id="egth" type="text" inputmode="numeric" data-dpath="spec.egenTh" value="${esc(sp.egenTh||"")}" placeholder="t.ex. 150"><em>mm</em></div></div><label class="field"><span>Något mer om väggen? (valfritt)</span><input class="input" data-dpath="spec.wallNote" value="${esc(sp.wallNote||"")}" placeholder="T.ex. befintlig vägg ska vara kvar"></label></div>`:""}
      ${mx&&WL.length>1?`<div class="fx-hint">${svg("check",16)}<span><b>Fördela direkt i ritningen</b><br>Markera en vägg och tryck på mellanväggarna i ritningen.</span></div>`:""}`}},
-   {id:"p-fyll",pg:"fyll",sec:"Utförande",sub:"Fyllning",html:()=>`<h2>Vilket material i plankorna?</h2><p class="lead">Fyllningen är plankorna i nedre delen av fronten och väggarna. Gran är vanligast.</p>
+   {id:"p-fyll",pg:"fyll",sec:"Utförande",sub:"Fyllning",html:()=>`<h2>Vilket material i plankorna?</h2><p class="lead">Fyllningen är plankorna i nedre delen av fronten och väggarna.</p>
      <div class="swgrid">${FILL.map(x=>`<button type="button" class="swi" data-pick1="spec.fill" data-v="${esc(x)}" aria-pressed="${sp.fill===x}" ${okF.includes(x)?"":"disabled title='Finns inte för "+esc(fn)+"'"}><span class="swbig" style="background:${SWATCH[x]}"></span>${ib("fill:"+x,1)}<b>${esc(x.replace("Plast ","").replace(/^svart$/,"Svart"))}</b><small>${x.startsWith("Plast")?"Plast":x==="Toffee"?"Bambu":"Trä"}</small>${fillTag(x,okF)}</button>`).join("")}</div>`},
    {id:"p-yta",pg:"yta",sec:"Utförande",sub:"Yta",html:()=>`<h2>Hur ska stålet se ut?</h2><p class="lead">Varmförzinkat är standard och håller i decennier. Vill du ha färg väljer du pulverlack.</p>${(()=>{const L=lackSum();const s2=L?"+ "+krs(vat(L))+" för hela stallet":"Pris beror på val";return choice("spec.finish",[{v:"Varmförzinkad",t:"Varmförzinkat",s:"Standard",info:"fin:Varmförzinkad",p:"Ingår i priset",lo:true},{v:"Pulverlack (RAL)",t:"Pulverlackerat",s:"Valfri RAL-kulör",info:"fin:Pulverlack (RAL)",p:s2},{v:"Förzinkad + pulverlack",t:"Förzinkat + lack",s:"Extra rosttåligt",info:"fin:Förzinkad + pulverlack",p:s2}],sp.finish)})()}${/ulverlack/.test(sp.finish||"")?`<p class="hintline" style="margin-top:14px">Vilken kulör? Valfri RAL går bra, här är de vanligaste. Syns i 3D och i stallgången.</p><div class="swgrid ral">${Object.entries(RALC).map(([id,[n,c]])=>`<button type="button" class="swi ralb" data-pick1="spec.ral" data-v="${id}" aria-pressed="${(sp.ral||"RAL 9005")===id}"><span class="swbig" style="background:${c}"></span><b>${n}</b><small>${id}</small></button>`).join("")}</div>`:""}`},
    {id:"p-stolpe",pg:"stolp",sec:"Utförande",sub:"Stolpar",html:()=>`<h2>Vilka stolpar?</h2><p class="lead">Med Strömsholm, Emmaboda, Fårö och Baryard räknas måttet från stolpe till stolpe, så en bredare stolpe gör boxen lite bredare i ritningen.</p><p class="lead">En stolpe vid varje mellanvägg: mellan två boxar, mot ett rum och i slutet av varje boxrad. Mot yttervägg behövs ingen stolpe${f==="rotbrunna"?" (Rotbrunna har stolpe även där)":""}.</p>${choice("spec.post",postOpts("mid"),sp.post)}`},
@@ -2998,6 +3007,9 @@ function prodTop(){const pg=cfgPgKey(),sp=D.spec||{};let key=null,inf=null,p=nul
   if(!p&&!inf){const what={front:"en front",vagg:"en mellanvägg",fyll:"en fyllning",yta:"en ytbehandling",stolp:"stolpar"}[pg];return `<div class="ptop empty"><span>${svg("star",16)}</span><span>Välj ${what} till höger, så ser du den här i ritningen och i stallet.</span></div>`}
   const S2=p?(SHOW[p.id]||{}):{},title=p?p.name:inf.t,q=p?(S2.q||USP[p.id]||p.tag||""):(inf.q||""),bul=(p?S2.hl:inf.b)||[],u=p?img(p.id):"";
   return `<div class="ptop"><div class="pt-img" ${u?`style="background-image:url('${esc(u)}')"`:sw?`style="background:${sw}"`:""}>${u||sw?"":svg("range",34)}</div><div class="pt-b"><p class="eyebrow">${esc(kick)}${(()=>{const k={vagg:"wall",fyll:"fill",yta:"finish",stolp:"post"}[pg];return k&&sp[k]&&!(D.ui.chosen||{})[k]?` <em class="stdtag">Standard · byt om du vill</em>`:""})()}</p><b>${esc(title)}</b><p class="pt-q">${esc(q)}</p>${bul.length?`<ul>${bul.slice(0,3).map(x=>`<li>${svg("check",14)}<span>${esc(x)}</span></li>`).join("")}</ul>`:""}${ib(key)}</div></div>`}
+/* Nikki 11/11: tips om att man ändrar hängning genom att trycka på boxdörren. Visas tills kunden stänger det. */
+function hangTip(lvl){if(D.ui.tipHang||lvl<3||viewMode()!=="plan"||!(D.spec||{}).front||!["front","vagg","fyll","yta","stolp","dekor","rum"].includes(cfgPgKey()))return "";
+  return `<div class="htip" role="note"><span class="htip-i">${svg("star",16)}</span><p><b>Tips:</b> Tryck på en boxdörr i ritningen så byter den hängning.</p><button type="button" class="htip-x" data-tiphang aria-label="Stäng tipset">${svg("close",14)}</button></div>`}
 function cfgPanel(lvl){const dr=D.drawing,stall=D.ui.kind==="stall";
   if(!stall||lvl<1||cfgPgKey()==="start"){const items=D.items.filter(i=>MORE_CATS.includes(prod(i.product)?.cat));
     return `<div class="cfg-hero" style="background-image:linear-gradient(180deg,rgba(20,38,25,.05) 30%,rgba(20,38,25,.78)),url('${esc(img(stall?"komplett-stall":"hero-home")||img("hero-home"))}')"><div><span class="logo" role="img" aria-label="Myrby"></span><h3>${stall?"Din stallinredning börjar här":"Bygg din stallinredning"}</h3><p>Inredning till ditt befintliga stall, måttanpassad till millimetern. Tillverkad i Enköping sedan 1972.</p></div></div>${items.length?`<div class="cchips">${cfgChips(0)}</div>${priceCard(0)}`:""}`}
@@ -3005,6 +3017,7 @@ function cfgPanel(lvl){const dr=D.drawing,stall=D.ui.kind==="stall";
   const warns=lvl>=2?[...drwWarnings(dr),...["N","S"].map(k=>dr.cfg?.[k]?.err).filter(Boolean)]:[],mat=lvl>=3?drwMaterials2(dr):null;
   return `<div class="cfg-head slim"><div><b>${lvl>=3&&specFront()?esc(prod(specFront()).name)+"-stall":"Ditt stall"}</b>${lvl>=2?`<span class="faint small">${drwMaterials2(dr).boxes} boxar · stallgång ${mm(aisle(dr))} mm</span>`:""}</div>${viewBar(lvl)}</div>
     ${prodTop()}
+    ${hangTip(lvl)}
     ${warns.slice(0,2).map(w=>`<div class="warn">${esc(w)}</div>`).join("")}
     ${(cfgPgKey()==="kund"||cfgPgKey()==="sum")&&viewMode()==="plan"?finalSheet(lvl):`${viewMode()==="plan"?(paintOn()?paintBar():wallPaintOn()?wallPaintBar():""):(paintOn()||wallPaintOn())?`<p class="hintline">Gå tillbaka till <b>Ritning</b> för att fördela i ritningen.</p>`:""}${cfgPgKey()==="rum"&&viewMode()==="plan"?blockBar():cfgPgKey()==="win"&&viewMode()==="plan"?winBar():""}<div class="drw-svg cad live lv${lvl} v-${viewMode()} ${paintOn()||wallPaintOn()?"painting":""}" id="cfgcanvas" data-lvl="${lvl}">${canvasInner(dr,lvl,{interactive:lvl>=5||["matt","boxA","boxB","ing","win"].includes(cfgPgKey()),lvl,hl:cfgHL(),paint:paintOn()?"front":wallPaintOn()?"wall":(cfgPgKey()==="front"&&(D.spec||{}).front&&!fmixOn()?"show":false),doors:cfgPgKey()==="front"&&!!(D.spec||{}).front})}${viewMode()==="walk"?`<label class="wslide"><span class="ws-t">Gå i stallgången</span><span class="ws-l">Ingången</span><input type="range" class="vrange" id="walkpos" min="0" max="100" value="${D.ui.walk||0}" style="--p:${D.ui.walk||0}%" aria-label="Gå framåt i stallgången"><span class="ws-l">Längst in</span></label>`:""}${paintOn()&&viewMode()==="plan"&&fmixList().length>1?`<div class="psides"><span class="pside" data-fside="N">Hela långsida A</span><span class="pside" data-fside="S">Hela långsida B</span></div>`:""}${wallPaintOn()&&viewMode()==="plan"&&wmixList().length>1?`<div class="psides"><span class="pside" data-wside="N">Hela långsida A</span><span class="pside" data-wside="S">Hela långsida B</span></div>`:""}</div>${lvl>=4&&viewMode()==="plan"?cfgLegend():""}
     ${lvl>=5&&viewMode()==="plan"&&["N","S","W","E"].some(k=>(dr.walls[k]||[]).some(m=>m.t!=="box"))?`<p class="draghint ${cfgPgKey()==="rum"?"big":""}">✥ Dra rum och dörrar i ritningen för att flytta dem.</p>`:""}`}
@@ -3021,9 +3034,9 @@ function renderWiz(){
   const step=`<div class="cfg-steps">${secs.map((x,i)=>{const first=PG.findIndex(p=>p.sec===x),ok=first>=0&&first<=D.ui.reach;return `<button type="button" class="cstep ${x===curSec?"cur":i<secIdx?"done":""}" ${ok?`data-wgo="${first}"`:"disabled"}><span class="cn">${i<secIdx?svg("check",12):i+1}</span><span class="cl">${esc(x)}</span></button>`}).join("")}</div>`;
   const nextLbl=last?"":pg.key==="start"?"Börja":"Nästa: "+(PG[s+1].sec===pg.sec?(PG[s+1].list[0].sub||"nästa fråga"):PG[s+1].sec);
   const foot=`<div class="wiz-foot"><div class="in">${priceFoot(lvl)}${s>0?`<button class="btn ghost lg" data-wprev aria-label="Tillbaka">${svg("back",20)}</button>`:""}
-    ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min stallinredning till Myrby":S.role==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund")?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
+    ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min ritning till Myrby":S.role==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund")?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
   const keepP=$("#cfgplan")?.scrollTop||0,prevLvl=+($("#cfgcanvas")?.dataset.lvl??-1),prevSet=new Set([...($("#cfgcanvas svg")?.querySelectorAll(INK_SEL)||[])].map(e=>e.outerHTML)),dirCls=renderWiz.dir>0?"in-r":renderWiz.dir<0?"in-l":"";renderWiz.dir=0;
-  $("#wiz").innerHTML=`<div class="wiz-top cfg-top">${isPublic()?`<span class="logo publogo" role="img" aria-label="Myrby"></span>`:`<button class="icon-btn" data-wclose aria-label="Stäng">${svg("close")}</button>`}${step}<span class="cfg-count faint small">${D.ui.kind?`Steg ${secIdx+1} av ${secs.length}`:""}</span>${isPublic()?(D.ui.kind?pubSaveBtn():"")+pubCloseBtn():""}${D.ui.kind&&!isPublic()?`<button type="button" class="btn sm ghost wsave" data-wsave title="Spara och fortsätt senare">${svg("doc",16)}<span>${D.ui.code?"Sparad":"Spara & fortsätt senare"}</span></button>`:""}</div><div class="cfg-prog"><i style="width:${(s+1)/PG.length*100}%"></i></div>
+  $("#wiz").innerHTML=`<div class="wiz-top cfg-top">${isPublic()?`<span class="logo publogo" role="img" aria-label="Myrby"></span>`:`<button class="icon-btn" data-wclose aria-label="Stäng">${svg("close")}</button>`}${step}<span class="cfg-count faint small">${D.ui.kind?`Steg ${secIdx+1} av ${secs.length}`:""}</span>${isPublic()?(D.ui.kind&&s>0?pubResetBtn():"")+(D.ui.kind?pubSaveBtn():"")+pubCloseBtn():""}${D.ui.kind&&!isPublic()?`<button type="button" class="btn sm ghost wsave" data-wsave title="Spara och fortsätt senare">${svg("doc",16)}<span>${D.ui.code?"Sparad":"Spara & fortsätt senare"}</span></button>`:""}</div><div class="cfg-prog"><i style="width:${(s+1)/PG.length*100}%"></i></div>
    ${adv?`<div class="wiz-scroll" id="wizscroll"><div class="wiz-step q1 wide"><div class="qblock" id="q-s-klar"><h2>Finjustera skissen</h2><p class="lead">Ändra enskilda boxar, dörrar och fönster, eller dra delarna i ritningen.</p>${drwEditor3(dr)}<button type="button" class="btn ghost" data-wadv="0" style="justify-self:start">${svg("back",18)} Tillbaka</button></div></div></div>${foot}`:
    `<div class="cfg ${lvl<1?"nolvl":""}"><section class="cfg-q"><div class="wiz-scroll" id="wizscroll"><div class="wiz-step q1 cfgstep ${dirCls}" data-pg="${esc(pg.key||"")}">${(()=>{const sib=PG.filter(p=>p.sec===pg.sec&&p.list[0].sub);return sib.length>1?`<div class="mini">${sib.map(p=>`<span class="${p===pg?"on":PG.indexOf(p)<s?"done":""}">${esc(p.list[0].sub)}</span>`).join("")}</div>`:""})()}${pg.list.map(x=>`<section class="qblock" id="q-${x.id}">${x.html()}</section>`).join("")}</div></div>${foot}</section><aside class="cfg-plan pg-${esc(pg.key||"")} ${lvl<1||pg.key==="start"?"start":""}" id="cfgplan">${cfgPanel(lvl)}</aside></div>`}`;
   const cp=$("#cfgplan");if(cp)cp.scrollTop=keepP;animTotals();if(isPublic())pubStore();
@@ -3303,6 +3316,8 @@ const CY="#14a3b8",INK="#1b1b1b",LT="#5b6b62";
 const mm=v=>Math.round(v).toLocaleString("sv-SE").replace(/ /g," ");
 const m2=(w,d)=>(w*d/1e6).toLocaleString("sv-SE",{minimumFractionDigits:2,maximumFractionDigits:2});
 const uid2=()=>Math.random().toString(36).slice(2,8);
+/* Dörrblad (Nikki 11/11): upp till 1 500 mm enkeldörr. Bredare blir pardörr med aktivt blad 1 200 mm och passivt blad = resten. Från 2 500 mm två lika blad. */
+const doorLeaves=w=>{w=+w||0;return w<=1500?[w]:w<2500?[1200,w-1200]:[w/2,w/2]};
 function box(w=3500,d=3500,dir="V"){return{id:uid2(),t:"box",w,d,dir,win:true}}
 function newDrawing2(q){
   const ids=(q?q.items:D.items||[]).map(i=>i.product);
@@ -3326,8 +3341,8 @@ function layout(dr){
     let pos=(k==="W"||k==="E")?gableSpan(dr,k).y0:0;
     (dr.walls[k]||[]).forEach((m,i)=>{out.push({k,i,m,start:pos,tf:T[k](pos),flip:k==="S"||k==="W"});pos+=+m.w||0});
   }
-  // numrering medurs: N vänster→höger, E uppifrån, S höger→vänster, W nerifrån
-  let n=0;const order=[...out.filter(o=>o.k==="N"),...out.filter(o=>o.k==="E"),...out.filter(o=>o.k==="S").reverse(),...out.filter(o=>o.k==="W").reverse()];
+  // numrering: långsida A vänster→höger, långsida B vänster→höger, sedan gavlarna uppifrån (Maja 11/11)
+  let n=0;const order=[...out.filter(o=>o.k==="N"),...out.filter(o=>o.k==="S"),...out.filter(o=>o.k==="W"),...out.filter(o=>o.k==="E")];
   order.forEach(o=>{if(o.m.t==="box"){o.nr=++n;o.f=(dr.fmix||{})[o.nr]||dr.front}});
   return out;
 }
@@ -3356,7 +3371,9 @@ function applyNej(){const dr=D.drawing,nj=D.ui.nej;if(!dr||!nj)return;const n=nj
   dr.L=Math.max(8000,Math.round((nN*len+400)/100)*100);["N","S"].forEach((k,i)=>{dr.cfg[k]=dr.cfg[k]||{d:3485,auto:true};const c=dr.cfg[k];c.n=i?nS:nN;c.mode="fast";c.std=nearestSize(len,dr.front);c.auto=true});autoAll(dr)}
 function clearBoxWins(dr){dr.wins=wins(dr).filter(x=>!x.box);dr.winBox=false}
 const allWins=dr=>wins(dr);
-function autoWindow(dr){const n=wins(dr).length,k=n%2?"S":"N",c=wins(dr).filter(x=>x.k===k).length;return addWindow(dr,k,dr.L/2+(c%2?1:-1)*Math.ceil(c/2)*2500)}
+function autoWindow(dr){const W=wins(dr),free=layout(dr).filter(o=>o.m.t==="box"&&(o.k==="N"||o.k==="S")).sort((a,b)=>a.nr-b.nr).find(o=>!W.some(x=>x.k===o.k&&x.p>=o.start&&x.p<=o.start+(+o.m.w)));
+  if(free)return addWindow(dr,free.k,free.start+(+free.m.w)/2);
+  const n=W.length,k=n%2?"S":"N",c=W.filter(x=>x.k===k).length;return addWindow(dr,k,dr.L/2+(c%2?1:-1)*(Math.ceil(c/2)+1)*2500)}
 function depthMax(dr,k){return Math.max(0,...(dr.walls[k]||[]).filter(m=>m.t==="box"||m.t==="room").map(m=>+m.d||0))}
 function aisle(dr){return dr.W-depthMax(dr,"N")-depthMax(dr,"S")}
 const wallLabelId=(dr,id)=>!id?"Mellanvägg (ej vald)":id==="egen"?`Egen mellanvägg (ingår ej)${dr.egenMat||dr.egenTh?", "+[dr.egenMat,dr.egenTh?dr.egenTh+" mm":""].filter(Boolean).join(", "):""}${dr.wallNote?", "+dr.wallNote:""}`:(prod(id)?.name||"Mellanvägg");
@@ -3373,7 +3390,7 @@ function drwMaterials2(dr){
   const dec=dr.decor==="med"||dr.front==="stromsholm";if(dec&&boxes.length)rows.push(["","Dekorbräda",boxes.length]);
   L.filter(o=>o.m.t==="room").forEach(o=>rows.push(["",`${o.m.name} ${mm(o.m.w)} × ${mm(o.m.d)} mm`,1]));
   const doors=L.filter(o=>o.m.t==="door");if(doors.length)rows.push(["",`Ytterdörr/port, öppnas utåt (${doors.map(o=>mm(o.m.w)).join(", ")} mm)`,doors.length]);
-  const wins=L.filter(o=>(o.m.t==="box"||o.m.t==="room")&&o.m.win).length;if(wins)rows.push(["","Öppningsbart fönster",wins]);
+  const wins=isPublic()?0:L.filter(o=>(o.m.t==="box"||o.m.t==="room")&&o.m.win).length;if(wins)rows.push(["","Öppningsbart fönster",wins]);
   if(dr.intag)rows.push(["⊠","Friskluftsintag",boxes.length]);
   if(+dr.fans)rows.push(["⊗",`Frånluftsfläkt ${dr.fanType==="vagg"?"på vägg":"i tak"}${dr.fanType==="vagg"?(dr.fanPlace==="egen"?", placerad i ritningen":": Myrby föreslår placering"):""}`,+dr.fans]);
   return {rows,boxes:boxes.length,b1d,midN:postN,corN:0,midAll:pl.length,corAll:0}}
@@ -3421,9 +3438,9 @@ function planSVG(dr,{interactive=false,sel=null,lvl=9}={}){
       }
     }else if(m.t==="door"){
       g.push(line(0,-WT/2,w,-WT/2,`stroke="#fff" stroke-width="${WT+40}"`));
-      const leaves=m.pair?[[0,w/2],[w,w/2]]:[[0,w]];
+      const lv=doorLeaves(w),leaves=lv.length>1?[[0,lv[0]],[w,lv[1]]]:[[0,w]];
       leaves.forEach(([hx,r])=>{const s=hx===0?1:-1;g.push(line(hx,-WT,hx,-WT-r,`stroke="${INK}" stroke-width="12"`));const a=tf(hx,-WT-r),b=tf(hx+s*r,-WT);g.push(`<path d="M ${a[0]} ${a[1]} A ${r} ${r} 0 0 ${(k==="N"||k==="E")===(s>0)?1:0} ${b[0]} ${b[1]}" fill="none" stroke="${INK}" stroke-width="8"/>`)});
-      if(interactive)g.push(poly([[0,-WT-(m.pair?w/2:w)],[w,-WT-(m.pair?w/2:w)],[w,300],[0,300]],`fill="${isSel?"rgba(229,203,126,.35)":"transparent"}" ${hit}`));
+      if(interactive)g.push(poly([[0,-WT-Math.max(...doorLeaves(w))],[w,-WT-Math.max(...doorLeaves(w))],[w,300],[0,300]],`fill="${isSel?"rgba(229,203,126,.35)":"transparent"}" ${hit}`));
     }else{ // öppen yta
       if(interactive)g.push(poly([[0,0],[w,0],[w,1200],[0,1200]],`fill="${isSel?"rgba(229,203,126,.35)":"rgba(0,0,0,0)"}" stroke="${isSel?"#c9a94b":"none"}" stroke-dasharray="80 60" stroke-width="12" ${hit}`));
     }
@@ -3507,7 +3524,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
           g.push(line(left,d,right,d,`stroke="${C.aisle}" stroke-width="44"`)+line(left,d+60,right,d+60,`stroke="${C.aisle}" stroke-width="14"`)+line(hx,d,ex,ey,`stroke="${C.front}" stroke-width="18" stroke-linecap="round"`));
           const a=tf(ex,ey),b=tf(m.dir==="H"?left:right,d);g.push(`<path d="M ${a[0]} ${a[1]} A ${dw} ${dw} 0 0 ${(m.dir==="H")===(k==="N"||k==="E")?1:0} ${b[0]} ${b[1]}" fill="none" stroke="${C.line}" stroke-width="6" stroke-dasharray="28 22" opacity=".5"/>`)}
         const a1=tf(cen?(m.dir==="H"?Math.max(300*F,left-250*F):Math.min(w-300*F,right+250*F)):(m.dir==="H"?380*F:w-380*F),d+300*F);tags.push(tag(a1[0],a1[1],"A1"))}
-      if(m.win&&lvl>=5)over.push(line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.glass}" stroke-width="${WT*.4}"`)+line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.line}" stroke-width="6"`));
+      if(m.win&&lvl>=5&&!isPublic())over.push(line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.glass}" stroke-width="${WT*.4}"`)+line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.line}" stroke-width="6"`));
       if(dr.intag&&lvl>=5){const p=tf(w-260,190),r=70*F;g.push(`<rect x="${p[0]-r}" y="${p[1]-r}" width="${2*r}" height="${2*r}" fill="none" stroke="${C.air}" stroke-width="12"/><path d="M${p[0]-r} ${p[1]-r}L${p[0]+r} ${p[1]+r}M${p[0]+r} ${p[1]-r}L${p[0]-r} ${p[1]+r}" stroke="${C.air}" stroke-width="10"/>`)}
     }else if(m.t==="room"){
       g.push(poly([[0,0],[w,0],[w,d],[0,d]],`fill="${C.room}" stroke="${C.roomLine}" stroke-width="12" ${hit} ${m.id&&m.id===D.ui?.snap?'class="snap"':""}`));
@@ -3518,7 +3535,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
       if(m.win)over.push(line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.glass}" stroke-width="${WT*.4}"`)+line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.line}" stroke-width="6"`));
     }else if(m.t==="door"){
       over.push(line(0,-WT/2,w,-WT/2,`stroke="${C.aisle}" stroke-width="${WT+20}"`)+line(0,0,0,-WT,`stroke="${C.line}" stroke-width="14"`)+line(w,0,w,-WT,`stroke="${C.line}" stroke-width="14"`));
-      const leaves=m.pair?[[0,w/2],[w,w/2]]:[[0,w]];
+      const lv=doorLeaves(w),leaves=lv.length>1?[[0,lv[0]],[w,lv[1]]]:[[0,w]];
       leaves.forEach(([hx,r])=>{const s=hx===0?1:-1,rr=r*.92;over.push(line(hx,-WT,hx,-WT-rr,`stroke="${C.ink}" stroke-width="45" stroke-linecap="round"`));const a=tf(hx,-WT-rr),b=tf(hx+s*rr,-WT);over.push(`<path d="M ${a[0]} ${a[1]} A ${rr} ${rr} 0 0 ${(k==="N"||k==="E")===(s>0)?1:0} ${b[0]} ${b[1]}" fill="none" stroke="${C.ink}" stroke-width="16" stroke-dasharray="50 34" opacity=".8"/>`)});
       if(interactive)over.push(poly([[0,-WT-w*.55],[w,-WT-w*.55],[w,300],[0,300]],`fill="transparent" ${hit}`));
     }else{if(interactive)g.push(poly([[0,0],[w,0],[w,1200],[0,1200]],`fill="transparent" ${hit}`))}
@@ -3705,14 +3722,14 @@ const FRONT_SIZES={
   faro:{type:"fixed",list:[2940,3000,3060,3170,3230,3340,3400,3500,3510,3570,3680,3740,3850,3910,4020]},
   baryard:{type:"fixed",list:STD_STEPS,prelim:true},
   rotbrunna:{type:"fixed",list:STD_STEPS,prelim:true},
-  janslund:{type:"range",min:1820,max:4060},
-  fagelbro:{type:"range",min:1888,max:4128},
-  optimal:{type:"range",min:1000,max:6000,free:true},
-  dala:{type:"range",min:1000,max:6000,free:true}
+  janslund:{type:"range",min:2500,max:4060},
+  fagelbro:{type:"range",min:2500,max:4128},
+  optimal:{type:"range",min:2500,max:6000,free:true},
+  dala:{type:"range",min:2500,max:6000,free:true}
 };
 const POST_X={s50:0,s80:30,stal:64,tra:40,ingen:0};
 const postExtra=dr=>POST_X[(dr||D.drawing||{}).post]||0;
-const sizeRule=f=>{const r=FRONT_SIZES[f]||{type:"range",min:1000,max:6000,free:true};if(r.type!=="fixed")return r;const x=postExtra();return x?{...r,list:r.list.map(v=>v+x),extra:x}:r};
+const sizeRule=f=>{const r=FRONT_SIZES[f]||{type:"range",min:2500,max:6000,free:true};if(r.type!=="fixed")return r;const x=postExtra();return x?{...r,list:r.list.map(v=>v+x),extra:x}:r};
 const frontLen=(w,f)=>{const r=sizeRule(f);return r.type==="fixed"&&r.extra?+w-r.extra:+w};
 const fillsFor=f=>sizeRule(f).fills||FILL;
 function sizeText(f){const r=FRONT_SIZES[f]||sizeRule(f);if(r.type==="fixed")return `Fasta längder ${mm(r.list[0])}–${mm(r.list[r.list.length-1])} mm (${r.list.length} storlekar)${r.prelim?" · preliminärt":""}`;return r.free?"Valfri längd på millimetern":`Valfri längd ${mm(r.min)}–${mm(r.max)} mm`}
@@ -3764,7 +3781,7 @@ function newDrawing3(q){
   const f=ids.find(id=>prod(id)?.cat==="fronter")||"optimal",w=ids.find(id=>prod(id)?.cat==="mellan")||"mv-kg2";
   const dr={v:2,L:20000,W:10000,ceil:2700,front:f,wall:w,post:"stal",fill:fillsFor(f).includes("Plast Ash Grey")?"Plast Ash Grey":fillsFor(f)[0],finish:"Varmförzinkad",intag:true,fans:2,note:"",
     walls:{N:[],S:[{id:uid2(),t:"room",w:2500,d:3500,name:"Spolspilta",win:false}],W:[{id:uid2(),t:"door",w:2000,pair:true}],E:[]},
-    cfg:{N:{n:5,mode:"lika",std:3500,d:3485,auto:true},S:{n:4,mode:"lika",std:3500,d:3485,auto:true},W:{n:0,mode:"lika",std:3500,d:3485,auto:true},E:{n:0,mode:"lika",std:3500,d:3485,auto:true}}};
+    cfg:{N:{n:5,mode:"lika",std:3500,d:3500,auto:true},S:{n:4,mode:"lika",std:3500,d:3500,auto:true},W:{n:0,mode:"lika",std:3500,d:3500,auto:true},E:{n:0,mode:"lika",std:3500,d:3500,auto:true}}};
   autoAll(dr);return dr;
 }
 function boxWarnings(dr){const out=[];layout(dr).forEach(o=>{if(o.m.t==="box"&&!sizeOK(o.m.w,dr.front))out.push(`Hästbox ${o.nr}: ${mm(o.m.w)} mm tillverkas inte i ${prod(dr.front)?.name}. Närmaste är ${mm(nearestSize(o.m.w,dr.front))} mm.`)});return out}
@@ -4090,6 +4107,8 @@ document.addEventListener("click",async e=>{
   if(d.d3size&&d.d3size.startsWith("w-std:")&&!t.closest("#drw2")){const k=d.d3size.slice(6);D.drawing.cfg[k].std=+d.v;D.drawing.cfg[k].auto=true;autoFill(D.drawing,k);saveD();wizRefresh(true);return}
   if(t.dataset.pfoot!==undefined){const c=$(".pcard");if(c&&innerWidth>900)c.scrollIntoView({behavior:"smooth",block:"center"});else{openSheet(`<div class="sh-body" style="padding-top:34px">${priceCard(drawLvl(wizPages()))}</div>`,"");animTotals.last=null;animTotals()}return}
   if(d.dopen){D.ui.dopen=D.ui.dopen||{};D.ui.dopen[d.dopen]=!D.ui.dopen[d.dopen];wizRefresh();return}
+  if(d.tiphang!==undefined){D.ui.tipHang=true;saveD();cfgPanelRefresh();return}
+  if(d.wopen){D.ui.wopen=D.ui.wopen||{};D.ui.wopen[d.wopen]=!D.ui.wopen[d.wopen];wizRefresh();return}
   if(d.sd){setBoxD(d.sd,+d.v);return}
   if(d.bsel){const [k,i]=d.bsel.split(":");D.ui.bsel={...(D.ui.bsel||{}),[k]:+i};saveD();wizRefresh();return}
   if(d.d3size&&d.d3size.startsWith("w-box:")&&!t.closest("#drw2")){const [,k,i]=d.d3size.split(":");setBoxW(k,+i,+d.v);return}
@@ -4103,6 +4122,7 @@ document.addEventListener("click",async e=>{
   if(d.ingang){D.ui.measured=true;toggleExtra(D.drawing,d.ingang);if(extraFind(D.drawing,d.ingang)&&/[NS]$/.test(d.ingang))centerDoor(D.drawing,d.ingang);if(extraFind(D.drawing,d.ingang)&&/[WE]$/.test(d.ingang))centerGableDoor(D.drawing,d.ingang);saveD();wizRefresh();return}
   if(d.sx){toggleExtra(D.drawing,d.sx);saveD();wizRefresh();return}
   if(d.pubsave!==undefined){pubSaveOpen();return}
+  if(d.pubreset!==undefined){if(t.closest("[data-pubreset]").dataset.armed){pubReset()}else{const b=t.closest("[data-pubreset]");b.dataset.armed="1";const sp=b.querySelector("span");if(sp)sp.textContent="Tryck igen för att rensa allt";setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;if(sp)sp.textContent="Börja om"}},3000)}return}
   if(d.pubclose!==undefined){publicClose();return}
   if(d.pubrm!==undefined){(window.__pubFiles||[]).splice(+d.pubrm,1);wizRefresh();return}
   if(d.sumgo){D.ui.fromSum=true;saveD();wizJump(d.sumgo);const pg=wizPages()[S.wizStep];if(pg&&pg.list[0].id===d.sumgo)$("#wizscroll").scrollTop=0;return}
@@ -4375,6 +4395,8 @@ async function publicSend(){
   if(sent){D=emptyDraft();ls.set("myrby.draft2",D);window.__pubFiles=[]}
 }
 /* v111: Stäng (konfiguratorn ligger som pop-up/iframe på myrby.com). Föräldrasidan kan lyssna på postMessage och svara, annars går vi till closeUrl. */
+function pubResetBtn(){return `<button type="button" class="pubclose pubreset" data-pubreset aria-label="Börja om">${svg("back",16)}<span>Börja om</span></button>`}
+function pubReset(){try{localStorage.removeItem(PUB_KEY)}catch(e){}D=emptyDraft();D.ui=D.ui||{};ls.set("myrby.draft2",D);window.__pubFiles=[];S.wizStep=0;S.pubDone=false;HIST.stack=[];HIST.i=-1;renderWiz.dir=-1;renderWiz();toast("Allt är rensat, du börjar om från början")}
 function pubCloseBtn(){return `<button type="button" class="pubclose" data-pubclose aria-label="Stäng">${svg("close",18)}<span>Stäng</span></button>`}
 function publicClose(){const cfg=window.MYRBY_PUBLIC||{};try{ls.set("myrby.draft2",D)}catch(e){}
   try{if(window.frameElement&&window.frameElement.dataset.mkTake){const pd=parent.document,ref=pd.referrer||"";if(ref.startsWith(location.origin)&&!/rita-ditt-stall/.test(ref)){parent.history.back()}else{parent.location.href=cfg.closeUrl||"/"}return}}catch(e){}
