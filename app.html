@@ -2214,15 +2214,20 @@ const choice=(path,items,cur)=>`<div class="qcards">${[...items,...((S.noOv?[]:(
 const SWATCH={"Gran":"linear-gradient(90deg,#e9cf9d 0 46%,#d9b97f 46% 50%,#e9cf9d 50% 96%,#d9b97f 96%)","Spontad gran":"#e9cf9d","Hyvlad gran":"#ecd6ab","Toffee":"repeating-linear-gradient(90deg,#6b4a2b 0 10px,#5a3c22 10px 12px)","Ek":"repeating-linear-gradient(90deg,#b88a55 0 14px,#a7794a 14px 16px)","Plast Ash Grey":"#6c7173","Plast Mineral Grey":"#8d9192","Plast Canyon Brown":"#6e4b36","Plast Sand Beige":"#cdb994","Plast svart":"#232323"};
 const FILL_SUB={"Gran":"Klassiskt trä, behandlas före montering","Toffee":"Hård och fuktresistent","Ek":"Exklusivt, mycket slitstarkt","Plast Ash Grey":"Underhållsfri, alltid i lager","Plast Mineral Grey":"Underhållsfri, ljusare grå","Plast Canyon Brown":"Underhållsfri, alltid i lager","Plast Sand Beige":"Underhållsfri","Plast svart":"Underhållsfri"};
 const EXTRAS=[["Spolspilta","room",2500],["Sadelkammare","room",3500],["Foderkammare","room",3500],["Torkrum","room",2000],["door-W","door",2000,"Ytterdörr gavel vänster"],["door-E","door",2400,"Ytterdörr gavel höger"],["door-N","door",2400,"Ytterdörr långsida A"],["door-S","door",2400,"Ytterdörr långsida B"]];
-function extraFind(dr,key){for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[];let i=ms.findIndex(m=>m.xk===key);if(i<0)i=key.startsWith("door-")?(k===key.slice(5)?ms.findIndex(m=>m.t==="door"&&!m.xk):-1):ms.findIndex(m=>m.t==="room"&&m.name===key&&!m.xk);if(i>=0)return {k,i,m:ms[i]}}return null}
+function extraFind(dr,key){if(String(key).startsWith("door-")){const ds=doors(dr),j=ds.findIndex(d=>d.xk===key);return j>=0?{k:ds[j].k,i:j,m:ds[j],door:true}:null}
+  for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[];let i=ms.findIndex(m=>m.xk===key);if(i<0)i=key.startsWith("door-")?(k===key.slice(5)?ms.findIndex(m=>m.t==="door"&&!m.xk):-1):ms.findIndex(m=>m.t==="room"&&m.name===key&&!m.xk);if(i>=0)return {k,i,m:ms[i]}}return null}
 function extraMod(dr,key){return extraFind(dr,key)?.m}
-function setExtraW(dr,key,v){const f=extraFind(dr,key);if(!f)return;f.m.w=Math.max(800,Math.min(8000,Math.round(v)));autoFill(dr,f.k)}
+function setExtraW(dr,key,v){const f=extraFind(dr,key);if(!f)return;f.m.w=Math.max(800,Math.min(8000,Math.round(v)));if(f.door){f.m.p=doorClamp(dr,f.k,f.m.p,f.m.w);if(f.m.ctr)gableRecenter(dr);return}autoFill(dr,f.k)}
 const hasExtra=(dr,key)=>!!extraFind(dr,key);
+/* Om boxarna inte får plats (t.ex. efter att ett rum lagts till): färre boxar på den väggen, aldrig utanför stallet */
+function fitBoxes(dr){const fixed=[];["N","S"].forEach(k=>{const c=dr.cfg?.[k];if(!c||!c.auto)return;let n0=c.n,guard=0;while(c.err&&c.n>0&&(c.rest||0)<0&&guard++<20){c.n--;autoFill(dr,k)}if(c.n!==n0)fixed.push(`${WALL_NAMES[k]}: ${c.n} boxar`)});
+  if(fixed.length&&typeof toast==="function")toast("Färre boxar så att allt får plats. "+fixed.join(", "))}
 function toggleExtra(dr,key){const f=extraFind(dr,key);
-  if(f){dr.walls[f.k].splice(f.i,1)}
-  else if(key.startsWith("door-")){const k=key.slice(5);(dr.walls[k]=dr.walls[k]||[]).push({id:uid2(),t:"door",w:EXTRAS.find(e=>e[0]===key)[2],pair:true,xk:key})}
+  if(f&&f.door){doors(dr).splice(f.i,1)}
+  else if(f){dr.walls[f.k].splice(f.i,1)}
+  else if(key.startsWith("door-")){const k=key.slice(5,6),w=EXTRAS.find(e=>e[0]===key)?.[2]||2000;doors(dr).push({id:uid2(),t:"door",k,w,p:doorClamp(dr,k,(k==="N"||k==="S")?dr.L-w-1000:(dr.W-w)/2,w),xk:key,ctr:true})}
   else{const ms=dr.walls.S=dr.walls.S||[];const x=EXTRAS.find(e=>e[0]===key);let at=0;while(at<ms.length&&ms[at].t==="room")at++;ms.splice(at,0,{id:uid2(),t:"room",w:x[2],d:dr.cfg?.S?.d||3500,name:key,win:false,xk:key})}
-  autoAll(dr);
+  autoAll(dr);fitBoxes(dr);
 }
 function suggestCounts(dr){if(D.ui?.touchedN)return;const r=sizeRule(dr.front),pref=r.type==="fixed"?3500:3500;
   ["N","S"].forEach(k=>{const c=dr.cfg[k];c.auto=true;c.n=Math.max(1,Math.floor(wallAvail(dr,k)/pref));autoFill(dr,k)})}
@@ -2261,14 +2266,14 @@ const specFront=()=>D.spec?.front||"";
 function ensureCfg(){D.ui=D.ui||{};D.spec=D.spec||{};if(!D.ui.kind&&D.drawing&&D.drawing.v===2)D.ui.kind="stall";
   if(!D.spec.front){const f=D.items.map(i=>i.product).find(id=>prod(id)?.cat==="fronter");if(f)D.spec.front=f}
   if(!D.spec.wall){const w=D.items.map(i=>i.product).find(id=>prod(id)?.cat==="mellan");if(w)D.spec.wall=w}
-  if(D.ui.kind==="stall"&&(!D.drawing||D.drawing.v!==2)){const dr=D.drawing=newDrawing3();dr.walls.S=[];dr.walls.W=[];dr.walls.E=[];D.ui.touchedN=false;syncSpec(true);suggestCounts(dr)}
+  if(D.ui.kind==="stall"&&(!D.drawing||D.drawing.v!==2)){const dr=D.drawing=newDrawing3();dr.walls.S=[];dr.walls.W=[];dr.walls.E=[];dr.doors=[];D.ui.touchedN=false;syncSpec(true);suggestCounts(dr)}
   if(D.ui.kind==="stall"){D.ui.measured=true;D.ui.mchoice="ja"}if(D.ui.kind==="stall"&&!D.ui.defaulted){D.ui.defaulted=true;const sp=D.spec;sp.wall=sp.wall||"mv-galler";sp.fill=sp.fill||"Gran";sp.finish=sp.finish||"Varmförzinkad";sp.post=sp.post||"stal";sp.decor=sp.decor||"utan";syncSpec(true)}}
 function syncSpec(init){const sp=D.spec||{},dr=D.drawing;if(!dr)return;
   if(sp.front&&dr.front!==sp.front){dr.front=sp.front;onFrontChange(dr);if(!init)suggestCounts(dr)}
   const postChanged=(sp.post||"")!==(dr.post||"");["wall","post","decor","fill","finish","ral"].forEach(k=>dr[k]=sp[k]||"");if(postChanged){for(const k of ["N","S","W","E"]){const c=dr.cfg?.[k];if(c&&c.auto){if(c.std&&sizeRule(dr.front).type==="fixed")c.std=nearestSize(c.std,dr.front);continue}(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"&&!sizeOK(m.w,dr.front))m.w=nearestSize(m.w,dr.front)})}}dr.cornerPost=dr.post;dr.egenMat=sp.egenMat||"";dr.egenTh=sp.egenTh||"";dr.wallNote=sp.wallNote||"";if(sp.front&&sp.fill&&!fillsFor(sp.front).includes(sp.fill)){sp.fill="";dr.fill=""}autoAll(dr)}
 function specFromDrawing(){const dr=D.drawing;if(!dr)return;D.spec=D.spec||{};SPEC_KEYS.forEach(k=>{D.spec[k]=dr[k]||""});D.spec.wallNote=dr.wallNote||""}
 function specRows(sp,dr){sp=sp||{};const v=k=>sp[k]||dr?.[k]||"";const pl=k=>POST_SHORT[v(k)]?(v(k)==="tra"||v(k)==="ingen"?POST_SHORT[v(k)]:POST_SHORT[v(k)]+" mm"):"";
-  return [["Mellanvägg",dr&&dr.wmix&&Object.keys(dr.wmix).length?"Blandade, se materiallistan":wallLabelId(dr||{},v("wall"))],["Stolpar",pl("post")],["Dekorbräda",v("decor")==="med"?"Med":v("decor")==="utan"?"Utan":""],["Fyllning",v("fill")],["Ytbehandling",v("finish")+(v("ral")&&/ulverlack/.test(v("finish"))?" · "+v("ral")+" "+(RALC[v("ral")]||[""])[0].toLowerCase():"")],["Antal fronter",D.ui?.mchoice==="nej"&&D.ui.nej?`${D.ui.nej.n} st, ${D.ui.nej.len?mm(D.ui.nej.len)+" mm":"längd okänd"} (utan ritning)`:""],["Ingångar",dr?["W","N","S","E"].flatMap(k=>(dr.walls[k]||[]).filter(m=>m.t==="door").map(m=>`${WALL_NAME[k]} ${mm(m.w)} mm`)).join(", "):""],["Fönster idag",dr&&allWins(dr).length?`${allWins(dr).length} st (${["N","S","W","E"].map(k=>[k,allWins(dr).filter(x=>x.k===k).length]).filter(x=>x[1]).map(([k,n])=>`${n} på ${WALL_NAME[k].toLowerCase()}`).join(", ")})`:""],["Ventilation, kundens svar",dr?.ventInfo||""],["Hästnamn",dr&&dr.names?Object.keys(dr.names).sort((a,b)=>a-b).map(n=>`Box ${n}: ${dr.names[n]}`).join(", "):""]].filter(r=>r[1])}
+  return [["Mellanvägg",dr&&dr.wmix&&Object.keys(dr.wmix).length?"Blandade, se materiallistan":wallLabelId(dr||{},v("wall"))],["Stolpar",pl("post")],["Dekorbräda",v("decor")==="med"?"Med":v("decor")==="utan"?"Utan":""],["Fyllning",v("fill")],["Ytbehandling",v("finish")+(v("ral")&&/ulverlack/.test(v("finish"))?" · "+v("ral")+" "+(RALC[v("ral")]||[""])[0].toLowerCase():"")],["Antal fronter",D.ui?.mchoice==="nej"&&D.ui.nej?`${D.ui.nej.n} st, ${D.ui.nej.len?mm(D.ui.nej.len)+" mm":"längd okänd"} (utan ritning)`:""],["Ingångar",dr?doors(dr).map(d=>`${WALL_NAME[d.k]} ${mm(d.w)} mm`).join(", "):""],["Fönster idag",dr&&allWins(dr).length?`${allWins(dr).length} st (${["N","S","W","E"].map(k=>[k,allWins(dr).filter(x=>x.k===k).length]).filter(x=>x[1]).map(([k,n])=>`${n} på ${WALL_NAME[k].toLowerCase()}`).join(", ")})`:""],["Ventilation, kundens svar",dr?.ventInfo||""],["Hästnamn",dr&&dr.names?Object.keys(dr.names).sort((a,b)=>a-b).map(n=>`Box ${n}: ${dr.names[n]}`).join(", "):""]].filter(r=>r[1])}
 const MORE_CATS=["dorrbox","tillbeh","ute","dorrfon","skritt","garden"];
 const EGEN_SVG='<svg width="40" height="40" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40V14l16-8 16 8v26"/><path d="M14 40V22h20v18M14 28h20M14 34h20"/><path d="M34 10l6-4 2 3-6 4z"/></svg>';
 const isPublic=()=>!!window.MYRBY_PUBLIC; /* hemsidesversionen (myrby.com) byggs ur samma källa med tools/build_public.py */
@@ -2449,12 +2454,14 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
   const ln=(p1,p2,att)=>{const q1=pr(...p1),q2=pr(...p2);return `<line x1="${fx(q1[0])}" y1="${fx(q1[1])}" x2="${fx(q2[0])}" y2="${fx(q2[1])}" ${att}/>`};
   const ink="#26352e",fc=fillC(dr.fill)||["#dcc39a","#b2905e","#efdcb8"],PH=1300,F=[];
   function panel(p0,p1,o){const inkP=(o.fr||{}).a||ink;const pt=(t,y)=>[p0[0]+t*(p1[0]-p0[0]),y,p0[1]+t*(p1[1]-p0[1])],len=Math.hypot(p1[0]-p0[0],p1[1]-p0[1]),H=o.h||2320,arch=o.arch||0;const tp=t=>H+arch*1000*Math.sin(Math.PI*t);let s="";
-    if(o.solid){s+=poly([pt(0,0),pt(1,0),pt(1,o.solid),pt(0,o.solid)],`fill="${o.solidC||fc[0]}" stroke="${inkP}" stroke-width="1.1"`);if(!o.solidC){const n=Math.round(len/140);for(let k=1;k<n;k++)s+=ln(pt(k/n,0),pt(k/n,o.solid),`stroke="${fc[1]}" stroke-width=".6" opacity=".8"`)}return s}
-    const ph=Math.min(PH,H);const fh=o.curve?t=>ph+(o.curve)*(1-Math.cos(Math.PI*Math.min(1,Math.max(0,(t-.35)/.65))))/2:()=>ph;
-    if(o.curve){const Q=[pt(0,0),pt(1,0)];for(let k=16;k>=0;k--)Q.push(pt(k/16,fh(k/16)));s+=poly(Q,`fill="${fc[0]}" stroke="${inkP}" stroke-width="1.1"`)}else s+=poly([pt(0,0),pt(1,0),pt(1,ph),pt(0,ph)],`fill="${fc[0]}" stroke="${inkP}" stroke-width="1.1"`);
-    const n=Math.round(len/140);for(let k=1;k<n;k++)s+=ln(pt(k/n,0),pt(k/n,fh(k/n)),`stroke="${fc[1]}" stroke-width=".6" opacity=".8"`);
-    if(!o.curve)s+=ln(pt(0,ph),pt(1,ph),`stroke="${inkP}" stroke-width="2"`);
-    if(H>ph){const g0=o.gal?o.gal[0]:0,g1=o.gal?o.gal[1]:1;const nb=Math.round(len*(g1-g0)/105);for(let k=1;k<nb;k++){const t=g0+(g1-g0)*k/nb;if(fh(t)<tp(t)-40)s+=ln(pt(t,fh(t)),pt(t,tp(t)),`stroke="${inkP}" stroke-width=".9"`)}
+    if(o.solid){s+=poly([pt(0,0),pt(1,0),pt(1,o.solid),pt(0,o.solid)],`fill="${o.solidC||fc[0]}" stroke="${inkP}" stroke-width="1.1"`);if(!o.solidC){const n=Math.round(len/140);for(let k=1;k<n;k++)s+=ln(pt(k/n,0),pt(k/n,o.solid),`stroke="${fc[1]}" stroke-width="1.1"`)}
+      if(o.mid){s+=poly([pt(0,o.mid-45),pt(1,o.mid-45),pt(1,o.mid+45),pt(0,o.mid+45)],`fill="${inkP}"`)+ln(pt(0,o.mid),pt(1,o.mid),`stroke="${fc[2]||"#fff"}" stroke-width=".7" opacity=".5"`)}
+      if(o.frame)s+=ln(pt(0,0),pt(0,o.solid),`stroke="${inkP}" stroke-width="2.4"`)+ln(pt(1,0),pt(1,o.solid),`stroke="${inkP}" stroke-width="2.4"`)+ln(pt(0,o.solid),pt(1,o.solid),`stroke="${inkP}" stroke-width="2.2"`);return s}
+    const ph=o.ph?Math.min(o.ph,H):Math.min(PH,H);const fh=o.fh?t=>o.fh(t,len,ph,H):o.curve?t=>ph+(o.curve)*(1-Math.cos(Math.PI*Math.min(1,Math.max(0,(t-.35)/.65))))/2:()=>ph;
+    if(o.curve||o.fh){const Q=[pt(0,0),pt(1,0)];for(let k=16;k>=0;k--)Q.push(pt(k/16,fh(k/16)));s+=poly(Q,`fill="${fc[0]}" stroke="${inkP}" stroke-width="1.1"`)}else s+=poly([pt(0,0),pt(1,0),pt(1,ph),pt(0,ph)],`fill="${fc[0]}" stroke="${inkP}" stroke-width="1.1"`);
+    const n=Math.round(len/140);for(let k=1;k<n;k++)s+=ln(pt(k/n,0),pt(k/n,fh(k/n)),`stroke="${fc[1]}" stroke-width="1.1"`);
+    if(!o.curve)s+=poly([pt(0,ph-30),pt(1,ph-30),pt(1,ph+30),pt(0,ph+30)],`fill="${inkP}"`); /* stålprofilen mellan trä och galler, som på fronten */
+    if(H>ph){const g0=o.gal?o.gal[0]:0,g1=o.gal?o.gal[1]:1;const nb=Math.round(len*(g1-g0)/(o.bar||105));for(let k=1;k<nb;k++){const t=g0+(g1-g0)*k/nb;if(fh(t)<tp(t)-40)s+=ln(pt(t,fh(t)),pt(t,tp(t)),`stroke="${inkP}" stroke-width=".9"`)}
       if(o.gal&&(g0>0||g1<1)){if(g0>0)s+=poly([pt(0,ph),pt(g0,ph),pt(g0,H),pt(0,H)],`fill="${fc[0]}" stroke="${inkP}" stroke-width="1"`);if(g1<1)s+=poly([pt(g1,ph),pt(1,ph),pt(1,H),pt(g1,H)],`fill="${fc[0]}" stroke="${inkP}" stroke-width="1"`)}
       const tops=[];for(let k=0;k<=12;k++)tops.push(pt(k/12,tp(k/12)));s+=`<polyline points="${tops.map(p=>pr(...p).map(fx).join(",")).join(" ")}" fill="none" stroke="${inkP}" stroke-width="2.2"/>`}
     s+=ln(pt(0,0),pt(0,tp(0)),`stroke="${inkP}" stroke-width="2.4"`)+ln(pt(1,0),pt(1,tp(1)),`stroke="${inkP}" stroke-width="2.4"`);
@@ -2466,9 +2473,12 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
   lay.forEach(o=>{const {m,tf}=o,w=+m.w,d=+m.d||0;if(m.t!=="box"&&m.t!=="room")return;if(lvl<2)return;if(m.t==="room"&&lvl<5)return;const q=[tf(0,0),tf(w,0),tf(w,d),tf(0,d)];
     F.push({d:-1e11,s:poly(q.map(p=>[p[0],0,p[1]]),`fill="${m.t==="room"?"#dfe6da":m.t==="box"&&bedOn(lvl)?"#ead7a1":"#e7ebe1"}" stroke="${m.t==="box"&&bedOn(lvl)?"#c8ac6c":"#b9c4b1"}" stroke-width="1.2"`)+(m.t==="box"&&bedOn(lvl)?bedSVG(w,d,o.nr+(o.k==="S"?50:0),(x,y,h)=>{const q=tf(x,y);return pr(q[0],h,q[1])},[1.5,1.35,1.25,1.15,1.05]):"")+(()=>{const c=tf(w/2,d/2),p=pr(c[0],0,c[1]);return m.t==="box"?`<text x="${fx(p[0])}" y="${fx(p[1]+6)}" text-anchor="middle" font-family="EB Garamond,serif" font-size="40" font-weight="600" fill="${ink}" opacity=".9" ${bedOn(lvl)?`stroke="#fbf3dc" stroke-width="6" paint-order="stroke"`:""}>${o.nr}</text>`:`<text x="${fx(p[0])}" y="${fx(p[1]+5)}" text-anchor="middle" font-family="EB Garamond,serif" font-style="italic" font-size="14" fill="${ink}">${esc(m.name||"Rum")}</text>`})()});
     if(lvl>=3){const p0=tf(0,d),p1=tf(w,d),c=tf(w/2,d+10);if(m.t==="box"){const f=o.f||dr.front,S=frontProfile(f,w,m.dir),P=(x,y)=>{const q=tf(x,d);return pr(q[0],y,q[1])};F.push({d:dep(c[0],c[1]),s:frontSVG(S,P,()=>K*.95,{fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:m.dir,pre:"i3",post:dr.post,noHw:true,decor:hasDecor(dr,f)})})}
-      else{const nm=(m.name||"").toLowerCase(),spol=/spol/.test(nm),s=spol?poly([[p0[0],0,p0[1]],[p1[0],0,p1[1]],[p1[0],1300,p1[1]],[p0[0],1300,p0[1]]],`fill="${fc[0]}" stroke="${ink}" stroke-width="1.2"`):panel(p0,p1,{solid:2600,solidC:"#e6ece2"})+(()=>{const q0=tf(w/2-500,d),q1=tf(w/2+500,d);return poly([[q0[0],0,q0[1]],[q1[0],0,q1[1]],[q1[0],2100,q1[1]],[q0[0],2100,q0[1]]],`fill="#8a5a33" stroke="${ink}" stroke-width="1"`)})();F.push({d:dep(c[0],c[1]),s})}}});
+      else{const nm=(m.name||"").toLowerCase(),spol=openBay(m),ms=dr.walls[o.k]||[],len0=o.k==="N"||o.k==="S"?dr.L:null;
+        const sides=[[0,ms[o.i-1]],[w,ms[o.i+1]]].filter(([x,nb])=>!(spol&&nb&&(nb.t==="box"||openBay(nb)))&&!(!nb&&len0&&(o.start+x<=60||o.start+x>=len0-60))).map(([x])=>{const a=tf(x,0),b=tf(x,d),mm2=tf(x,d/2);return {d:dep(mm2[0],mm2[1])+1,s:panel([a[0],a[1]],[b[0],b[1]],{solid:2600,solidC:"#e6ece2"})}});
+        sides.forEach(x=>F.push(x));
+        const s=spol?panel(p0,p1,{fr:frameCol(dr,dr.front),door:"c"}):panel(p0,p1,{solid:2600,solidC:"#e6ece2"})+(()=>{const q0=tf(w/2-500,d),q1=tf(w/2+500,d);return poly([[q0[0],0,q0[1]],[q1[0],0,q1[1]],[q1[0],2100,q1[1]],[q0[0],2100,q0[1]]],`fill="#8a5a33" stroke="${ink}" stroke-width="1"`)})();F.push({d:dep(c[0],c[1]),s})}}});
   if(lvl>=4)partList(dr).forEach(p=>{const a0=p.o.tf(p.x,0),a1=p.o.tf(p.x,p.d),mid=p.o.tf(p.x,p.d/2),w=p.w;let o;
-    if(w==="mv-tat")o={solid:2320};else if(w==="egen")o={solid:2400,solidC:"#d9d2c2"};else if(w==="mv-dala")o={h:1300};else if(w==="mv-kg2")o={gal:[Math.max(0,1-2000/p.d),1]};else if(w==="mv-kg1")o={gal:[Math.max(0,1-1000/p.d),1]};else if(w==="mv-faro")o={curve:800};else o={};
+    if(w==="mv-tat")o={solid:2320,mid:1160,frame:true};else if(w==="egen")o={solid:2400,solidC:"#d9d2c2"};else if(w==="mv-dala")o={h:1560,ph:1300,bar:75};else if(w==="mv-kg2")o={gal:[Math.max(0,1-2000/p.d),1]};else if(w==="mv-kg1")o={gal:[Math.max(0,1-1000/p.d),1]};else if(w==="mv-faro")o={fh:(t,len,ph,H)=>faroH((1-t)*len,len,ph,H)};else o={};
     o.fr=frameCol(dr,dr.front);F.push({d:dep(mid[0],mid[1]),s:panel([a0[0],a0[1]],[a1[0],a1[1]],o)})});
   const walls=[[[0,0],[L,0],"N"],[[L,0],[L,W],"E"],[[L,W],[0,W],"S"],[[0,W],[0,0],"W"]];
   walls.forEach(([p,q,wk])=>{const mx=(p[0]+q[0])/2,mz=(p[1]+q[1])/2,far=dep(mx,mz)<dep(cx,cz)-1,h=far?2900:450;const dd=far?-1e10:dep(mx,mz)+1e6;allWins(dr).filter(x=>x.k===wk).forEach(x=>{const T=wk==="N"?(a,b)=>[a,b]:wk==="S"?(a,b)=>[a,W-b]:wk==="W"?(a,b)=>[b,a]:(a,b)=>[L-b,a];const a=T(x.p-x.w/2,0),b=T(x.p+x.w/2,0),y0=far?1500:0,y1=far?2300:h;F.push({d:dd+1,s:poly([[a[0],y0,a[1]],[b[0],y0,b[1]],[b[0],y1,b[1]],[a[0],y1,a[1]]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.2"`)+(far?ln([(a[0]+b[0])/2,1500,(a[1]+b[1])/2],[(a[0]+b[0])/2,2300,(a[1]+b[1])/2],`stroke="${ink}" stroke-width=".8"`):"")})});
@@ -2493,7 +2503,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
       S2.forEach(t=>{const a=pr(X(t.x1),t.h*.3,Z(t.y1)),b=pr(X(t.x2),t.h*.3,Z(t.y2)),c=pr(X(t.cx),t.h*.3+10,Z(t.cy)),k=Math.min(.26,FOC/Math.max(300,X(t.cx)-camX));P[t.c].push([`M${f(a[0])} ${f(a[1])}Q${f(c[0])} ${f(c[1])} ${f(b[0])} ${f(b[1])}`,k])});
       G.push(`<g fill="none" stroke-linecap="round" pointer-events="none">${[4,3,2,1,0].map(i=>P[i].map(([dd,k])=>`<path d="${dd}" stroke="${BED_C[i]}" stroke-width="${f(Math.max(.6,14*k))}"/>`).join("")).join("")}</g>`)})}
   const g1=pr(L,0,zA-200),g2=pr(L,CEIL,zB+200);G.push(`<rect x="${fx(g1[0])}" y="${fx(g2[1])}" width="${fx(g2[0]-g1[0])}" height="${fx(g1[1]-g2[1])}" fill="#e7dfcc" stroke="${ink}" stroke-width="1.4"/>`);
-  const hasE=(dr.walls.E||[]).some(m=>m.t==="door"),d1=pr(L,0,camZ-Math.min(1200,(zB-zA)/2-200)),d2=pr(L,hasE?2600:1800,camZ+Math.min(1200,(zB-zA)/2-200));
+  const hasE=doors(dr).some(d=>d.k==="E"),d1=pr(L,0,camZ-Math.min(1200,(zB-zA)/2-200)),d2=pr(L,hasE?2600:1800,camZ+Math.min(1200,(zB-zA)/2-200));
   G.push(`<defs><radialGradient id="wklt" cx=".5" cy=".7" r=".8"><stop offset="0" stop-color="#fff8e4"/><stop offset="1" stop-color="#f1dfae"/></radialGradient><linearGradient id="wkbeam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff4d6" stop-opacity="0"/><stop offset=".5" stop-color="#fff4d6" stop-opacity=".6"/><stop offset="1" stop-color="#fff4d6" stop-opacity="0"/></linearGradient>${BRASS("wk")}</defs>`);
   if(hasE){G.push(`<rect x="${fx(d1[0])}" y="${fx(d2[1])}" width="${fx(d2[0]-d1[0])}" height="${fx(d1[1]-d2[1])}" fill="url(#wklt)" stroke="${ink}" stroke-width="2"/>`);G.push(poly([[L,0,camZ-900],[L,0,camZ+900],[near+2500,0,camZ+500],[near+2500,0,camZ-500]],`fill="url(#wkbeam)"`))}
   else{const w1=pr(L,1200,camZ-700),w2=pr(L,2100,camZ+700);G.push(`<rect x="${fx(w1[0])}" y="${fx(w2[1])}" width="${fx(w2[0]-w1[0])}" height="${fx(w1[1]-w2[1])}" fill="url(#wklt)" stroke="${ink}" stroke-width="1.6"/><line x1="${fx((w1[0]+w2[0])/2)}" y1="${fx(w2[1])}" x2="${fx((w1[0]+w2[0])/2)}" y2="${fx(w1[1])}" stroke="${ink}" stroke-width="1.2"/>`)}
@@ -2501,16 +2511,17 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="door"&&o.start+(+o.m.w)>near).forEach(o=>{const z=o.k==="N"?0:W,x0=Math.max(near,o.start),x1=o.start+(+o.m.w);G.push(poly([[x0,0,z],[x1,0,z],[x1,2400,z],[x0,2400,z]],`fill="url(#wklt)" stroke="${ink}" stroke-width="1.4"`))});
   allWins(dr).filter(x=>(x.k==="N"||x.k==="S")&&x.p+x.w/2>near+100).forEach(x=>{const z=x.k==="N"?0:W,x0=Math.max(near+100,x.p-x.w/2),x1=x.p+x.w/2,mid=(x0+x1)/2;G.push(poly([[x0,1500,z],[x1,1500,z],[x1,2300,z],[x0,2300,z]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.3"`)+ln([mid,1500,z],[mid,2300,z],`stroke="${ink}" stroke-width=".8"`)+ln([x0,1900,z],[x1,1900,z],`stroke="${ink}" stroke-width=".8"`))});
   const fr0=frameCol(dr,dr.front),wallName=w=>w||dr.wall;
-  (lvl>=4?partList(dr):[]).filter(pt=>(pt.o.k==="N"||pt.o.k==="S")).map(pt=>({x:pt.o.start+pt.x,k:pt.o.k,d:pt.d,w:wallName(pt.w)})).filter(q=>q.x>near+120).sort((a,b)=>b.x-a.x).forEach(q=>{const zF=q.k==="N"?q.d:W-q.d,zB=q.k==="N"?0:W,x=q.x,gal=q.w==="mv-tat"||q.w==="egen"?0:q.w==="mv-kg1"?1000:q.w==="mv-kg2"?2000:q.d,top=q.w==="mv-dala"?1300:2320,k=Math.min(.26,FOC/Math.max(300,x-camX));
+  (lvl>=4?partList(dr):[]).filter(pt=>(pt.o.k==="N"||pt.o.k==="S")).map(pt=>({x:pt.o.start+pt.x,k:pt.o.k,d:pt.d,w:wallName(pt.w)})).filter(q=>q.x>near+120).sort((a,b)=>b.x-a.x).forEach(q=>{const zF=q.k==="N"?q.d:W-q.d,zB=q.k==="N"?0:W,x=q.x,gal=q.w==="mv-tat"||q.w==="egen"?0:q.w==="mv-kg1"?1000:q.w==="mv-kg2"?2000:q.d,top=q.w==="mv-dala"?1560:2320,k=Math.min(.26,FOC/Math.max(300,x-camX));
     const zg=q.k==="N"?Math.max(zB,zF-gal):Math.min(zB,zF+gal);let s="";
-    const faro=q.w==="mv-faro",fhz=t=>faro?1300+800*(1-Math.cos(Math.PI*Math.min(1,Math.max(0,(t-.35)/.65))))/2:1300;
+    const faro=q.w==="mv-faro",fhz=t=>faro?faroH(t*q.d,q.d,1300,top):1300;
     if(faro){const Q=[[x,0,zF],[x,0,zB]];for(let i=16;i>=0;i--){const t=i/16;Q.push([x,fhz(t),zF+(zB-zF)*t])}s+=poly(Q,`fill="${fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`)}
     else s+=poly([[x,0,zF],[x,0,zB],[x,1300,zB],[x,1300,zF]],`fill="${q.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
     const nP=Math.max(1,Math.round(q.d/140));for(let i=1;i<nP;i++){const t=i/nP,z=zF+(zB-zF)*t;s+=ln([x,0,z],[x,fhz(t),z],`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`)}
-    if(top>1300){if(gal<q.d)s+=poly([[x,1300,zg],[x,1300,zB],[x,top,zB],[x,top,zg]],`fill="${q.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
-      if(gal>0){const nb=Math.max(1,Math.round(gal/105));for(let i=1;i<nb;i++){const z=zF+(zg-zF)*i/nb,y0=fhz((z-zF)/((zB-zF)||1));if(y0<top-40)s+=ln([x,y0,z],[x,top,z],`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`)}}
+    if(top>1300){if(gal<q.d){s+=poly([[x,1300,zg],[x,1300,zB],[x,top,zB],[x,top,zg]],`fill="${q.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
+        if(q.w!=="egen"){const n2=Math.max(1,Math.round(Math.abs(zB-zg)/140));for(let i=1;i<n2;i++){const z=zg+(zB-zg)*i/n2;s+=ln([x,1300,z],[x,top,z],`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`)}}} /* plankorna syns även ovanför profilen (Maja 30) */
+      if(gal>0){const nb=Math.max(1,Math.round(gal/(q.w==="mv-dala"?75:105)));for(let i=1;i<nb;i++){const z=zF+(zg-zF)*i/nb,y0=fhz((z-zF)/((zB-zF)||1));if(y0<top-40)s+=ln([x,y0,z],[x,top,z],`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`)}}
       s+=ln([x,top,zF],[x,top,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)}
-    if(!faro)s+=ln([x,1300,zF],[x,1300,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s)});
+    s+=ln([x,1300,zF],[x,1300,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s)});
   if(lvl===2)layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="box"&&o.start+(+o.m.w)>near+100).forEach(o=>{const z0=o.k==="N"?0:W,z1=o.k==="N"?+o.m.d:W-(+o.m.d),x0=Math.max(near+100,o.start),x1=o.start+(+o.m.w);G.push(poly([[x0,0,z0],[x1,0,z0],[x1,0,z1],[x0,0,z1]],`fill="#e7ebe1" stroke="#9fae97" stroke-width="1.2" stroke-dasharray="6 4"`))});
   const rows=layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&((o.m.t==="box"&&lvl>=3)||(o.m.t==="room"&&lvl>=5))).map(o=>({o,z:o.k==="N"?+o.m.d:W-(+o.m.d),x0:o.start,x1:o.start+(+o.m.w)}));
   rows.sort((p,q)=>q.x0-p.x0).forEach(({o,z,x0,x1})=>{if(x1<near)return;const xs=Math.max(x0,near),len=x1-xs,pt=(t,y)=>[xs+t*len,y,z],box=o.m.t==="box";
@@ -2518,6 +2529,8 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
       if(/spol/.test(nm)){const T=`fill="#dfe8ea" stroke="#9fb3b8" stroke-width="${fx(2*k)}"`;s+=poly([[xs,0,zB],[x1,0,zB],[x1,H,zB],[xs,H,zB]],T);for(let y=300;y<H;y+=300)s+=ln([xs,y,zB],[x1,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);for(let xx=Math.ceil(xs/300)*300;xx<x1;xx+=300)s+=ln([xx,0,zB],[xx,H,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);
         [x0,x1].forEach(xx=>{if(xx<=near+120)return;s+=poly([[xx,0,z],[xx,0,zB],[xx,H,zB],[xx,H,z]],T);for(let y=300;y<H;y+=300)s+=ln([xx,y,z],[xx,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`)});
         const nearRoom=x0<camX+4500,hx=(x0+x1)/2,hz=zB;if(!nearRoom)s+=`<path d="M${pr(hx-500,1800,hz).map(fx).join(" ")} Q${pr(hx,1200,hz).map(fx).join(" ")} ${pr(hx+300,1900,hz).map(fx).join(" ")}" fill="none" stroke="#3f6f8f" stroke-width="${fx(28*k)}" stroke-linecap="round"/>`;const dc=pr(hx,0,(z+zB)/2);if(!nearRoom)s+=`<ellipse cx="${fx(dc[0])}" cy="${fx(dc[1])}" rx="${fx(220*k)}" ry="${fx(80*k)}" fill="#c9d3cf" stroke="${ink}" stroke-width="${fx(2*k)}"/>`;
+        if(!nearRoom){s+=poly([pt(0,0),pt(1,0),pt(1,1250),pt(0,1250)],`fill="${fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);const np=Math.max(1,Math.round(len/140));for(let i=1;i<np;i++)s+=ln(pt(i/np,0),pt(i/np,1250),`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`);
+          const nb=Math.max(1,Math.round(len/105));for(let i=1;i<nb;i++)s+=ln(pt(i/nb,1300),pt(i/nb,2320),`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`);s+=ln(pt(0,2320),pt(1,2320),`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)+ln(pt(0,0),pt(0,2320),`stroke="${fr0.a}" stroke-width="${fx(60*k)}"`)+ln(pt(1,0),pt(1,2320),`stroke="${fr0.a}" stroke-width="${fx(60*k)}"`)}
         if(!nearRoom)s+=poly([pt(0,1250),pt(1,1250),pt(1,1300),pt(0,1300)],`fill="${fr0.a}"`)+poly([pt(0,0),pt(1,0),pt(1,60),pt(0,60)],`fill="${fr0.b}"`);
         const c=pr(...pt(.5,H-250));if(!nearRoom)s+=`<text x="${fx(c[0])}" y="${fx(c[1])}" text-anchor="middle" font-family="Carlito,sans-serif" font-weight="700" letter-spacing="${fx(2*k)}" font-size="${fx(Math.max(8,160*k))}" fill="${ink}" opacity=".7">SPOLSPILTA</text>`;G.push(s);return}
       s+=poly([pt(0,0),pt(1,0),pt(1,H),pt(0,H)],wall);const mid=(x0+x1)/2,dl=Math.max(xs,mid-500),dR=mid+500;
@@ -2854,7 +2867,6 @@ function wizScreens(){
   const L=[
    {id:"s-fraga",pg:"start",sec:"Start",html:()=>`<p class="kick">Myrby · handbyggt i Enköping sedan 1972</p><h2 class="h-start">Bygg din stallinredning</h2>
      <ol class="st-steps"><li><span>1</span><div><b>Ange stallets mått</b><small>Längd och bredd på insidan. Ett ungefär räcker.</small></div></li><li><span>2</span><div><b>Välj front, material och rum</b><small>Du ser allt växa fram i ritning och 3D.</small></div></li><li><span>3</span><div><b>Skicka din ritning</b><small>${NK("Nikki","Vi")} återkommer inom en arbetsdag med ett skräddarsytt förslag. Inget är bindande.</small></div></li></ol>
-     <button type="button" class="btn lg st-go" data-wnext>Börja rita ditt stall ${svg("chev",20)}</button>
      <div class="st-kv"><div><b>3 min</b><small>från tomma väggar till färdig ritning</small></div><div><b>1 mm</b><small>så noga måttanpassar vi</small></div><div><b>0 kr</b><small>inget är bindande</small></div></div>
      ${S.db?`<details class="resumecode st-code"><summary>Har du en kod? Fortsätt där du slutade</summary><div class="rc-in"><div class="mf"><label for="wcodein">Kod</label><input id="wcodein" type="text" autocomplete="off" placeholder="T.ex. K7P 2QM" style="text-transform:uppercase"></div><button type="button" class="btn" data-wcode>Fortsätt</button></div></details>`:""}
      ${!isPublic()?`<p class="more st-more">Bara andra produkter, utan stallinredning? <button type="button" class="linkbtn" data-pick1="ui.kind" data-v="ovrigt">Välj produkter ›</button></p>`:""}`},
@@ -2951,18 +2963,15 @@ function wallPaintBar(){const L=wmixList(),b=L.includes(D.ui.wbrush)?D.ui.wbrush
   return `<div class="pbar">${steps}<div class="pbar-t"><span><small class="pb-k">Steg 2 av 2</small><b>Tryck på mellanväggarna som ska vara <em style="--fc:${wmixColor(b)}">${esc(wmixName(b))}</em></b><small>Mellanväggarna är de färgade strecken (B1) mellan boxarna.</small></span></div><div class="pbar-pens">${L.map(id=>`<button type="button" class="fx-pen" data-wbrush="${id}" aria-pressed="${id===b}" style="--fc:${wmixColor(id)}"><i></i><span><b>${esc(wmixName(id))}</b><small>${c[id]||0} st</small></span></button>`).join("")}</div></div>`}
 function xFields(k,m,label,noWall){const dr=D.drawing,f=extraFind(dr,k),isDoor=m.t==="door",num=(att,val,lab,step)=>`<div class="xf"><span>${lab}</span><div class="xw"><button type="button" data-${att}b="${k}" data-v="-${step}" aria-label="Minska">−</button><label><input type="text" inputmode="numeric" data-${att}="${k}" value="${mm(val)}"><em>mm</em></label><button type="button" data-${att}b="${k}" data-v="${step}" aria-label="Öka">+</button></div></div>`;
   const pos=isDoor?doorStart(dr,k):0,WN={N:"Långsida A",S:"Långsida B",W:"Gavel",E:"Andra gaveln"};
-  return `<div class="xfields">${num("sxwin",m.w,"Bredd",100)}${isDoor?num("sxpos",pos,"Från väggens början",500):num("sxdin",+m.d||3500,"Djup",100)}
+  return `<div class="xfields">${num("sxwin",m.w,"Bredd",100)}${isDoor?num("sxpos",pos,f&&(f.k==="W"||f.k==="E")?"Från övre hörnet":"Från vänstra hörnet",100):num("sxdin",+m.d||3500,"Djup",100)}
    ${isDoor&&!noWall?`<div class="xf wide"><span>Vägg</span><div class="seg">${["N","S","W","E"].map(w=>`<button type="button" class="opt" data-sxwall="${k}" data-v="${w}" aria-pressed="${f.k===w}">${WN[w]}</button>`).join("")}</div><small class="faint">Dörren öppnas utåt. Du kan också dra den i ritningen.</small></div>`:""}</div>`}
-function doorStart(dr,key){const f=extraFind(dr,key);if(!f)return 0;return (dr.walls[f.k]||[]).slice(0,f.i).reduce((a,m)=>a+(+m.w||0),0)}
+function doorStart(dr,key){const f=extraFind(dr,key);return f&&f.door?+f.m.p||0:0}
 function wallLen(dr,k){return k==="N"||k==="S"?dr.L:gableSpan(dr,k).len}
-function setDoorPos(dr,key,P){const f=extraFind(dr,key);if(!f)return;f.m.ctr=false;const ms=dr.walls[f.k];const gi=ms.findIndex(x=>x.gapFor===f.m.id);if(gi>=0)ms.splice(gi,1);
-  const i=ms.indexOf(f.m),before=ms.slice(0,i).reduce((a,x)=>a+(+x.w||0),0),others=ms.reduce((a,x)=>a+(+x.w||0),0),max=wallLen(dr,f.k)-others+before;P=Math.round(P);
-  if(P<before){toast(`Närmast möjligt: ${mm(before)} mm, något står i vägen`);P=before}if(P>max){P=Math.max(before,max);toast("Längre bort får dörren inte plats")}
-  if(P>before)ms.splice(i,0,{id:uid2(),t:"gap",w:P-before,gapFor:f.m.id});autoAll(dr)}
-function centerDoor(dr,key){const f=extraFind(dr,key);if(!f)return;const ms=dr.walls[f.k];ms.splice(f.i,1);const half=wallLen(dr,f.k)/2;let acc=0,idx=0;for(const m of ms){if(acc+(+m.w||0)/2<half)idx++;acc+=+m.w||0}ms.splice(idx,0,f.m);autoAll(dr)}
+function setDoorPos(dr,key,P){const f=extraFind(dr,key);if(!f||!f.door)return;f.m.ctr=false;const q=doorClamp(dr,f.k,+P||0,f.m.w);if(q!==Math.round((+P||0)/10)*10)toast(q===0?"Dörren står i hörnet":"Längre bort får dörren inte plats");f.m.p=q}
+function centerDoor(dr,key){const f=extraFind(dr,key);if(!f||!f.door)return;f.m.p=doorClamp(dr,f.k,(wallLen(dr,f.k)-(+f.m.w||0))/2,f.m.w)}
 /* v102: dörr på gaveln hamnar mitt för stallgången som standard (Carl) */
-function centerGableDoor(dr,key){const f=extraFind(dr,key);if(!f)return;const g=gableSpan(dr,f.k),mid=(depthMax(dr,"N")+dr.W-depthMax(dr,"S"))/2,w=+f.m.w||0;let P=mid-w/2-g.y0;P=Math.max(0,Math.min(P,g.len-w));setDoorPos(dr,key,Math.round(P/10)*10);f.m.ctr=true}
-function moveDoorWall(dr,key,k2){const f=extraFind(dr,key);if(!f||f.k===k2)return;const ms=dr.walls[f.k];const gi=ms.findIndex(x=>x.gapFor===f.m.id);if(gi>=0)ms.splice(gi,1);ms.splice(ms.indexOf(f.m),1);(dr.walls[k2]=dr.walls[k2]||[]).push(f.m);if(!f.m.xk)f.m.xk=key;autoAll(dr)}
+function centerGableDoor(dr,key){const f=extraFind(dr,key);if(!f||!f.door)return;const mid=(depthMax(dr,"N")+dr.W-depthMax(dr,"S"))/2;f.m.p=doorClamp(dr,f.k,mid-(+f.m.w||0)/2,f.m.w);f.m.ctr=true}
+function moveDoorWall(dr,key,k2){const f=extraFind(dr,key);if(!f||!f.door||f.k===k2)return;f.m.k=k2;f.m.p=doorClamp(dr,k2,f.m.p,f.m.w);if(k2==="W"||k2==="E"){f.m.ctr=true;gableRecenter(dr)}}
 function doorBox(){const dr=D.drawing,f=(D.spec||{}).front;if(!dr||!f)return "";const bx=layout(dr).filter(o=>o.m.t==="box");if(!bx.length)return "";
   const c={};bx.forEach(o=>{const t=hingeTxt(o.k,o.m.dir,o.f||dr.front);c[t]=(c[t]||0)+1});const opt=bx.every(o=>(o.f||dr.front)==="optimal");
   return `<div class="dbox"><p class="mbox-h">${svg("check",16)} Dörrarna</p><p class="fx-help">${opt?"Optimal har skjutdörr, välj åt vilket håll den glider.":"Dörren sitter mitt på fronten"+(bx.some(o=>["optimal","rotbrunna"].includes(o.f||dr.front))?" (Optimal och Rotbrunna har dörren i ena kanten)":"")+". Välj hängning för alla, eller <b>tryck på en dörr i ritningen</b> för att vända just den."}</p>
@@ -3032,7 +3041,7 @@ function renderWiz(){
   const adv=["rum","rumx","rumy"].includes(pg.key)&&dr&&D.ui.adv;
   const secs=D.ui.kind?[...new Set(PG.map(p=>p.sec))]:WSECS.map(x=>x[0]),curSec=pg.sec,secIdx=secs.indexOf(curSec);
   const step=`<div class="cfg-steps">${secs.map((x,i)=>{const first=PG.findIndex(p=>p.sec===x),ok=first>=0&&first<=D.ui.reach;return `<button type="button" class="cstep ${x===curSec?"cur":i<secIdx?"done":""}" ${ok?`data-wgo="${first}"`:"disabled"}><span class="cn">${i<secIdx?svg("check",12):i+1}</span><span class="cl">${esc(x)}</span></button>`}).join("")}</div>`;
-  const nextLbl=last?"":pg.key==="start"?"Börja":"Nästa: "+(PG[s+1].sec===pg.sec?(PG[s+1].list[0].sub||"nästa fråga"):PG[s+1].sec);
+  const nextLbl=last?"":pg.key==="start"?"Börja rita ditt stall":"Nästa: "+(PG[s+1].sec===pg.sec?(PG[s+1].list[0].sub||"nästa fråga"):PG[s+1].sec);
   const foot=`<div class="wiz-foot"><div class="in">${priceFoot(lvl)}${s>0?`<button class="btn ghost lg" data-wprev aria-label="Tillbaka">${svg("back",20)}</button>`:""}
     ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min ritning till Myrby":S.role==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund")?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
   const keepP=$("#cfgplan")?.scrollTop||0,prevLvl=+($("#cfgcanvas")?.dataset.lvl??-1),prevSet=new Set([...($("#cfgcanvas svg")?.querySelectorAll(INK_SEL)||[])].map(e=>e.outerHTML)),dirCls=renderWiz.dir>0?"in-r":renderWiz.dir<0?"in-l":"";renderWiz.dir=0;
@@ -3327,13 +3336,23 @@ function newDrawing2(q){
 }
 /* geometri */
 function wallLen(dr,k){return k==="N"||k==="S"?dr.L:dr.W}
+/* Gamla ritningar hade dörren som en modul i väggraden (med "gap" framför). Flytta dem till dr.doors en gång. */
+const hasDoorMods=dr=>!!dr&&!!dr.walls&&["N","S","W","E"].some(k=>(dr.walls[k]||[]).some(m=>m.t==="door"||(m.t==="gap"&&m.gapFor)));
+function migrateDoors(dr){if(!dr||!dr.walls)return dr;if(!Array.isArray(dr.doors))dr.doors=[];if(!hasDoorMods(dr))return dr;
+  for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[];let pos=(k==="W"||k==="E")?gableSpan(dr,k).y0:0;const keep=[];
+    for(const m of ms){const w=+m.w||0;if(m.t==="door"){let xk=m.xk||("door-"+k);if(dr.doors.some(d=>d.xk===xk))xk="door-"+k+"-"+(m.id||uid2());dr.doors.push({id:m.id||uid2(),t:"door",k,p:Math.max(0,Math.round(pos)),w,xk,ctr:!!m.ctr})}
+      else if(!(m.t==="gap"&&m.gapFor))keep.push(m);pos+=w}
+    dr.walls[k]=keep}
+  return dr}
+const doors=dr=>{migrateDoors(dr);return dr.doors||(dr.doors=[])};
+function doorClamp(dr,k,p,w){return Math.max(0,Math.min(wallLen(dr,k)-(+w||0),Math.round(p/10)*10))}
 function used(dr,k){return (dr.walls[k]||[]).reduce((a,m)=>a+(+m.w||0),0)}
 function gableSpan(dr,k){ // var gavelraden får plats (mellan långsidornas moduler)
   const end=k==="W"?0:1;const dep=row=>{const ms=dr.walls[row]||[];if(!ms.length)return 0;let pos=0;for(const m of ms){if(end===0){return m.t==="box"||m.t==="room"?m.d:0}pos+=m.w}
     const last=ms[ms.length-1];return used(dr,row)>=dr.L-5&&(last.t==="box"||last.t==="room")?last.d:0};
   const a=dep("N"),b=dep("S");return {y0:a,y1:dr.W-b,len:dr.W-a-b};
 }
-function layout(dr){
+function layout(dr){migrateDoors(dr);
   const out=[];const T={
     N:(x0)=>(x,y)=>[x0+x,y], S:(x0)=>(x,y)=>[x0+x,dr.W-y],
     W:(y0)=>(x,y)=>[y,y0+x], E:(y0)=>(x,y)=>[dr.L-y,y0+x]};
@@ -3344,6 +3363,7 @@ function layout(dr){
   // numrering: långsida A vänster→höger, långsida B vänster→höger, sedan gavlarna uppifrån (Maja 11/11)
   let n=0;const order=[...out.filter(o=>o.k==="N"),...out.filter(o=>o.k==="S"),...out.filter(o=>o.k==="W"),...out.filter(o=>o.k==="E")];
   order.forEach(o=>{if(o.m.t==="box"){o.nr=++n;o.f=(dr.fmix||{})[o.nr]||dr.front}});
+  (dr.doors||[]).forEach((d,j)=>{if(!T[d.k])return;const p=+d.p||0;out.push({k:d.k,i:-1,j,m:d,start:p,tf:T[d.k](p),flip:d.k==="S"||d.k==="W",door:true})});
   return out;
 }
 /* Mellanväggar och stolpar enligt Nikkis regel: en mellanvägg (och en stolpe) vid varje boxkant
@@ -3351,8 +3371,11 @@ function layout(dr){
 function edgeList(dr){const lay=layout(dr),out=[],seen=new Set();
   lay.filter(o=>o.m.t==="box").forEach(o=>{const ms=dr.walls[o.k]||[],len=o.k==="N"||o.k==="S"?dr.L:null;
     [[0,ms[o.i-1]],[+o.m.w,ms[o.i+1]]].forEach(([x,nb])=>{const abs=o.start+x,key=o.k+":"+Math.round(abs);if(seen.has(key))return;
-      const outer=!nb&&(len?(abs<=60||abs>=len-60):true);seen.add(key);
+      const outer=(nb&&nb.t==="room"&&!openBay(nb))||(!nb&&(len?(abs<=60||abs>=len-60):true));seen.add(key);
       out.push({key,o,x,nb,outer,d:nb&&nb.t==="box"?Math.min(+o.m.d,+nb.d||+o.m.d):+o.m.d,f:o.f||dr.front})})});return out}
+/* Fårö mellanvägg: s = mm från fronten. Längst fram trä i full höjd, sedan en rundad övergång ner till profilen; gallrets övre mått är 2 500 mm. */
+function faroH(s,d,ph,top){const a=d-2500;if(s<=a)return top;const u=Math.min(1,(s-a)/700);return ph+(top-ph)*(1+Math.cos(Math.PI*u))/2}
+function openBay(m){return /spol|uppst/i.test((m&&m.name)||"")}
 function partList(dr){return edgeList(dr).filter(e=>!e.outer).map(e=>({...e,w:(dr.wmix||{})[e.key]||dr.wall}))}
 function postList(dr){return edgeList(dr).filter(e=>!e.outer||e.f==="rotbrunna")}
 const hingeTxt=(k,dir,f)=>{const right=(k==="N"||k==="E")?dir==="H":dir!=="H";return f==="optimal"?(right?"skjuts åt höger":"skjuts åt vänster"):(right?"högerhängd":"vänsterhängd")};
@@ -3408,7 +3431,7 @@ function planSVG(dr,{interactive=false,sel=null,lvl=9}={}){
   for(const o of lay){if(lvl<2)break;const {m,tf,k}=o;if(m.t!=="box"&&lvl<5)continue;const w=+m.w,d=+m.d||0,isSel=sel&&sel.k===k&&sel.i===o.i;
     const poly=(pts,attr)=>`<polygon points="${pts.map(p=>tf(...p).join(",")).join(" ")}" ${attr}/>`;
     const line=(x1,y1,x2,y2,attr)=>{const a=tf(x1,y1),b=tf(x2,y2);return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ${attr}/>`};
-    const hit=interactive?`data-mod="${k}:${o.i}" style="cursor:${m.t==="box"?"pointer":"grab"}"${m.t!=="box"?' data-drag="1"':""}`:"";
+    const hit=interactive?(o.door?`data-door="${m.id}" data-drag="1" style="cursor:grab"`:`data-mod="${k}:${o.i}" style="cursor:${m.t==="box"?"pointer":"grab"}"${m.t!=="box"?' data-drag="1"':""}`):"";
     if(m.t==="box"||m.t==="room"){
       g.push(poly([[0,0],[w,0],[w,d],[0,d]],`fill="${isSel?"#fff3cf":m.t==="room"?"#f7f5ef":"#fff"}" stroke="${INK}" stroke-width="12" ${hit}`));
       const c=tf(w/2,d/2);
@@ -3504,7 +3527,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
   for(const o of lay){if(lvl<2&&m_(o)!=="door")continue;const {m,tf,k}=o;if(m.t!=="box"&&m.t!=="door"&&lvl<5)continue;const w=+m.w,d=+m.d||0;
     const poly=(pts,attr)=>`<polygon points="${pts.map(p=>tf(...p).join(",")).join(" ")}" ${attr}/>`;
     const line=(x1,y1,x2,y2,attr)=>{const a=tf(x1,y1),b=tf(x2,y2);return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ${attr}/>`};
-    const hit=interactive&&m.t!=="box"?`data-mod="${k}:${o.i}" data-drag="1" style="cursor:grab"`:"";
+    const hit=interactive&&m.t!=="box"?(o.door?`data-door="${m.id}" data-drag="1" style="cursor:grab"`:`data-mod="${k}:${o.i}" data-drag="1" style="cursor:grab"`):"";
     const c=tf(w/2,d/2);
     if(m.t==="box"){
       {const pc=(paint==="front"||paint==="show")&&typeof fmixColor==="function"?fmixColor(o.f):null;g.push(poly([[0,0],[w,0],[w,d],[0,d]],pc?`fill="${pc}" fill-opacity=".13" stroke="${pc}" stroke-width="22" ${paint==="front"?`class="pbox" data-fbox="${o.nr}" style="cursor:pointer"`:`class="pbox-in" style="animation-delay:${(o.nr-1)*70}ms"`}`:`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12"`))}
@@ -3768,9 +3791,7 @@ function autoFill(dr,k){
 function autoAll(dr){["N","S"].forEach(k=>autoFill(dr,k));gableRecenter(dr);["W","E"].forEach(k=>autoFill(dr,k))}
 /* v102: gaveldörrar som inte flyttats för hand följer stallgångens mitt */
 const _autoFill0=autoFill;autoFill=function(dr,k){_autoFill0(dr,k);if(k==="N"||k==="S")gableRecenter(dr)};
-function gableRecenter(dr){["W","E"].forEach(k=>{const ms=dr.walls[k]||[];ms.filter(m=>m.t==="door"&&(m.ctr||(m.ctr===undefined&&!ms.some(x=>x.gapFor===m.id)))).forEach(m=>{m.ctr=true;const gi=ms.findIndex(x=>x.gapFor===m.id);if(gi>=0)ms.splice(gi,1);
-  const i=ms.indexOf(m),before=ms.slice(0,i).reduce((a,x)=>a+(+x.w||0),0),others=ms.reduce((a,x)=>a+(+x.w||0),0),g=gableSpan(dr,k),w=+m.w||0,mid=(depthMax(dr,"N")+dr.W-depthMax(dr,"S"))/2;
-  let P=Math.round((mid-w/2-g.y0)/10)*10;P=Math.max(before,Math.min(P,g.len-others+before));if(P>before)ms.splice(i,0,{id:uid2(),t:"gap",w:P-before,gapFor:m.id})})})}
+function gableRecenter(dr){const mid=(depthMax(dr,"N")+dr.W-depthMax(dr,"S"))/2;doors(dr).forEach(d=>{if(d.ctr&&(d.k==="W"||d.k==="E"))d.p=doorClamp(dr,d.k,mid-(+d.w||0)/2,d.w);else d.p=doorClamp(dr,d.k,+d.p||0,d.w)})}
 function onFrontChange(dr){let snapped=0;
   for(const k of ["N","S","W","E"]){const c=dr.cfg?.[k];if(c&&c.auto)continue;(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"&&!sizeOK(m.w,dr.front)){m.w=nearestSize(m.w,dr.front);snapped++}})}
   autoAll(dr);const fl=fillsFor(dr.front);let msg="";if(dr.fill&&!fl.includes(dr.fill)){dr.fill=fl[0];msg=` Fyllningen ändrades till ${fl[0]}.`}
@@ -4199,11 +4220,14 @@ function enableDrag(host,getDr,onLive,onEnd){if(!host)return;let st=null;
   const toPlan=e=>{const svg=host.querySelector("svg");if(!svg)return null;const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=svg.getScreenCTM();return m?pt.matrixTransform(m.inverse()):null};
   host.onpointerdown=e=>{const we=e.target.closest("[data-wwin]");if(we&&e.button<=0){st={win:+we.dataset.wwin,x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};e.preventDefault();return}
     const fe=e.target.closest("[data-wfan]");if(fe&&e.button<=0){st={fan:+fe.dataset.wfan,x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};e.preventDefault();return}
-    const el=e.target.closest("[data-drag]");if(!el||e.button>0)return;const [k,i]=el.dataset.mod.split(":"),dr=getDr(),m=dr.walls[k]?.[+i];if(!m)return;st={id:m.id,x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};e.preventDefault()};
+    const el=e.target.closest("[data-drag]");if(!el||e.button>0)return;if(el.dataset.door){const dr=getDr(),d=doors(dr).find(x=>x.id===el.dataset.door);if(!d)return;const p0=toPlan(e);st={door:d.id,grab:p0?((d.k==="N"||d.k==="S")?p0.x:p0.y)-(+d.p||0):(+d.w||0)/2,x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};e.preventDefault();return}
+    if(!el.dataset.mod)return;const [k,i]=el.dataset.mod.split(":"),dr=getDr(),m=dr.walls[k]?.[+i];if(!m)return;st={id:m.id,x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};e.preventDefault()};
   host.onpointermove=e=>{if(!st)return;if(!st.moved){if(Math.hypot(e.clientX-st.x0,e.clientY-st.y0)<6)return;st.moved=true;try{host.setPointerCapture(st.pid)}catch(err){}host.classList.add("dragging");
-      if(st.fan==null&&st.win==null){const dr0=getDr();for(const k of ["N","S","W","E"]){const ms=dr0.walls[k]||[];const gi=ms.findIndex(x=>x.gapFor===st.id);if(gi>=0)ms.splice(gi,1)}}}
+      if(st.fan==null&&st.win==null&&st.door==null){const dr0=getDr();for(const k of ["N","S","W","E"]){const ms=dr0.walls[k]||[];const gi=ms.findIndex(x=>x.gapFor===st.id);if(gi>=0)ms.splice(gi,1)}}}
     const p=toPlan(e),dr=getDr();if(!p)return;
     if(st.win!=null){const x=wins(dr)[st.win];if(!x)return;const dd={N:Math.abs(p.y),S:Math.abs(dr.W-p.y),W:Math.abs(p.x),E:Math.abs(dr.L-p.x)};const to=Object.keys(dd).sort((a,b)=>dd[a]-dd[b])[0];x.k=to;x.p=winClamp(dr,to,(to==="N"||to==="S")?p.x:p.y,x.w);onLive();return}
+    if(st.door!=null){const d=doors(dr).find(x=>x.id===st.door);if(!d)return;const dd={N:Math.abs(p.y),S:Math.abs(dr.W-p.y),W:Math.abs(p.x),E:Math.abs(dr.L-p.x)};const to=Object.keys(dd).sort((a,b)=>dd[a]-dd[b])[0];
+      if(to!==d.k){d.k=to;st.grab=(+d.w||0)/2}d.ctr=false;d.p=doorClamp(dr,to,((to==="N"||to==="S")?p.x:p.y)-st.grab,d.w);onLive();return}
     if(st.fan!=null){const dd={N:Math.abs(p.y),S:Math.abs(dr.W-p.y),W:Math.abs(p.x),E:Math.abs(dr.L-p.x)};const to=Object.keys(dd).sort((a,b)=>dd[a]-dd[b])[0];if(dr.fanPlace!=="egen"){dr.wfans=fanPos(dr).map(x=>({...x}));dr.fanPlace="egen"}
       dr.wfans[st.fan]={k:to,p:Math.max(200,Math.min((to==="N"||to==="S"?dr.L:dr.W)-200,Math.round(to==="N"||to==="S"?p.x:p.y)))};onLive();return}
     const d={N:Math.abs(p.y),S:Math.abs(dr.W-p.y),W:Math.abs(p.x),E:Math.abs(dr.L-p.x)};let to=Object.keys(d).sort((a,b)=>d[a]-d[b])[0];
@@ -4215,7 +4239,7 @@ function enableDrag(host,getDr,onLive,onEnd){if(!host)return;let st=null;
     dr.walls[from].splice(fi,1);dr.walls[to]=dr.walls[to]||[];dr.walls[to].splice(idx,0,mod);
     dr.cfg=dr.cfg||{};[from,to].forEach(k=>{if(dr.cfg[k]&&dr.cfg[k].auto)autoFill(dr,k)});
     if(typeof DSEL!=="undefined"&&DSEL)DSEL={k:to,i:idx};onLive()};
-  const end=e=>{if(!st)return;const moved=st.moved,wasFan=st.fan!=null||st.win!=null;st=null;if(wasFan&&!moved)return;host.classList.remove("dragging");if(moved){onEnd();toast("Flyttad")}};
+  const end=e=>{if(!st)return;const moved=st.moved,wasFan=st.fan!=null||st.win!=null||(st.door!=null&&!moved);st=null;if(wasFan&&!moved)return;host.classList.remove("dragging");if(moved){onEnd();toast("Flyttad")}};
   host.onpointerup=end;host.onpointercancel=end}
 
 /* dropdowns */
