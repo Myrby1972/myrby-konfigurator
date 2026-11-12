@@ -3831,6 +3831,18 @@ function boxMoveTo(dr,k,id,u){const ms=dr.walls[k]||[],bi=ms.findIndex(m=>m.id==
   if(g>0)ms.splice(at,0,{id:uid2(),t:"gap",w:g,gapBox:true});at=ms.indexOf(b);
   if(hasNext&&room-g>0)ms.splice(at+1,0,{id:uid2(),t:"gap",w:room-g,gapBox:true});
   if(dr.cfg?.[k]?.auto)autoFill(dr,k);if(abGable(dr).some(x=>x)){const t0=toast;toast=()=>{};try{autoAll(dr)}finally{toast=t0}}return true}
+/* v138: drar man en box åt höger knuffar den grannarna framför sig (som ett tåg) tills väggen tar slut, så box 3 och 4 kan läggas i andra hörnet.
+   Åt vänster går boxen själv och lämnar en lucka. Räknas från läget när draget började. */
+function boxSnapWall(dr,k){let pos=0;return (dr.walls[k]||[]).map(m=>{const o={m,s:pos,w:+m.w||0};pos+=o.w;return o}).filter(o=>o.m.t!=="gap")}
+function boxMove2(dr,k,id,t,snap){const len=wallLen2(dr,k),it=snap.map(o=>({...o})),bi=it.findIndex(o=>o.m.id===id);if(bi<0)return false;const b=it[bi];
+  t=Math.round(t/100)*100;if(t<150)t=0;
+  if(t>=b.s){let cur=t;for(let j=bi;j<it.length;j++){if(j>bi&&it[j].s>=cur)break;it[j].s=Math.max(it[j].s,cur);cur=it[j].s+it[j].w}
+    const over=it.reduce((a,o)=>Math.max(a,o.s+o.w),0)-len;if(over>0){const sh=Math.min(over,t-b.s);t-=sh;for(let j=bi;j<it.length;j++)it[j].s=snap[j].s;let c2=t;for(let j=bi;j<it.length;j++){if(j>bi&&it[j].s>=c2)break;it[j].s=Math.max(it[j].s,c2);c2=it[j].s+it[j].w}}}
+  else{const prevEnd=bi>0?it[bi-1].s+it[bi-1].w:0;b.s=Math.max(prevEnd,t)}
+  const last=it.reduce((a,o)=>Math.max(a,o.s+o.w),0);if(last>len+1)return false;
+  const ms=dr.walls[k],out=[];let pos=0;it.forEach(o=>{const g=Math.round(o.s-pos);if(g>=1)out.push({id:uid2(),t:"gap",w:g,gapBox:true});out.push(o.m);pos=o.s+o.w});
+  const same=out.length===ms.length&&out.every((m,i)=>m===ms[i]||(m.t==="gap"&&ms[i].t==="gap"&&+m.w===+ms[i].w));if(same)return false;
+  ms.splice(0,ms.length,...out);if(dr.cfg?.[k]?.auto)autoFill(dr,k);if(abGable(dr).some(x=>x)){const t0=toast;toast=()=>{};try{autoAll(dr)}finally{toast=t0}}return true}
 const _af131=autoFill;autoFill=function(dr,k){_af131(dr,k);const ms=dr.walls?.[k];if(!ms)return;
   while(ms.length&&ms[ms.length-1].t==="gap"&&ms[ms.length-1].gapBox)ms.pop();
   for(let i=ms.length-1;i>0;i--)if(ms[i].t==="gap"&&ms[i].gapBox&&ms[i-1].t==="gap"&&ms[i-1].gapBox){ms[i-1].w=(+ms[i-1].w||0)+(+ms[i].w||0);ms.splice(i,1)}};
@@ -3840,8 +3852,8 @@ const _ed131=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed131(host
   const uOf=(dr,k,p)=>(k==="N"||k==="S"?p.x:p.y)-wallBase(dr,k);
   host.onpointerdown=e=>{const el=e.target.closest&&e.target.closest("[data-bmove]");if(el&&e.button<=0&&!e.target.closest("[data-corner]")){const [k,id]=el.dataset.bmove.split("|"),dr=getDr(),p=toPlan(e),o=layout(dr).find(o=>!o.door&&o.k===k&&o.m.id===id);if(!o||!p)return pd&&pd.call(host,e);
       bs={k,id,grab:uOf(dr,k,p)-(o.start-wallBase(dr,k)),x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};e.preventDefault();e.stopPropagation();return}return pd&&pd.call(host,e)};
-  host.onpointermove=e=>{if(!bs)return pm&&pm.call(host,e);const dr=getDr();if(!bs.moved){if(Math.hypot(e.clientX-bs.x0,e.clientY-bs.y0)<6)return;bs.moved=true;try{host.setPointerCapture(bs.pid)}catch(_){}host.classList.add("dragging");boxLock(dr,bs.k)}
-    const p=toPlan(e);if(!p)return;if(boxMoveTo(dr,bs.k,bs.id,uOf(dr,bs.k,p)-bs.grab))onLive()};
+  host.onpointermove=e=>{if(!bs)return pm&&pm.call(host,e);const dr=getDr();if(!bs.moved){if(Math.hypot(e.clientX-bs.x0,e.clientY-bs.y0)<6)return;bs.moved=true;try{host.setPointerCapture(bs.pid)}catch(_){}host.classList.add("dragging");boxLock(dr,bs.k);bs.snap=boxSnapWall(dr,bs.k)}
+    const p=toPlan(e);if(!p)return;if(boxMove2(dr,bs.k,bs.id,uOf(dr,bs.k,p)-bs.grab,bs.snap))onLive()};
   const end=e=>{if(!bs)return pu&&pu.call(host,e);const b0=bs;bs=null;try{host.releasePointerCapture(b0.pid)}catch(_){}host.classList.remove("dragging");if(b0.moved){onEnd();toast("Boxen flyttad")}};
   host.onpointerup=end;host.onpointercancel=end};
 /* Mellanväggar och stolpar enligt Nikkis regel: en mellanvägg (och en stolpe) vid varje boxkant
