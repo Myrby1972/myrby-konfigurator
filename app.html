@@ -3103,26 +3103,30 @@ function viewPick(){const dr=D.drawing,sp=D.spec||{},cur=sp.front,op=S.vmenu||""
 function dragLegend(){return addLib()}
 /* v155: "+ Lägg till" – bibliotek med det man redan gått igenom, ersätter menyn "Dra i ritningen" */
 function addLib(){const op=S.vmenu==="add",dr=D.drawing;
-  const btn=`<button type="button" class="vm-btn al-btn" data-vm="add" aria-expanded="${op}" aria-haspopup="dialog"><i class="al-plus">${op?"×":"+"}</i><b>Lägg till</b></button>`;
-  if(!op||!dr)return `<span class="vm vm-add">${btn}</span>`;
   let PG=[],cur=0;try{PG=wizPages();cur=S.wizStep||0}catch(_){}
-  const at=k=>PG.findIndex(p=>p.key===k),st=k=>{const i=at(k);return i<0||i<=cur?"":i===cur+1?"Nästa steg":"Senare"};
-  const lock=t=>t?`<span class="al-lock">${t}</span>`:"";
+  const done=k=>{const i=PG.findIndex(p=>p.key===k);return i>=0&&i<cur},gI=done("ing"),gB=done("boxA"),gW=done("win"),gR=done("rum");
+  if(!dr||!gB)return ""; /* visas först efter boxsteget */
+  const btn=`<button type="button" class="vm-btn al-btn" data-vm="add" aria-expanded="${op}" aria-haspopup="dialog"><i class="al-plus">${op?"×":"+"}</i><b>Lägg till</b></button>`;
+  if(!op)return `<span class="vm vm-add">${btn}</span>`;
+    const lock=()=>"";
   const ic={N:'<rect x="11" y="1" width="8" height="4"/>',S:'<rect x="11" y="17" width="8" height="4"/>',W:'<rect x="0" y="7" width="4" height="8"/>',E:'<rect x="26" y="7" width="4" height="8"/>'};
   const wi=k=>`<svg viewBox="0 0 30 22" aria-hidden="true"><rect x="2" y="3" width="26" height="16" fill="none" stroke="#b9b2a2" stroke-width="2"/><g fill="#23412a">${ic[k]}</g></svg>`;
   const it=(attr,lab,on,msg,ico,dis)=>`<button type="button" class="al-it${on?" on":""}" ${dis?"disabled":attr+" data-alclose"+(on?"":` data-almsg="${esc(msg)}"`)} aria-pressed="${!!on}">${ico||""}<span>${esc(lab)}</span></button>`;
-  const lI=st("ing"),lB=st("boxA"),lW=st("win"),lR=st("rum");
+  const lI="",lB="",lW="",lR="";
   const DOORS=[["door-N","N","Långsida A","långsida A"],["door-S","S","Långsida B","långsida B"],["door-W","W","Gavel vänster","vänster gavel"],["door-E","E","Gavel höger","höger gavel"]];
   const g1=`<div class="al-g${lI?" lk":""}"><div class="al-gt"><b>Ingångar</b>${lock(lI)}</div><div class="al-row">${DOORS.map(([key,k,lab,ll])=>it(`data-ingang="${key}"`,lab,!!extraFind(dr,key),`Ingång på ${ll} tillagd. Dra den dit den sitter.`,wi(k),lI)).join("")}</div></div>`;
   const nb=k=>(dr.walls[k]||[]).filter(m=>m.t==="box").length;
   const stp=(k,lab)=>`<div class="al-br"><span>${lab}</span><span class="al-stp"><button type="button" data-sn="${k}" data-v="-1" ${lB||!nb(k)?"disabled":""} aria-label="Färre boxar, ${lab}">−</button><b>${nb(k)}</b><button type="button" data-sn="${k}" data-v="1" ${lB?"disabled":""} aria-label="Fler boxar, ${lab}">+</button></span></div>`;
-  const g2=`<div class="al-g${lB?" lk":""}"><div class="al-gt"><b>Boxar</b>${lock(lB)}</div>${stp("N","Långsida A")}${stp("S","Långsida B")}</div>`;
+  const g2=`<div class="al-g${lB?" lk":""}"><div class="al-gt"><b>Boxar</b>${lock(lB)}</div>${stp("N","Långsida A")}${stp("S","Långsida B")}${stp("W","Gavel vänster")}${stp("E","Gavel höger")}</div>`;
   const nw=wins(dr).length;
   const g3=`<div class="al-g${lW?" lk":""}"><div class="al-gt"><b>Fönster</b>${lock(lW)}</div><div class="al-row">${it('data-winadd="1"',"+ Ett fönster",false,"Fönster tillagt. Dra det dit det sitter.","",lW)}${it('data-winbox="1"',"Ett i varje box",!!dr.winBox,"Ett fönster i varje box.","",lW)}</div>${!lW&&nw?`<p class="al-n">${nw} fönster i ritningen</p>`:""}</div>`;
   const RM=EXTRAS.filter(e=>e[1]==="room").map(e=>e[0]);
   const g4=`<div class="al-g${lR?" lk":""}"><div class="al-gt"><b>Rum</b>${lock(lR)}</div><div class="al-row">${RM.map(r=>it(`data-sx="${esc(r)}"`,r,!!extraFind(dr,r),`${r} tillagd. Dra den dit den ska vara.`,"",lR)).join("")}</div></div>`;
   const leg=`<div class="al-leg"><b>Så drar du i ritningen</b><div><span><i style="background:#23412a"></i>Yttervägg</span><span><i style="background:#b8862f"></i>Boxens bredd</span><span><i style="background:#3f6f8f"></i>Boxens djup</span></div></div>`;
-  return `<span class="vm vm-add">${btn}<div class="vm-pop al-pop" role="dialog" aria-label="Lägg till i ritningen"><div class="al-h"><b>Lägg till i ritningen</b><span>Det du väljer pulserar</span></div>${g1}${g2}${g3}${g4}${leg}</div></span>`}
+  return `<span class="vm vm-add">${btn}<div class="vm-pop al-pop" role="dialog" aria-label="Lägg till i ritningen"><div class="al-h"><b>Lägg till i ritningen</b><span>Från stegen du har gjort</span></div>${gI?g1:""}${gB?g2:""}${gW?g3:""}${gR?g4:""}${leg}</div></span>`}
+function alFit(){document.querySelectorAll(".al-pop").forEach(p=>{if(!p.offsetParent||innerWidth<=900)return;p.style.translate="0px 0px";const r=p.getBoundingClientRect(),pad=16;let dx=0;if(r.left<pad)dx=pad-r.left;else if(r.right>innerWidth-pad)dx=innerWidth-pad-r.right;if(dx)p.style.translate=dx+"px 0px"})}
+try{new MutationObserver(()=>{if(document.querySelector(".al-pop"))alFit()}).observe(document.documentElement,{childList:true,subtree:true})}catch(_){}
+addEventListener("resize",()=>{try{alFit()}catch(_){}});
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".al-pop [data-alclose]");if(!b||b.disabled)return;const msg=b.dataset.almsg;S.vmenu=null;if(msg)setTimeout(()=>{try{toast(msg)}catch(_){}},30)},true);
 function canvasInner(dr,lvl,opts){const v=viewMode();if(v==="iso")return iso3d(dr,lvl);if(v==="walk")return walk3d(dr,D.ui.walk||0,lvl);return planPretty(dr,opts)}
 
