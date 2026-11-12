@@ -1845,6 +1845,20 @@ html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[d
 html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[data-pg="fyll"],[data-pg="yta"],[data-pg="stolp"],[data-pg="mer"],[data-pg="sum"],[data-pg="kund"]))) .bwchips .bwin{min-height:0}
 html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[data-pg="fyll"],[data-pg="yta"],[data-pg="stolp"],[data-pg="mer"],[data-pg="sum"],[data-pg="kund"]))) .fgal:not(.small){gap:6px}
 html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[data-pg="fyll"],[data-pg="yta"],[data-pg="stolp"],[data-pg="mer"],[data-pg="sum"],[data-pg="kund"]))) .fgal:not(.small) .fgi .fgimg{height:40px}
+/* v127: introkort i Mått (startsidan borttagen för kunden, Carl 12/11) */
+#wiz .pintro{position:relative;border-radius:16px;padding:14px 16px 13px;background:radial-gradient(120% 90% at 100% 0,rgba(201,169,106,.16),transparent 60%),linear-gradient(160deg,#284a31,#1b3022);color:#efe7d6;display:grid;gap:9px;margin-bottom:4px}
+#wiz .pintro-ov{font:700 10px/1.2 var(--f-body,Lato,sans-serif);letter-spacing:.2em;text-transform:uppercase;color:#c9a86a;padding-right:28px}
+#wiz .pintro-t{font:500 1.35rem/1.1 var(--f-display,"EB Garamond",serif);color:#fff;margin-top:-3px}
+#wiz .pintro-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#wiz .pintro-steps div{display:grid;gap:3px;align-content:start;padding:8px 9px;border-radius:10px;background:rgba(255,255,255,.06)}
+#wiz .pintro-steps div.on{background:rgba(201,169,106,.22);box-shadow:inset 0 0 0 1px rgba(201,169,106,.6)}
+#wiz .pintro-steps b{display:flex;align-items:center;gap:6px;font-size:.8rem;color:#fff;line-height:1.15}
+#wiz .pintro-steps i{font-style:normal;width:18px;height:18px;border-radius:50%;background:#c9a86a;color:#22301f;display:grid;place-items:center;font-weight:900;font-size:.62rem;flex:none}
+#wiz .pintro-steps small{font-size:.7rem;line-height:1.3;color:rgba(239,231,214,.82)}
+#wiz .pintro-tr{display:flex;flex-wrap:wrap;gap:3px 14px;font-size:.74rem;color:rgba(239,231,214,.9)}
+#wiz .pintro-tr span::before{content:"✓ ";color:#c9a86a;font-weight:900}
+#wiz .pintro-x{position:absolute;top:9px;right:10px;width:24px;height:24px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#efe7d6;font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center}
+#wiz .pintro-x:hover{background:rgba(255,255,255,.22)}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -3026,13 +3040,13 @@ function wizScreens(){
   if(!MORE_CATS.includes(wizCat))wizCat="tillbeh";
   const big=(v,t,s,ic,path,cur)=>`<button type="button" class="bigopt" data-pick1="${path}" data-v="${esc(v)}" aria-pressed="${cur===v}"><span class="bo-ic">${ic}</span><span class="bo-t"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="bo-ck">${svg("check",18)}</span></button>`;
   const L=[
-   {id:"s-fraga",pg:"start",sec:"Start",html:()=>`<p class="kick">Myrby · handbyggt i Enköping sedan 1972</p><h2 class="h-start">Bygg din stallinredning</h2>
+   ...(isPublic()?[]:[{id:"s-fraga",pg:"start",sec:"Start",html:()=>`<p class="kick">Myrby · handbyggt i Enköping sedan 1972</p><h2 class="h-start">Bygg din stallinredning</h2>
      <ol class="st-steps"><li><span>1</span><div><b>Ange stallets mått</b><small>Längd och bredd på insidan. Ett ungefär räcker.</small></div></li><li><span>2</span><div><b>Välj front, material och rum</b><small>Du ser allt växa fram i ritning och 3D.</small></div></li><li><span>3</span><div><b>Skicka din ritning</b><small>${NK("Nikki","Vi")} återkommer inom en arbetsdag med ett skräddarsytt förslag. Inget är bindande.</small></div></li></ol>
      <div class="st-kv"><div><b>3 min</b><small>från tomma väggar till färdig ritning</small></div><div><b>1 mm</b><small>så noga måttanpassar vi</small></div><div><b>0 kr</b><small>inget är bindande</small></div></div>
      ${S.db?`<details class="resumecode st-code"><summary>Har du en kod? Fortsätt där du slutade</summary><div class="rc-in"><div class="mf"><label for="wcodein">Kod</label><input id="wcodein" type="text" autocomplete="off" placeholder="T.ex. K7P 2QM" style="text-transform:uppercase"></div><button type="button" class="btn" data-wcode>Fortsätt</button></div></details>`:""}
-     ${!isPublic()?`<p class="more st-more">Bara andra produkter, utan stallinredning? <button type="button" class="linkbtn" data-pick1="ui.kind" data-v="ovrigt">Välj produkter ›</button></p>`:""}`},
+     ${!isPublic()?`<p class="more st-more">Bara andra produkter, utan stallinredning? <button type="button" class="linkbtn" data-pick1="ui.kind" data-v="ovrigt">Välj produkter ›</button></p>`:""}`}]),
    ...(!stall?[]:[
-   {id:"s-matt",pg:"matt",sec:"Stallet",sub:"Mått",html:()=>`<h2>Hur stort är stallet inuti?</h2><p class="lead">Mät från vägg till vägg på insidan. Ett ungefär räcker, du kan ändra senare.</p>
+   {id:"s-matt",pg:"matt",sec:"Stallet",sub:"Mått",html:()=>`${isPublic()&&!D.ui.introX&&!(D.ui.reach>0)?`<div class="pintro" role="note"><button type="button" class="pintro-x" data-introx aria-label="Stäng introt">×</button><span class="pintro-ov">Myrby · handbyggt i Enköping sedan 1972</span><b class="pintro-t">Rita din stallinredning</b><div class="pintro-steps"><div class="on"><b><i>1</i>Mått</b><small>Längd och bredd, ett ungefär räcker</small></div><div><b><i>2</i>Front och rum</b><small>Allt växer fram i ritning och 3D</small></div><div><b><i>3</i>Skicka</b><small>Svar inom en arbetsdag</small></div></div><div class="pintro-tr"><span>Ca 3 minuter</span><span>Inget är bindande</span><span>Måttanpassat på millimetern</span></div></div>`:""}<h2>Hur stort är stallet inuti?</h2><p class="lead">Mät från vägg till vägg på insidan. Ett ungefär räcker, du kan ändra senare.</p>
      <div class="dimin"><div class="mf"><label for="wm-L">Längd</label><input id="wm-L" type="text" inputmode="numeric" data-wm="L" value="${dr.L}" placeholder="t.ex. 24000"><em>mm</em></div><span class="dimx">×</span><div class="mf"><label for="wm-W">Bredd</label><input id="wm-W" type="text" inputmode="numeric" data-wm="W" value="${dr.W}" placeholder="t.ex. 11500"><em>mm</em></div></div>
      <p class="hintline">Golvyta <b id="areaout">${(dr.L*dr.W/1e6).toLocaleString("sv-SE",{maximumFractionDigits:1})} m²</b></p>
      <details class="more3"><summary>Takhöjd (normalt minst 2 700 mm)</summary><div class="mf" style="margin-top:8px;max-width:240px"><label for="wm-ceil">Takhöjd</label><input id="wm-ceil" type="text" inputmode="numeric" data-wm="ceil" value="${dr.ceil}"><em>mm</em></div></details>`},
@@ -4330,6 +4344,7 @@ document.addEventListener("click",async e=>{
   if(d.vgapply){const dr=D.drawing,r=ventRec(dr);dr.intag=true;dr.fans=r.fans;dr.fanType="tak";dr.fanPlace="auto";dr.ventInfo=ventInfo();D.ui.vg={...D.ui.vg,mode:"self",done:true};saveD();wizRefresh();toast("Förslaget ligger i ritningen");return}
   if(d.vint){D.drawing.intag=!D.drawing.intag;saveD();wizRefresh();return}
   if(d.vfan){const dr=D.drawing;dr.fans=Math.max(0,Math.min(8,(+dr.fans||0)+(+d.vfan)));if(dr.fanPlace==="egen"){dr.wfans=dr.wfans||[];while(dr.wfans.length<dr.fans)dr.wfans.push({k:"N",p:dr.L/2});dr.wfans.length=dr.fans}saveD();wizRefresh();return}
+  if(d.introx!==undefined){D.ui.introX=1;saveD();renderWiz();return}
   if(d.gview){D.ui.gview=d.gview;saveD();wizRefresh();return}
   if(d.gopt){const [cat,qi,oi]=d.gopt.split(":");const g=GUIDE[cat][+qi];D.ui.guide=D.ui.guide||{};const st=D.ui.guide[cat]=D.ui.guide[cat]||{};let sel=st[qi]||[];const n=+oi;
     if(g.m)sel=sel.includes(n)?sel.filter(x=>x!==n):[...sel,n];else sel=sel.includes(n)?[]:[n];st[qi]=sel;saveD();wizRefresh();return}
@@ -4471,7 +4486,7 @@ function pubTakeover(){try{const fe=window.frameElement,cfg=window.MYRBY_PUBLIC|
   pd.querySelectorAll("iframe").forEach(f=>{if(f!==fe&&/weply/.test(f.getAttribute("src")||""))f.style.setProperty("visibility","hidden","important")})}catch(e){}}
 
 /* ===== v117: spara & fortsätt på hemsidan (Carl) ===== */
-const PUB_KEY="myrby.pub";
+const PUB_KEY="myrby.pub2";
 function pubBoot(){}
 function pubHasWork(){return !!(D&&D.ui&&D.ui.kind&&(S.wizStep||0)>0)}
 function pubStore(){if(!isPublic())return;try{if(S.pubDone||!pubHasWork()){if(S.pubDone)localStorage.removeItem(PUB_KEY);return}
