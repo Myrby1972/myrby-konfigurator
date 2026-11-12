@@ -2010,6 +2010,46 @@ html body #wiz .fgal .dpop .fx-sum span{color:#e3c78f}
 #wiz .pintro~p.lead{display:none}
 .rs-outer .rs-pill{opacity:1}
 .rs-outer .rs-grip{opacity:1}
+/* v141: verktygsradens dropdowns + färgkodade handtag */
+.vm{position:relative;display:inline-flex}
+.vm-btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px 0 14px;border-radius:999px;border:0;background:#fff;box-shadow:inset 0 0 0 1.5px #e2dccf,0 1px 2px rgba(31,42,33,.05);font:inherit;color:var(--ink);cursor:pointer;white-space:nowrap;transition:box-shadow .15s}
+.vm-btn:hover,.vm-btn[aria-expanded="true"]{box-shadow:inset 0 0 0 1.5px var(--green),0 4px 14px rgba(31,42,33,.1)}
+.vm-btn small{font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.vm-btn b{font-size:.86rem;font-weight:700}
+.vm-car{width:7px;height:7px;border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);transform:rotate(45deg) translate(-2px,-2px);margin-left:2px;transition:transform .15s}
+.vm-btn[aria-expanded="true"] .vm-car{transform:rotate(225deg) translate(-1px,-1px)}
+.vm-sw{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);flex:none}
+.vm-sw.lg{width:26px;height:26px}
+.vm-pop{position:absolute;top:calc(100% + 8px);left:0;z-index:60;min-width:240px;max-height:min(420px,60vh);overflow:auto;background:#fff;border-radius:16px;padding:6px;box-shadow:0 18px 50px rgba(18,36,26,.22),0 0 0 1px rgba(18,36,26,.06);animation:vmIn .14s ease-out}
+.vm-pop .vm-h{margin:6px 10px 6px;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+@keyframes vmIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.vm-it{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;border-radius:10px;padding:8px 10px;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.vm-it:hover{background:#f3f5ef}
+.vm-it[aria-selected="true"]{background:#eef2ea}
+.vm-ck{width:16px;color:var(--green);font-weight:900;flex:none;text-align:center}
+.vm-tx{display:grid;flex:1}
+.vm-tx b{font-size:.9rem}
+.vm-tx small{font-size:.74rem;color:var(--ink-3)}
+.vm-dots{display:inline-flex;gap:3px}.vm-dots i{width:9px;height:9px;border-radius:50%}
+.vm-lgd{min-width:280px;padding:10px 12px;display:grid;gap:8px}
+.vm-l{display:flex;gap:12px;align-items:center}
+.vm-l .hd{width:8px;height:26px;border-radius:5px;flex:none;margin:0 9px}
+.vm-l .hd.hz{width:26px;height:8px;margin:0}
+.vm-l .hd.mv{width:26px;height:26px;border-radius:50%;background:#f1e6c9;color:var(--green);display:grid;place-items:center;font-style:normal;font-size:.9rem;margin:0}
+.vm-l span{display:grid;font-size:.78rem;color:var(--ink-2)}
+.vm-l b{font-size:.86rem;color:var(--ink)}
+.vbar,.vbar .vpicks,.vbar .vm,.vbar>*{overflow:visible!important}
+.vm:has(.vm-pop){z-index:70}
+.vbar .vm-btn b{font:700 .84rem/1.1 Carlito,Calibri,Arial,sans-serif!important;letter-spacing:0;color:var(--ink)}
+.vbar .vm-btn{height:36px}
+.vm-pop .vm-tx b{font:700 .9rem/1.2 Carlito,Calibri,Arial,sans-serif!important}
+.vm-lgd .vm-l b{font:700 .86rem/1.2 Carlito,Calibri,Arial,sans-serif!important}
+.rs-w .rs-pill{fill:#b8862f!important}
+.rs-front .rs-pill{fill:#3f6f8f!important}
+.rs-outer .rs-pill{fill:#23412a!important}
+.rs-h .rs-pill{opacity:.55}
+.rs-h:hover .rs-pill{opacity:1}
+.rs-outer .rs-pill{opacity:1}
 </style>
 
 <div class="app">
@@ -2922,13 +2962,15 @@ function viewMode(){return D.ui.view||"plan"}
 function viewBar(lvl){if(lvl<1)return "";if(lvl<2&&D.ui.view&&D.ui.view!=="plan")D.ui.view="plan";const v=viewMode(),nu=lvl===2&&!D.ui.viewSeen;
   return `<div class="vbar"><div class="vseg ${nu?"vnew":""}" role="group" aria-label="Visa stallet">${(lvl>=2?[["plan","Ritning"],["iso","3D"],["walk","Stallgången"]]:[["plan","Ritning"]]).map(([k,t])=>`<button type="button" data-view="${k}" aria-pressed="${v===k}">${t}</button>`).join("")}</div>${nu?`<span class="vhint">Nytt: 3D och stallgången</span>`:""}
    ${v==="iso"?`<button type="button" class="vbtn" data-vrot="-1" aria-label="Vrid åt vänster">↺</button><button type="button" class="vbtn" data-vrot="1" aria-label="Vrid åt höger">↻</button>`:""}
-   ${(v==="iso"||v==="walk")&&lvl>=3&&D.drawing?viewPick():""}
+   ${(v==="iso"||v==="walk")&&lvl>=3&&D.drawing?viewPick():""}${v==="plan"&&D.drawing&&!paintOn()&&!wallPaintOn()?dragLegend():""}
    
    <span class="vsp"></span>${HIST.i>0||HIST.i<HIST.stack.length-1?`<button type="button" class="vbtn" data-hundo ${HIST.i<=0?"disabled":""} title="Ångra">↶<span> Ångra</span></button><button type="button" class="vbtn" data-hredo ${HIST.i>=HIST.stack.length-1?"disabled":""} title="Gör om">↷<span> Gör om</span></button>`:""}</div>`}
-function viewPick(){const dr=D.drawing,sp=D.spec||{},cur=sp.front;
-  const fr=fmixOn()?"":`<label class="vpick"><span>Front</span><select data-vfront aria-label="Byt front">${FRONTS().map(p=>`<option value="${esc(p.id)}" ${p.id===cur?"selected":""}>${esc(p.name)}</option>`).join("")}</select></label>`;
-  const lack=/ulverlack/.test(sp.finish||""),curC=lack?(sp.ral||"RAL 9005"):"zink",cols=[["zink","Varmförzinkat","#b4b9ba"],...Object.entries(RALC).map(([id,[n,c]])=>[id,n,c])],cn=cols.find(c=>c[0]===curC)||cols[0];
-  return `<span class="vpicks">${fr}<span class="vwall" role="group" aria-label="Färg på fronter och mellanväggar"><span>Färg</span>${cols.map(([id,n,c])=>`<button type="button" class="vsw" data-vcol="${id}" style="background:${c}" aria-pressed="${curC===id}" title="${n}${id!=="zink"?" · "+id:""}" aria-label="Färg ${n}"></button>`).join("")}<b class="vcname">${esc(cn[1])}${cn[0]!=="zink"?` <small>${cn[0]}</small>`:""}</b></span></span>`}
+function viewPick(){const dr=D.drawing,sp=D.spec||{},cur=sp.front,op=S.vmenu||"";
+  const lack=/ulverlack/.test(sp.finish||""),curC=lack?(sp.ral||"RAL 9005"):"zink",cols=[["zink","Varmförzinkat","#b4b9ba","Standard"],...Object.entries(RALC).map(([id,[n,c]])=>[id,n,c,id])],cn=cols.find(c=>c[0]===curC)||cols[0];
+  const fr=fmixOn()?"":`<span class="vm"><button type="button" class="vm-btn" data-vm="front" aria-haspopup="listbox" aria-expanded="${op==="front"}"><small>Front</small><b>${esc(prod(cur)?.name||"Välj")}</b><i class="vm-car"></i></button>${op==="front"?`<div class="vm-pop" role="listbox">${FRONTS().map(p=>{const r=sizeRule(p.id);return `<button type="button" class="vm-it" role="option" data-vfpick="${esc(p.id)}" aria-selected="${p.id===cur}"><span class="vm-ck">${p.id===cur?"✓":""}</span><span class="vm-tx"><b>${esc(p.name)}</b><small>${r.type==="fixed"?"Fasta storlekar":"Valfri längd"}</small></span></button>`}).join("")}</div>`:""}</span>`;
+  const cl=`<span class="vm"><button type="button" class="vm-btn" data-vm="color" aria-haspopup="listbox" aria-expanded="${op==="color"}"><small>Färg</small><i class="vm-sw" style="background:${cn[2]}"></i><b>${esc(cn[1])}</b><i class="vm-car"></i></button>${op==="color"?`<div class="vm-pop vm-cols" role="listbox"><p class="vm-h">Fronter och mellanväggar</p>${cols.map(([id,n,c,sub])=>`<button type="button" class="vm-it" role="option" data-vcol="${id}" aria-selected="${curC===id}"><i class="vm-sw lg" style="background:${c}"></i><span class="vm-tx"><b>${esc(n)}</b><small>${esc(sub)}${id!=="zink"?" · pulverlack":""}</small></span><span class="vm-ck">${curC===id?"✓":""}</span></button>`).join("")}</div>`:""}</span>`;
+  return `<span class="vpicks">${fr}${cl}</span>`}
+function dragLegend(){const op=S.vmenu==="legend";return `<span class="vm"><button type="button" class="vm-btn vm-leg" data-vm="legend" aria-expanded="${op}"><i class="vm-dots"><i style="background:#23412a"></i><i style="background:#b8862f"></i><i style="background:#3f6f8f"></i></i><b>Dra i ritningen</b><i class="vm-car"></i></button>${op?`<div class="vm-pop vm-lgd"><p class="vm-h">Ta tag i handtagen och dra</p><div class="vm-l"><i class="hd" style="background:#23412a"></i><span><b>Ytterväggar</b>Stallets längd och bredd</span></div><div class="vm-l"><i class="hd" style="background:#b8862f"></i><span><b>Boxväggar och rum</b>Bredare eller smalare</span></div><div class="vm-l"><i class="hd hz" style="background:#3f6f8f"></i><span><b>Fronten</b>Djupare eller grundare boxar</span></div><div class="vm-l"><i class="hd mv">✥</i><span><b>Mitt i en box eller ett rum</b>Flytta den längs väggen</span></div></div>`:""}</span>`}
 function canvasInner(dr,lvl,opts){const v=viewMode();if(v==="iso")return iso3d(dr,lvl);if(v==="walk")return walk3d(dr,D.ui.walk||0,lvl);return planPretty(dr,opts)}
 
 /* --- hästnamn --- */
@@ -3778,27 +3820,31 @@ function ovfFix(dr,act){const o=ovfInfo(dr)[0];if(!o)return;
 /* v134: dra måtten direkt i ritningen (Carl 12/11): väggen mellan två moduler, sista modulens kant, fronten (djup) och ytterväggarna i Mått.
    Snäpper till 100 mm och till 3 000/3 500/4 000, Alt ger 10 mm. Boxbredder låses till "Olika bredd" (per) när man drar. */
 const RS_STD=[3000,3500,4000];
+document.addEventListener("click",e=>{if(S.vmenu&&!(e.target.closest&&e.target.closest(".vm"))){S.vmenu=null;try{cfgPanelRefresh()}catch(_){}}},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.vmenu){S.vmenu=null;try{cfgPanelRefresh()}catch(_){}}});
 function rsSnap(v,alt,list){if(list)return list.reduce((a,b)=>Math.abs(b-v)<Math.abs(a-v)?b:a);if(alt)return Math.round(v/10)*10;for(const s2 of RS_STD)if(Math.abs(v-s2)<120)return s2;return Math.round(v/100)*100}
 function rsLim(dr,m){if(m.t==="room")return {min:1000,max:9000,list:null};const r=sizeRule(dr.front);return r.type==="fixed"?{min:r.list[0],max:r.list[r.list.length-1],list:r.list}:{min:r.min,max:Math.min(r.max,r.free?6000:r.max),list:null}}
 function rsPer(dr,k){const c=dr.cfg?.[k];if(!c)return;boxLock(dr,k);if(c.mode!=="per"){c.ws=(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w);c.mode="per"}}
 function rsSetW(dr,k,m,w){m.w=w;if(m.t==="box"){const c=dr.cfg?.[k];if(c){const bi=(dr.walls[k]||[]).filter(x=>x.t==="box").indexOf(m);c.ws=c.ws||[];c.ws[bi]=w}}}
 function rsEdges(dr){const out=[];for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[],len=wallLen2(dr,k);let pos=0;ms.forEach((m,i)=>{pos+=+m.w||0;if(m.t!=="box"&&m.t!=="room")return;const nx=ms[i+1];
+    const pv=ms[i-1];if(pv&&pv.t==="gap"&&pv.gapBox)out.push({k,i,kind:"lgap",pos:pos-(+m.w||0),side:"L"});
     if(nx&&(nx.t==="box"||nx.t==="room"))out.push({k,i,kind:"pair",pos});else if(nx&&nx.t==="gap"&&nx.gapBox)out.push({k,i,kind:"gap",pos});else if(!nx)out.push({k,i,kind:"free",pos,room:len-pos})})}return out}
 function rsApply(dr,st,u,alt){const ms=dr.walls[st.k],a=ms[st.i],lim=rsLim(dr,a);let nw=rsSnap(u-st.start,alt,lim.list);
   if(st.kind==="pair"){const b=ms[st.i+1],lb=rsLim(dr,b),tot=st.a0+st.b0;nw=Math.max(lim.min,Math.min(lim.max,nw,tot-lb.min));if(lim.list){rsSetW(dr,st.k,a,nw)}else{rsSetW(dr,st.k,a,nw);rsSetW(dr,st.k,b,tot-nw)}}
   else if(st.kind==="gap"){const g=st.gapRef,tot=st.a0+st.g0;nw=Math.max(lim.min,Math.min(lim.max,nw,tot));rsSetW(dr,st.k,a,nw);g.w=tot-nw}
+  else if(st.kind==="lgap"){const g=st.gapRef,end=st.start+st.a0,gs=st.start-st.g0;nw=rsSnap(end-u,alt,lim.list);nw=Math.max(lim.min,Math.min(lim.max,nw,end-gs));rsSetW(dr,st.k,a,nw);g.w=(end-nw)-gs}
   else{nw=Math.max(lim.min,Math.min(lim.max,nw,st.a0+Math.max(0,st.room)));rsSetW(dr,st.k,a,nw)}
   if(dr.cfg?.[st.k]?.auto)autoFill(dr,st.k);const ix=ms.indexOf(st.gapRef);if(st.gapRef&&ix>=0&&+st.gapRef.w<=0)ms.splice(ix,1);return nw}
 const _ed134=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed134(host,getDr,onLive,onEnd);if(!host)return;
   const pd=host.onpointerdown,pm=host.onpointermove,pu=host.onpointerup;let rs=null;
   const toPlan=e=>{const svg=host.querySelector("svg");if(!svg)return null;const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=svg.getScreenCTM();return m?pt.matrixTransform(m.inverse()):null};
   host.onpointerdown=e=>{const el=e.target.closest&&e.target.closest("[data-rsedge],[data-rsfront],[data-rsouter]");if(!el||e.button>0)return pd&&pd.call(host,e);const dr=getDr();
-    if(el.dataset.rsedge){const [k,i]=el.dataset.rsedge.split("|"),ed=rsEdges(dr).find(x=>x.k===k&&x.i===+i);if(!ed)return pd&&pd.call(host,e);const ms=dr.walls[k];
-      rs={t:"edge",k,i:+i,kind:ed.kind,start:ed.pos-(+ms[+i].w),a0:+ms[+i].w,b0:ed.kind==="pair"?+ms[+i+1].w:0,gapRef:ed.kind==="gap"?ms[+i+1]:null,g0:ed.kind==="gap"?+ms[+i+1].w:0,room:ed.room||0}}
+    if(el.dataset.rsedge){const [k,i,sd]=el.dataset.rsedge.split("|"),L1=sd==="L",ed=rsEdges(dr).find(x=>x.k===k&&x.i===+i&&(L1?x.kind==="lgap":x.kind!=="lgap"));if(!ed)return pd&&pd.call(host,e);const ms=dr.walls[k];
+      rs=L1?{t:"edge",k,i:+i,kind:"lgap",start:ed.pos,a0:+ms[+i].w,gapRef:ms[+i-1],g0:+ms[+i-1].w}:{t:"edge",k,i:+i,kind:ed.kind,start:ed.pos-(+ms[+i].w),a0:+ms[+i].w,b0:ed.kind==="pair"?+ms[+i+1].w:0,gapRef:ed.kind==="gap"?ms[+i+1]:null,g0:ed.kind==="gap"?+ms[+i+1].w:0,room:ed.room||0}}
     else if(el.dataset.rsfront)rs={t:"front",k:el.dataset.rsfront};else{const svg=host.querySelector("svg"),m=svg&&svg.getScreenCTM();rs={t:"outer",a:el.dataset.rsouter,sc:m?m.a:1,L0:+dr.L,W0:+dr.W}}
     rs.x0=e.clientX;rs.y0=e.clientY;rs.moved=false;rs.pid=e.pointerId;e.preventDefault();e.stopPropagation()};
   host.onpointermove=e=>{if(!rs)return pm&&pm.call(host,e);const dr=getDr();if(!rs.moved){if(Math.hypot(e.clientX-rs.x0,e.clientY-rs.y0)<4)return;rs.moved=true;try{host.setPointerCapture(rs.pid)}catch(_){}host.classList.add("dragging");
-      if(rs.t==="edge"){const ms=dr.walls[rs.k];if(ms[rs.i].t==="box"||(rs.kind==="pair"&&ms[rs.i+1].t==="box"))rsPer(dr,rs.k);rs.gapRef=rs.kind==="gap"?ms[rs.i+1]:null}}
+      if(rs.t==="edge"){const ms=dr.walls[rs.k],keep=rs.gapRef;if(ms[rs.i].t==="box"||(rs.kind==="pair"&&ms[rs.i+1].t==="box"))rsPer(dr,rs.k);rs.gapRef=rs.kind==="gap"?ms[rs.i+1]:rs.kind==="lgap"?ms[rs.i-1]:null}}
     const p=toPlan(e);if(!p)return;const lng=k=>k==="N"||k==="S";
     if(rs.t==="edge"){const u=(lng(rs.k)?p.x:p.y)-wallBase(dr,rs.k),nw=rsApply(dr,rs,u,e.altKey),m=dr.walls[rs.k][rs.i];S.dragTip={x:p.x,y:p.y,t:`${mm(nw)} mm${m.t==="box"?` · ${m2(nw,+m.d||3500)} m²`:""}`}}
     else if(rs.t==="front"){const k=rs.k,raw=k==="N"?p.y:k==="S"?dr.W-p.y:k==="W"?p.x:dr.L-p.x;const d=Math.max(2000,Math.min(5000,rsSnap(raw,e.altKey)));dr.cfg=dr.cfg||{};dr.cfg[k]=dr.cfg[k]||{n:0,mode:"lika",std:3500,auto:true};dr.cfg[k].d=d;(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"||(m.t==="room"&&!m.dset))m.d=d});autoAll(dr);S.dragTip={x:p.x,y:p.y,t:`djup ${mm(d)} mm`}}
@@ -3810,13 +3856,13 @@ const _ed134=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed134(host
   host.onpointerup=end;host.onpointercancel=end};
 function rsHandles(dr,lay,F,pg){const out=[],WT=230,T=(o,x,y)=>o.tf(x,y);
   const pill=(a,b,dir)=>{const cx=(a[0]+b[0])/2,cy=(a[1]+b[1])/2,v=dir==="v",w=v?130*F:520*F,h=v?520*F:130*F;return `<rect class="rs-pill" x="${cx-w/2}" y="${cy-h/2}" width="${w}" height="${h}" rx="${Math.min(w,h)/2}"/><path class="rs-grip" d="${v?`M${cx-24*F} ${cy-110*F}v${220*F}M${cx+24*F} ${cy-110*F}v${220*F}`:`M${cx-110*F} ${cy-24*F}h${220*F}M${cx-110*F} ${cy+24*F}h${220*F}`}"/>`};
-  if(pg==="boxA"||/^rum/.test(pg)){rsEdges(dr).forEach(ed=>{const o=lay.find(o=>!o.door&&o.k===ed.k&&o.i===ed.i);if(!o)return;const w=+o.m.w,d=+o.m.d||0,a=T(o,w,0),b=T(o,w,d),lng=ed.k==="N"||ed.k==="S",hw=150*F;
+  {rsEdges(dr).forEach(ed=>{const o=lay.find(o=>!o.door&&o.k===ed.k&&o.i===ed.i);if(!o)return;const w=+o.m.w,d=+o.m.d||0,xe=ed.kind==="lgap"?0:w,a=T(o,xe,0),b=T(o,xe,d),lng=ed.k==="N"||ed.k==="S",hw=150*F;
       const x0=Math.min(a[0],b[0])-(lng?hw:0),y0=Math.min(a[1],b[1])-(lng?0:hw),ww=Math.abs(b[0]-a[0])+(lng?2*hw:0),hh=Math.abs(b[1]-a[1])+(lng?0:2*hw);
-      out.push(`<g class="rs-h" data-rsedge="${ed.k}|${ed.i}" style="cursor:${lng?"ew-resize":"ns-resize"}"><rect x="${x0}" y="${y0}" width="${ww}" height="${hh}" fill="transparent"/>${pill(a,b,lng?"v":"h")}</g>`)})}
-  if(pg==="boxA")["N","S","W","E"].forEach(k=>{const bx=lay.filter(o=>!o.door&&o.k===k&&o.m.t==="box");if(!bx.length)return;const f=bx[0],l=bx[bx.length-1],d=+f.m.d||0,a=T(f,0,d),b=T(l,+l.m.w,d),lng=k==="N"||k==="S",hw=140*F;
+      out.push(`<g class="rs-h rs-w" data-rsedge="${ed.k}|${ed.i}${ed.kind==="lgap"?"|L":""}" style="cursor:${lng?"ew-resize":"ns-resize"}"><rect x="${x0}" y="${y0}" width="${ww}" height="${hh}" fill="transparent"/>${pill(a,b,lng?"v":"h")}</g>`)})}
+  ["N","S","W","E"].forEach(k=>{const bx=lay.filter(o=>!o.door&&o.k===k&&o.m.t==="box");if(!bx.length)return;const f=bx[0],l=bx[bx.length-1],d=+f.m.d||0,a=T(f,0,d),b=T(l,+l.m.w,d),lng=k==="N"||k==="S",hw=140*F;
     out.push(`<g class="rs-h rs-front" data-rsfront="${k}" style="cursor:${lng?"ns-resize":"ew-resize"}"><rect x="${Math.min(a[0],b[0])-(lng?0:hw)}" y="${Math.min(a[1],b[1])-(lng?hw:0)}" width="${Math.abs(b[0]-a[0])+(lng?0:2*hw)}" height="${Math.abs(b[1]-a[1])+(lng?2*hw:0)}" fill="transparent"/>${pill(a,b,lng?"h":"v")}</g>`)});
-  if(pg==="matt"){const L=dr.L,W=dr.W;if(!D.ui.wallHint){D.ui.wallHint=1;S.wallPulse=Date.now()}const pul=S.wallPulse&&Date.now()-S.wallPulse<4500,pc=(x,y)=>pul?`<circle class="wpulse wpw" cx="${x}" cy="${y}" r="${900*F}" fill="none" stroke="#c9a86a" stroke-width="${70*F}"/><circle class="wpulse wp2 wpw" cx="${x}" cy="${y}" r="${900*F}" fill="#c9a86a" fill-opacity=".2"/>`:"",lab=(x,y,t,v)=>`<g pointer-events="none"><rect x="${x-(v?0:820*F)}" y="${y-(v?190*F:0)}" width="${1640*F}" height="${380*F}" rx="${190*F}" fill="#23412a" transform="${v?`translate(${-380*F-1640*F} ${0})`:`translate(0 ${380*F})`}"/><text x="${x+(v?-380*F-820*F:0)}" y="${y+(v?75*F:380*F+265*F)}" text-anchor="middle" font-family="Carlito,Calibri,Arial,sans-serif" font-weight="700" font-size="${190*F}" fill="#fff">${t}</text></g>`;
-    out.push(`<g class="rs-h rs-outer" data-rsouter="L" style="cursor:ew-resize"><rect x="${L-WT*1.4}" y="0" width="${WT*2.8}" height="${W}" fill="transparent"/>${pc(L,W*.5)}${pill([L,W*.36],[L,W*.64],"v")}</g><g class="rs-h rs-outer" data-rsouter="W" style="cursor:ns-resize"><rect x="0" y="${W-WT*1.4}" width="${L}" height="${WT*2.8}" fill="transparent"/>${pc(L*.25,W)}${pill([L*.15,W],[L*.35,W],"h")}</g>${lab(L,W*.5,"↔ Dra",true)}${lab(L*.25,W,"↕ Dra",false)}`)}
+  {const L=dr.L,W=dr.W,isM=pg==="matt";if(isM&&!D.ui.wallHint){D.ui.wallHint=1;S.wallPulse=Date.now()}const pul=S.wallPulse&&Date.now()-S.wallPulse<4500,pc=(x,y)=>pul?`<circle class="wpulse wpw" cx="${x}" cy="${y}" r="${900*F}" fill="none" stroke="#c9a86a" stroke-width="${70*F}"/><circle class="wpulse wp2 wpw" cx="${x}" cy="${y}" r="${900*F}" fill="#c9a86a" fill-opacity=".2"/>`:"",lab=(x,y,t,v)=>`<g pointer-events="none"><rect x="${x-(v?0:820*F)}" y="${y-(v?190*F:0)}" width="${1640*F}" height="${380*F}" rx="${190*F}" fill="#23412a" transform="${v?`translate(${-380*F-1640*F} ${0})`:`translate(0 ${380*F})`}"/><text x="${x+(v?-380*F-820*F:0)}" y="${y+(v?75*F:380*F+265*F)}" text-anchor="middle" font-family="Carlito,Calibri,Arial,sans-serif" font-weight="700" font-size="${190*F}" fill="#fff">${t}</text></g>`;
+    out.push(`<g class="rs-h rs-outer" data-rsouter="L" style="cursor:ew-resize"><rect x="${L-WT*1.4}" y="0" width="${WT*2.8}" height="${W}" fill="transparent"/>${pc(L,W*.5)}${pill([L,W*.36],[L,W*.64],"v")}</g><g class="rs-h rs-outer" data-rsouter="W" style="cursor:ns-resize"><rect x="0" y="${W-WT*1.4}" width="${L}" height="${WT*2.8}" fill="transparent"/>${pc(L*.25,W)}${pill([L*.15,W],[L*.35,W],"h")}</g>${isM?lab(L,W*.5,"↔ Dra",true)+lab(L*.25,W,"↕ Dra",false):""}`)}
   if(S.dragTip){const t=S.dragTip,tw=Math.max(1800,t.t.length*140)*F/1.6,th=420*F/1.6;out.push(`<g pointer-events="none"><rect x="${t.x-tw/2}" y="${t.y-th*2.2}" width="${tw}" height="${th}" rx="${th/2}" fill="#1f2a21"/><text x="${t.x}" y="${t.y-th*2.2+th*.68}" text-anchor="middle" font-family="Carlito,Calibri,Arial,sans-serif" font-weight="700" font-size="${th*.56}" fill="#fff">${t.t}</text></g>`)}
   return out.join("")}
 function walkCamZ(dr,zA,zB){const g=dr.walls?.W||[];if(!g.some(m=>m.t==="box"||m.t==="room"))return (zA+zB)/2;let pos=gableSpan(dr,"W").y0;const occ=[];for(const m of g){if(m.t==="box"||m.t==="room")occ.push([pos,pos+(+m.w||0)]);pos+=+m.w||0}
@@ -4038,7 +4084,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
     const hit=interactive&&m.t!=="box"?(o.door?`data-door="${m.id}" data-drag="1" style="cursor:grab"`:`data-mod="${k}:${o.i}" data-drag="1" style="cursor:grab"`):"";
     const cx0=o.cx0||0,cx1=o.cx1||0,c=tf(w/2+(cx1-cx0)/2,d/2);
     if(m.t==="box"){
-      {const pc=(paint==="front"||paint==="show")&&typeof fmixColor==="function"?fmixColor(o.f):null;g.push(poly([[-cx0,0],[w+cx1,0],[w+cx1,d],[-cx0,d]],!pc&&interactive?`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12" data-bmove="${k}|${m.id}" style="cursor:grab"`:pc?`fill="${pc}" fill-opacity=".13" stroke="${pc}" stroke-width="22" ${paint==="front"?`class="pbox" data-fbox="${o.nr}" style="cursor:pointer"`:`class="pbox-in" style="animation-delay:${(o.nr-1)*70}ms"`}`:`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12"`))}
+      {const pc=(paint==="front"||paint==="show")&&typeof fmixColor==="function"?fmixColor(o.f):null;g.push(poly([[-cx0,0],[w+cx1,0],[w+cx1,d],[-cx0,d]],!pc&&!paint&&lvl>=2?`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12" data-bmove="${k}|${m.id}" style="cursor:grab"`:pc?`fill="${pc}" fill-opacity=".13" stroke="${pc}" stroke-width="22" ${paint==="front"?`class="pbox" data-fbox="${o.nr}" style="cursor:pointer"`:`class="pbox-in" style="animation-delay:${(o.nr-1)*70}ms"`}`:`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12"`))}
       if(false&&!paint&&bedOn(lvl)){ /* v104: ingen halm i ritningen (Carl) */g.push(poly([[0,0],[w,0],[w,d],[0,d]],`fill="#f4e8c4" stroke="${C.boxLine}" stroke-width="12" pointer-events="none"`)+`<g transform="${(()=>{const o0=tf(0,0),ox=tf(1,0),oy=tf(0,1);return `matrix(${ox[0]-o0[0]} ${ox[1]-o0[1]} ${oy[0]-o0[0]} ${oy[1]-o0[1]} ${o0[0]} ${o0[1]})`})()}">${bedSVG(w,d,o.nr+(k==="S"?50:0),(x,y)=>[x,y],[30,27,25,23,21],.72)}<rect x="${w*.04}" y="${d*.05}" width="${w*.92}" height="${d*.8}" rx="${Math.min(w,d)*.4}" fill="url(#pp-bedglow)" pointer-events="none"/></g>`)}
       const BS=Math.min(680*F,w*.42,d*.34),b1=Math.min(200*F,w*.11),b2=Math.min(250*F,w*.13);
       g.push(T(c[0],c[1]-BS*.75,"HÄSTBOX",`text-anchor="middle" ${sans} font-size="${b1}" font-weight="700" letter-spacing="${b1*.25}" fill="${C.mute}" pointer-events="none"`));
@@ -4092,7 +4138,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
       g.push(t==="stal"?`<circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="${fillc}" stroke="${C.box}" stroke-width="${sw}"/>`:`<rect x="${p[0]-r}" y="${p[1]-r}" width="${2*r}" height="${2*r}" fill="${fillc}" stroke="${C.box}" stroke-width="${sw}"/>`)})}
   g.push(...tags);
   const late=[];
-  if(interactive&&!paint&&typeof cfgPgKey==="function"){const pgk=cfgPgKey()||"";if(["boxA","matt"].includes(pgk)||/^rum/.test(pgk))late.push(rsHandles(dr,lay,F,pgk))}
+  if((interactive||lvl>=1)&&!paint&&typeof cfgPgKey==="function"){const pgk=cfgPgKey()||"";if(pgk!=="sum"&&pgk!=="kund")late.push(rsHandles(dr,lay,F,pgk))}
   if(lvl>=2)ovfInfo(dr).forEach(ov=>{const base=wallBase(dr,ov.k);lay.filter(o=>!o.door&&o.k===ov.k&&o.m.t!=="gap").forEach(o=>{const w=+o.m.w,d=+o.m.d||0,rel=o.start-base;if(rel+w<=ov.len+1)return;const x0=Math.max(0,ov.len-rel),P=pts=>pts.map(p=>o.tf(...p).join(",")).join(" ");
       late.push(`<polygon points="${P([[0,0],[w,0],[w,d],[0,d]])}" fill="none" stroke="#b23a30" stroke-width="${26*F}" stroke-dasharray="${90*F} ${60*F}" pointer-events="none"/><polygon points="${P([[x0,0],[w,0],[w,d],[x0,d]])}" fill="#b23a30" fill-opacity=".16" stroke="none" pointer-events="none"/>`)});
     const last=lay.filter(o=>!o.door&&o.k===ov.k).sort((a,b)=>b.start-a.start)[0];if(!last)return;const ex=ov.len+base,rel=ex-last.start,w2=+last.m.w,xm=(rel+w2)/2,a=last.tf(rel,-WT*2.2),b=last.tf(w2,-WT*2.2),pc=last.tf(xm,-WT*3.6),pw=1500*F,ph=380*F;
@@ -4658,7 +4704,9 @@ document.addEventListener("click",async e=>{
   if(d.balls!==undefined&&t.closest("[data-balls]")){D.drawing.balls=d.balls;saveD();wizRefresh();return}
   if(d.ydbox){const o=layout(D.drawing).find(x=>x.m.t==="box"&&x.nr===+d.ydbox);if(o){o.m.yd=!o.m.yd;saveD();wizRefresh()}return}
   if(d.ovf){ovfFix(D.drawing,d.ovf);saveD();wizRefresh();toast(d.ovf==="len"?"Stallet är större nu":d.ovf==="move"?"Flyttat":"Borttaget");return}
-  if(d.vcol){D.spec=D.spec||{};if(d.vcol==="zink")D.spec.finish="Varmförzinkad";else{if(!/ulverlack/.test(D.spec.finish||""))D.spec.finish="Pulverlack (RAL)";D.spec.ral=d.vcol}D.ui.chosen=D.ui.chosen||{};D.ui.chosen.finish=true;syncSpec();saveD();wizRefresh();return}
+  if(d.vm){S.vmenu=S.vmenu===d.vm?null:d.vm;cfgPanelRefresh();return}
+  if(d.vfpick){S.vmenu=null;D.spec=D.spec||{};D.spec.front=d.vfpick;D.ui.chosen=D.ui.chosen||{};D.ui.chosen.front=true;D.items=D.items.filter(i=>prod(i.product)?.cat!=="fronter");syncSpec();saveD();wizRefresh();return}
+  if(d.vcol){S.vmenu=null;D.spec=D.spec||{};if(d.vcol==="zink")D.spec.finish="Varmförzinkad";else{if(!/ulverlack/.test(D.spec.finish||""))D.spec.finish="Pulverlack (RAL)";D.spec.ral=d.vcol}D.ui.chosen=D.ui.chosen||{};D.ui.chosen.finish=true;syncSpec();saveD();wizRefresh();return}
   if(d.wallc){D.drawing.wallC=d.wallc;saveD();cfgPanelRefresh();return}
   if(d.tiphang!==undefined){D.ui.tipHang=true;saveD();cfgPanelRefresh();return}
   if(d.wopen){D.ui.wopen=D.ui.wopen||{};D.ui.wopen[d.wopen]=!D.ui.wopen[d.wopen];wizRefresh();return}
