@@ -3923,8 +3923,8 @@ const gBox=(dr,g)=>(dr.walls[g]||[]).some(m=>m.t==="box");
 function rowOff(dr){return {a:gBox(dr,"W")?depthMax(dr,"W"):0,b:gBox(dr,"E")?depthMax(dr,"E"):0}}
 function used(dr,k){return (dr.walls[k]||[]).reduce((a,m)=>a+(+m.w||0),0)}
 function gableSpan(dr,k){ // var gavelraden får plats (mellan långsidornas moduler)
-  const end=k==="W"?0:1;const dep=row=>{const ms=dr.walls[row]||[];if(!ms.length)return 0;let pos=0;for(const m of ms){if(end===0){return m.t==="box"||m.t==="room"?m.d:0}pos+=m.w}
-    const last=ms[ms.length-1],ro=rowOff(dr);return used(dr,row)>=dr.L-ro.a-ro.b-5&&(last.t==="box"||last.t==="room")?last.d:0};
+  /* v163: gavelraden börjar alltid nedanför en långsidesrad som har boxar eller rum (oavsett om raden står mot vänster eller höger gavel) */
+  const dep=row=>{const hs=(dr.walls[row]||[]).filter(m=>m.t==="box"||m.t==="room");return hs.length?Math.max(...hs.map(m=>+m.d||0)):0};
   const a=dep("N"),b=dep("S");return {y0:a,y1:dr.W-b,len:dr.W-a-b};
 }
 function layout(dr){migrateDoors(dr);
@@ -4018,32 +4018,12 @@ const RS_PG={matt:["wall"],boxA:[],rum:["room"],rumx:["room"],rumy:["room"]};
 /* v159: ingång på en långsida med boxar får en fri passage i boxraden (Carls val A).
    Passagen är en "gap"-modul med doorGap=<dörrens id>, lika bred som dörren. Boxarna fyller resten jämnt,
    dörren hamnar i närmaste mellanrum mellan två moduler. Blir boxarna för smala tas en box bort. */
-const _af159=autoFill;autoFill=function(dr,k){
-  if(k!=="N"&&k!=="S"){_af159(dr,k);return}
-  const ms=dr.walls[k]=dr.walls[k]||[];for(let i=ms.length-1;i>=0;i--)if(ms[i].doorGap)ms.splice(i,1);
-  const c=dr.cfg?.[k],ds=(dr.doors||[]).filter(d=>d.k===k).sort((a,b)=>(+a.p||0)-(+b.p||0));
-  if(!c||!c.auto||!(c.n>0)||!ds.length||!ms.some(m=>m.t==="box")&&!(c.n>0)){_af159(dr,k);return}
-  const gaps=ds.map(d=>({id:uid2(),t:"gap",w:+d.w||2000,doorGap:d.id}));ms.push(...gaps);
-  _af159(dr,k);let g=0;S.doorDrop=S.doorDrop||0;while(c.err&&c.n>1&&g++<20){c.n--;S.doorDrop++;_af159(dr,k)}
-  for(let i=ms.length-1;i>=0;i--)if(ms[i].doorGap)ms.splice(i,1);
-  const base=wallBase(dr,k);
-  /* v161: en dörr på väggen hamnar exakt där man släpper den. Ligger den nära ett mellanrum (≤ 400 mm) snäpper den dit och alla boxar blir lika breda;
-     annars delar boxarna på var sin sida upp sin del jämnt. Faller tillbaka på snäpp om det inte går (fasta storlekar, rum på väggen, för smala boxar). */
-  if(ds.length===1&&ds[0].exact&&(c.mode||"lika")==="lika"&&ms.every(m=>m.t==="box")){const d=ds[0],gp=gaps[0],w=+gp.w,len=wallLen2(dr,k),r=sizeRule(dr.front),n=ms.length;
-    const s0=Math.max(0,Math.min(len-w,Math.round(((+d.p||0)-base)/10)*10));let pos=0,bd=1e12;for(let j=0;j<=n;j++){bd=Math.min(bd,Math.abs(pos-s0));if(j<n)pos+=+ms[j].w||0}
-    if(bd>400&&r.type!=="fixed"&&n>0){const L1=s0,R1=len-s0-w,mn=r.min||2500,mx=Math.min(r.max||6000,6000);const ok=(seg,c2)=>c2===0?seg<1:seg/c2>=mn&&seg/c2<=mx;
-      const n0=Math.round(n*L1/(L1+R1||1));let nl=-1;for(const t of [n0,n0-1,n0+1,n0-2,n0+2])if(t>=0&&t<=n&&ok(L1,t)&&ok(R1,n-t)){nl=t;break}
-      if(nl>=0){const split=(seg,c2)=>{if(!c2)return [];const b=Math.floor(seg/c2/10)*10,a2=Array(c2).fill(b);a2[c2-1]=seg-b*(c2-1);return a2};const ws=[...split(L1,nl),...split(R1,n-nl)];
-        ms.forEach((m,i)=>m.w=ws[i]);ms.splice(nl,0,gp);d.p=Math.round(base+L1);d.ctr=false;return}}}
-  ds.forEach((d,n)=>{const gp=gaps[n],cx=(+d.p||0)+(+d.w||0)/2-base;let pos=0,best=0,bd=1e12;
-    for(let j=0;j<=ms.length;j++){const dd=Math.abs(pos+gp.w/2-cx);if(dd<bd&&!(j>0&&j<ms.length&&ms[j-1].doorGap&&false)){bd=dd;best=j}if(j<ms.length)pos+=+ms[j].w||0}
-    let at=0;for(let j=0;j<best;j++)at+=+ms[j].w||0;ms.splice(best,0,gp);d.p=Math.round(base+at);d.ctr=false});
-};
-function doorRefill(dr,ks,say){if(!dr)return;const before={};(ks||["N","S"]).forEach(k=>{before[k]=S.dBefore&&S.dBefore[k]!=null?S.dBefore[k]:(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join()});S.dBefore=null;S.doorDrop=0;
-  (ks||["N","S"]).forEach(k=>{if(dr.cfg?.[k]?.auto)autoFill(dr,k)});
-  if(!say||typeof toast!=="function")return;const ch=(ks||["N","S"]).find(k=>(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join()!==before[k]&&(dr.walls[k]||[]).some(m=>m.doorGap));
+/* v159–v162: dörrpassagen har flyttats till slutet av skriptet (v163, _af163) */
+function doorRefill(dr,ks,say){if(!dr)return;const before={};(ks||["N","S","W","E"]).forEach(k=>{before[k]=S.dBefore&&S.dBefore[k]!=null?S.dBefore[k]:(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join()});S.dBefore=null;S.doorDrop=0;
+  (ks||["N","S","W","E"]).forEach(k=>{if(dr.cfg?.[k]?.auto)autoFill(dr,k)});
+  if(!say||typeof toast!=="function")return;const ch=(ks||["N","S","W","E"]).find(k=>(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join()!==before[k]&&(dr.walls[k]||[]).some(m=>m.doorGap));
   if(!ch)return;const bx=(dr.walls[ch]||[]).filter(m=>m.t==="box"),w=bx[0]?+bx[0].w:0,same=bx.every(m=>+m.w===w),side=ch==="N"?"långsida A":"långsida B";
-  setTimeout(()=>toast(S.doorDrop?`En box färre på ${side}, så att det blir en fri passage vid ingången`:same?`Boxarna på ${side} är ${mm(w)} mm breda nu, så att det blir en fri passage vid ingången`:(()=>{const ms=dr.walls[ch]||[],gi=ms.findIndex(m=>m.doorGap),l=ms.slice(0,gi).filter(m=>m.t==="box"),r=ms.slice(gi+1).filter(m=>m.t==="box");const dd=(dr.doors||[]).find(x=>x.id===ms[gi].doorGap),mid=dd&&Math.abs((+dd.p||0)+(+dd.w||0)/2-wallLen(dr,ch)/2)<20;return l.length&&r.length?`${mid?`Ingången står mitt på ${side}`:"Ingången står där du släppte den"}. Boxarna är ${mm(+l[0].w)} mm till vänster och ${mm(+r[0].w)} mm till höger om den`:`Boxarna på ${side} har flyttat sig, så att det blir en fri passage vid ingången`})()),60)}
+  setTimeout(()=>toast(S.doorDrop?`En box färre på ${side}, så att det blir en fri passage vid ingången`:same?`Boxarna på ${side} är ${mm(w)} mm breda nu, så att det blir en fri passage vid ingången`:(()=>{const ms=dr.walls[ch]||[],gi=ms.findIndex(m=>m.doorGap),l=ms.slice(0,gi).filter(m=>m.t==="box"),r=ms.slice(gi+1).filter(m=>m.t==="box");const mid=(dr.doors||[]).some(x=>x.k===ch&&Math.abs((+x.p||0)+(+x.w||0)/2-wallLen(dr,ch)/2)<20);return l.length&&r.length?`${mid?`Ingången står mitt på ${side}`:"Ingången står där du släppte den"}. Boxarna är ${mm(+l[0].w)} mm till vänster och ${mm(+r[0].w)} mm till höger om den`:`Boxarna på ${side} har flyttat sig, så att det blir en fri passage vid ingången`})()),60)}
 {const _te=toggleExtra;toggleExtra=function(dr,key){if(String(key).startsWith("door-")){S.dBefore={};["N","S"].forEach(k=>S.dBefore[k]=(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join())}const r=_te(dr,key);if(String(key).startsWith("door-")&&!extraFind(dr,key))doorRefill(dr,null,false);return r}}
 {const _cd=centerDoor;centerDoor=function(dr,key){const f0=extraFind(dr,key);_cd(dr,key);if(f0&&f0.m){if(f0.k==="N"||f0.k==="S")f0.m.exact=true;else delete f0.m.exact}/* v162: ny ingång på långsidan står mitt vid A/B */doorRefill(dr,null,true)}}
 {const _sp=setDoorPos;setDoorPos=function(dr,key,P){_sp(dr,key,P);const f0=extraFind(dr,key);if(f0&&f0.m)f0.m.exact=true;doorRefill(dr,null,true)}}
@@ -4051,7 +4031,7 @@ function doorRefill(dr,ks,say){if(!dr)return;const before={};(ks||["N","S"]).for
 {const _sw=setExtraW;setExtraW=function(dr,key,v){_sw(dr,key,v);if(String(key).startsWith("door-"))doorRefill(dr,null,true)}}
 {const _ed159=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed159(host,getDr,onLive,onEnd);if(!host)return;const pd=host.onpointerdown,pu=host.onpointerup;let dd=false;
   host.onpointerdown=e=>{const de=e.target.closest&&e.target.closest("[data-door]");dd=de?de.dataset.door:false;return pd&&pd.call(host,e)};
-  host.onpointerup=e=>{const r=pu&&pu.call(host,e);if(dd){const did=dd;dd=false;const dr=getDr();const dm=dr&&(dr.doors||[]).find(x=>x.id===did);if(dm&&!dm.ctr)dm.exact=true;if(dr&&(dr.doors||[]).some(d=>d.k==="N"||d.k==="S")){doorRefill(dr,null,true);try{saveD()}catch(_){}try{cfgPanelRefresh()}catch(_){}}}return r}}}
+  host.onpointerup=e=>{const r=pu&&pu.call(host,e);if(dd){const did=dd;dd=false;const dr=getDr();const dm=dr&&(dr.doors||[]).find(x=>x.id===did);if(dm&&!dm.ctr)dm.exact=true;if(dr&&(dr.doors||[]).length){doorRefill(dr,null,true);try{saveD()}catch(_){}try{cfgPanelRefresh()}catch(_){}}}return r}}}
 /* v154: allt som läggs in pulserar tre gånger, en gång.
    Regel: bara det som just tillkom, aldrig vid omritning, flytt eller laddning av ett sparat stall. */
 function newPulse(dr,lay,F){const now=Date.now(),cur={};
@@ -5275,6 +5255,61 @@ if(isPublic())publicBoot();else render();
   db.collection("leads").onSnapshot(s=>{S.leads=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{});
   if(S.uid){try{const p=await db.doc(`data/users/${S.uid}/prefs`).get();if(p.exists){S.prefs={checks:{},...p.data()};ls.set("myrby.prefs",S.prefs)}}catch(e){}}
 })();
+
+/* v163: ingångar och boxrader – en regel för alla väggar.
+   1) En dörr flyttas ALDRIG av att boxar läggs till, tas bort eller ändras. Bara kunden flyttar den.
+   2) Framför en dörr är det alltid fritt (en passage lika bred som dörren, genom hela boxraden).
+   3) Fyll jämnt: boxarna delar upp väggen mellan dörrarna i jämna delar. Samma/olika bredd: boxarna läggs i ordning och hoppar över dörren.
+   4) Får boxarna inte plats tas en box bort (meddelande säger det). Ligger helt sist i skriptet så att inga andra autoFill-omslag kan flytta något efteråt. */
+function doorSpans(dr,k,base,len){const sp=(dr.doors||[]).filter(d=>d.k===k).map(d=>{const s0=(+d.p||0)-base;return {s:Math.max(0,s0),e:Math.min(len,s0+(+d.w||0))}}).filter(x=>x.e-x.s>1).sort((a,b)=>a.s-b.s);
+  const m=[];sp.forEach(x=>{const l=m[m.length-1];if(l&&x.s<=l.e)l.e=Math.max(l.e,x.e);else m.push({...x})});return m}
+function doorPlace(dr,k,ms,sp,len,c,how){const hard=m=>m.t==="box"||m.t==="room",r=sizeRule(dr.front),gap=(w,o)=>({id:uid2(),t:"gap",w:Math.round(w),...o});
+  if(how==="lika"){if(!((c.mode||"lika")==="lika"&&r.type!=="fixed"&&ms.length&&ms.every(m=>m.t==="box"||m.autoRest)))return false;const bx=ms.filter(m=>m.t==="box"),n=bx.length,mn=r.min||2500,mx=Math.min(r.max||6000,6000);if(!n)return false;
+    const segs=[];let x=0;sp.forEach(q=>{segs.push({a:x,b:q.s,q});x=q.e});segs.push({a:x,b:len,q:null});const L=segs.map(g=>Math.max(0,g.b-g.a)),T=L.reduce((a,b)=>a+b,0)||1;
+    const per=(i,c2)=>c2?L[i]/c2:0,okc=(i,c2)=>c2===0||(per(i,c2)>=mn-1&&per(i,c2)<=mx+1);
+    const cnt=L.map(l=>{let v=Math.round(n*l/T);while(v>0&&l/v<mn)v--;if(v>0)while(l/v>mx)v++;return v});
+    let guard=0;while(cnt.reduce((a,b)=>a+b,0)<n&&guard++<50){let bi=-1,bw=0;cnt.forEach((v,i)=>{if(okc(i,v+1)&&L[i]/(v+1)>bw){bw=L[i]/(v+1);bi=i}});if(bi<0)break;cnt[bi]++}
+    guard=0;while(cnt.reduce((a,b)=>a+b,0)>n&&guard++<50){let bi=-1,bw=1e9;cnt.forEach((v,i)=>{if(v>0&&okc(i,v-1)&&per(i,v)<bw){bw=per(i,v);bi=i}});if(bi<0)break;cnt[bi]--}
+    if(cnt.reduce((a,b)=>a+b,0)!==n||!cnt.every((v,i)=>okc(i,v)))return false;
+    const out=[];let bi=0;segs.forEach((g,i)=>{if(cnt[i]){const b=Math.floor(L[i]/cnt[i]/10)*10;for(let j=0;j<cnt[i];j++){const m=bx[bi++];m.w=j===cnt[i]-1?L[i]-b*(cnt[i]-1):b;out.push(m)}}else if(L[i]>0)out.push(gap(L[i],{doorFill:true}));if(g.q)out.push(gap(g.q.e-g.q.s,{doorGap:true}))});
+    while(out.length&&out[out.length-1].t==="gap"&&(out[out.length-1].doorFill||out[out.length-1].doorGap))out.pop();
+    ms.splice(0,ms.length,...out);c.rest=0;c.err=false;return true}
+  const end=c.align==="end",flip=q=>end?q.map(z=>({s:len-z.e,e:len-z.s})).reverse():q,spans=flip(sp);
+  const finish=(out,x)=>{if(end){out.reverse();if(len-x>0)out.unshift(gap(len-x,{autoRest:true}))}ms.splice(0,ms.length,...out);return true};
+  if(how==="flow"||how==="force"){const mods=ms.filter(m=>!m.autoRest),seq=end?mods.slice().reverse():mods;const out=[];let x=0;
+    for(const m of seq){const w=+m.w||0;if(hard(m))for(const q of spans){if(x<q.e-1&&x+w>q.s+1){out.push(gap(q.e-x,{doorGap:true}));x=q.e}}out.push(m);x+=w}
+    if(x>len+1&&how!=="force")return false;return finish(out,x)}
+  if(how==="fit"){/* första lediga plats: boxar och rum läggs i den första del av väggen där de får plats, i ordning */
+    const hs=ms.filter(hard),seq=end?hs.slice().reverse():hs,segs=[];let a=0;spans.forEach(q=>{segs.push({a,b:q.s,q,items:[],used:0});a=q.e});segs.push({a,b:len,q:null,items:[],used:0});
+    for(const m of seq){const w=+m.w||0,g=segs.find(g=>g.b-g.a-g.used>=w-1);if(!g)return false;g.items.push(m);g.used+=w}
+    const out=[];let x=0;segs.forEach(g=>{g.items.forEach(m=>{out.push(m);x+=+m.w||0});if(g.q){const fill=g.q.s-x;out.push(gap(fill+(g.q.e-g.q.s),{doorGap:true}));x=g.q.e}});
+    while(out.length&&out[out.length-1].t==="gap"&&out[out.length-1].doorGap){x-=out[out.length-1].w;out.pop()}return finish(out,x)}
+  return false}
+/* v163: dörrens tillåtna zon. Långsida: mellan gavelraderna (hörnet bakom en gavelbox leder ingenstans).
+   Gavel: mot stallgången, mellan långsidornas rader. Ligger en dörr utanför (t.ex. efter att en gavelbox lagts till) flyttas den in så lite som möjligt. */
+function doorZone(dr,k,w){if(k==="N"||k==="S"){const ro=rowOff(dr);return {lo:ro.a,hi:dr.L-ro.b-w}}const g=gableSpan(dr,k);return {lo:g.y0,hi:g.y1-w}}
+function doorFit(dr,k){(dr.doors||[]).filter(d=>d.k===k).forEach(d=>{const z=doorZone(dr,k,+d.w||0);if(z.hi<z.lo)return;const p0=+d.p||0,p1=Math.max(z.lo,Math.min(z.hi,p0));if(Math.abs(p1-p0)>1){d.p=Math.round(p1);S.doorClamped=(S.doorClamped||0)+1}})}
+{const _dc=doorClamp;doorClamp=function(dr,k,p,w){const v=_dc(dr,k,p,w);try{const z=doorZone(dr,k,+w||0);if(z.hi>=z.lo){const q=Math.max(z.lo,Math.min(z.hi,v));if(Math.abs(q-v)>1)S.doorClamped=(S.doorClamped||0)+1;return q}}catch(_){}return v}}
+/* v163: när djupet på en rad ändras (knapp eller blått handtag) måste gavlarna och gaveldörrarna följa med */
+function settleGables(dr){if(!dr)return;const ro0=JSON.stringify(rowOff(dr));["N","S","W","E"].forEach(k=>doorFit(dr,k));["W","E"].forEach(k=>{try{autoFill(dr,k)}catch(_){}});if(JSON.stringify(rowOff(dr))!==ro0)autoAll(dr)}
+{const _sbd=setBoxD;setBoxD=function(k,v){_sbd(k,v);try{settleGables(D.drawing);saveD();wizRefresh()}catch(_){}}}
+{const _ed163=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed163(host,getDr,onLive,onEnd);if(!host)return;const pu=host.onpointerup,pd=host.onpointerdown;let fr=false;
+  host.onpointerdown=e=>{fr=!!(e.target.closest&&e.target.closest("[data-rsfront],[data-rsouter]"));return pd&&pd.call(host,e)};
+  host.onpointerup=e=>{const r=pu&&pu.call(host,e);if(fr){fr=false;try{const dr=getDr();settleGables(dr);saveD();cfgPanelRefresh()}catch(_){}}return r}}}
+/* v163: autoAll räknar om tills rader och gavlar är överens (gavlarnas boxar påverkar var långsidorna börjar och tvärtom) */
+{const _aa=autoAll;autoAll=function(dr){for(let g=0;g<4;g++){const key=()=>JSON.stringify([rowOff(dr),gableSpan(dr,"W"),gableSpan(dr,"E")]);const k0=key();_aa(dr);if(key()===k0)break}}}
+const _af163=autoFill;autoFill=function(dr,k){const ms=dr.walls[k]=dr.walls[k]||[];doorFit(dr,k);for(let i=ms.length-1;i>=0;i--)if(ms[i].doorGap||ms[i].doorFill)ms.splice(i,1);
+  const c=dr.cfg?.[k];const base=wallBase(dr,k),len=wallLen2(dr,k);const clean=()=>{for(let i=ms.length-1;i>=0;i--)if(ms[i].doorGap||ms[i].doorFill)ms.splice(i,1)};
+  const after=()=>{if((k==="N"||k==="S")&&(dr.doors||[]).some(d=>d.k==="W"||d.k==="E")){const n0=S.doorClamped||0;doorFit(dr,"W");doorFit(dr,"E")}};
+  if(!c||!c.auto||!(c.n>0)){_af163(dr,k);const sp0=doorSpans(dr,k,base,len);if(sp0.length&&ms.some(m=>m.t==="box"||m.t==="room")){clean();const cc={...(c||{}),mode:"per"};for(const h of ["flow","fit","force"])if(doorPlace(dr,k,ms,sp0,len,cc,h))break}after();return}
+  const sp=doorSpans(dr,k,base,len);if(!sp.length){_af163(dr,k);after();return}
+  const tot=sp.reduce((a,q)=>a+q.e-q.s,0);S.doorDrop=S.doorDrop||0;const n0=c.n;
+  for(let g=0;g<30;g++){const ph={id:uid2(),t:"gap",w:tot,doorGap:true};ms.push(ph);_af163(dr,k);const pi=ms.indexOf(ph);if(pi>=0)ms.splice(pi,1);clean();
+    if(!ms.some(m=>m.t==="box"||m.t==="room")){after();return}
+    if(doorPlace(dr,k,ms,sp,len,c,"lika")||doorPlace(dr,k,ms,sp,len,c,"flow")||doorPlace(dr,k,ms,sp,len,c,"fit"))break;
+    if(c.n<=0){doorPlace(dr,k,ms,sp,len,c,"force");break}c.n--;S.doorDrop++}
+  if(c.n<n0&&typeof toast==="function"&&!S.noDoorToast){clearTimeout(S.ddT);const nm=(typeof WALL_NAMES!=="undefined"&&WALL_NAMES[k])||k;S.ddT=setTimeout(()=>{try{toast(c.n?`${nm}: ${c.n} ${c.n===1?"box":"boxar"} får plats vid sidan av ingången`:`Det får inte plats någon box på ${String(nm).toLowerCase()} vid sidan av ingången`)}catch(_){}},90)}
+  after()};
 </script>
 
 </html>
