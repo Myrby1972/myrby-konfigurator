@@ -4015,6 +4015,35 @@ const _ed134=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed134(host
    rum när rummen ritats. Första gången en sort dyker upp pulserar den tre gånger, sedan ligger den kvar. */
 /* v143: pulsen kommer varje gång man kommer till sitt avsnitt (Mått: väggar, Boxar: boxväggar och fronter, Rum: rum) och första gången en sort syns */
 const RS_PG={matt:["wall"],boxA:[],rum:["room"],rumx:["room"],rumy:["room"]};
+/* v159: ingång på en långsida med boxar får en fri passage i boxraden (Carls val A).
+   Passagen är en "gap"-modul med doorGap=<dörrens id>, lika bred som dörren. Boxarna fyller resten jämnt,
+   dörren hamnar i närmaste mellanrum mellan två moduler. Blir boxarna för smala tas en box bort. */
+const _af159=autoFill;autoFill=function(dr,k){
+  if(k!=="N"&&k!=="S"){_af159(dr,k);return}
+  const ms=dr.walls[k]=dr.walls[k]||[];for(let i=ms.length-1;i>=0;i--)if(ms[i].doorGap)ms.splice(i,1);
+  const c=dr.cfg?.[k],ds=(dr.doors||[]).filter(d=>d.k===k).sort((a,b)=>(+a.p||0)-(+b.p||0));
+  if(!c||!c.auto||!(c.n>0)||!ds.length||!ms.some(m=>m.t==="box")&&!(c.n>0)){_af159(dr,k);return}
+  const gaps=ds.map(d=>({id:uid2(),t:"gap",w:+d.w||2000,doorGap:d.id}));ms.push(...gaps);
+  _af159(dr,k);let g=0;S.doorDrop=S.doorDrop||0;while(c.err&&c.n>1&&g++<20){c.n--;S.doorDrop++;_af159(dr,k)}
+  for(let i=ms.length-1;i>=0;i--)if(ms[i].doorGap)ms.splice(i,1);
+  const base=wallBase(dr,k);
+  ds.forEach((d,n)=>{const gp=gaps[n],cx=(+d.p||0)+(+d.w||0)/2-base;let pos=0,best=0,bd=1e12;
+    for(let j=0;j<=ms.length;j++){const dd=Math.abs(pos+gp.w/2-cx);if(dd<bd&&!(j>0&&j<ms.length&&ms[j-1].doorGap&&false)){bd=dd;best=j}if(j<ms.length)pos+=+ms[j].w||0}
+    let at=0;for(let j=0;j<best;j++)at+=+ms[j].w||0;ms.splice(best,0,gp);d.p=Math.round(base+at);d.ctr=false});
+};
+function doorRefill(dr,ks,say){if(!dr)return;const before={};(ks||["N","S"]).forEach(k=>{before[k]=S.dBefore&&S.dBefore[k]!=null?S.dBefore[k]:(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join()});S.dBefore=null;S.doorDrop=0;
+  (ks||["N","S"]).forEach(k=>{if(dr.cfg?.[k]?.auto)autoFill(dr,k)});
+  if(!say||typeof toast!=="function")return;const ch=(ks||["N","S"]).find(k=>(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join()!==before[k]&&(dr.walls[k]||[]).some(m=>m.doorGap));
+  if(!ch)return;const bx=(dr.walls[ch]||[]).filter(m=>m.t==="box"),w=bx[0]?+bx[0].w:0,same=bx.every(m=>+m.w===w),side=ch==="N"?"långsida A":"långsida B";
+  setTimeout(()=>toast(S.doorDrop?`En box färre på ${side}, så att det blir en fri passage vid ingången`:same?`Boxarna på ${side} är ${mm(w)} mm breda nu, så att det blir en fri passage vid ingången`:`Boxarna på ${side} har flyttat sig, så att det blir en fri passage vid ingången`),60)}
+{const _te=toggleExtra;toggleExtra=function(dr,key){if(String(key).startsWith("door-")){S.dBefore={};["N","S"].forEach(k=>S.dBefore[k]=(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join())}const r=_te(dr,key);if(String(key).startsWith("door-")&&!extraFind(dr,key))doorRefill(dr,null,false);return r}}
+{const _cd=centerDoor;centerDoor=function(dr,key){_cd(dr,key);doorRefill(dr,null,true)}}
+{const _sp=setDoorPos;setDoorPos=function(dr,key,P){_sp(dr,key,P);doorRefill(dr,null,false)}}
+{const _mw=moveDoorWall;moveDoorWall=function(dr,key,k2){_mw(dr,key,k2);doorRefill(dr,null,true)}}
+{const _sw=setExtraW;setExtraW=function(dr,key,v){_sw(dr,key,v);if(String(key).startsWith("door-"))doorRefill(dr,null,true)}}
+{const _ed159=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed159(host,getDr,onLive,onEnd);if(!host)return;const pd=host.onpointerdown,pu=host.onpointerup;let dd=false;
+  host.onpointerdown=e=>{dd=!!(e.target.closest&&e.target.closest("[data-door]"));return pd&&pd.call(host,e)};
+  host.onpointerup=e=>{const r=pu&&pu.call(host,e);if(dd){dd=false;const dr=getDr();if(dr&&(dr.doors||[]).some(d=>d.k==="N"||d.k==="S")){doorRefill(dr,null,true);try{saveD()}catch(_){}try{cfgPanelRefresh()}catch(_){}}}return r}}}
 /* v154: allt som läggs in pulserar tre gånger, en gång.
    Regel: bara det som just tillkom, aldrig vid omritning, flytt eller laddning av ett sparat stall. */
 function newPulse(dr,lay,F){const now=Date.now(),cur={};
