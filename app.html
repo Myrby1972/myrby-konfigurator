@@ -2135,6 +2135,12 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 /* v152: pulsen får aldrig skrivas över av rit-animationen */
 #cfgcanvas .wpulse.inkf{animation:wpulse 1s ease-out 3!important;opacity:0}
 #cfgcanvas .wpulse.wp2.inkf{animation-name:wpulse2!important}
+/* v154: puls på nytt inlagda saker (dörrar, boxar, rum) */
+#cfgcanvas .npl.wpulse,#cfgcanvas .npl.wpulse.inkf{animation:wpulse 1s ease-out 3!important;animation-delay:var(--np,0s)!important}
+#cfgcanvas .npl.wpulse.wp2,#cfgcanvas .npl.wpulse.wp2.inkf{animation-name:wpulse2!important}
+@keyframes npr{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
+#cfgcanvas .npr,#cfgcanvas .npr.inkf{opacity:0;animation:npr 1s ease-in-out 3!important;animation-delay:var(--np,0s)!important}
+@media (prefers-reduced-motion:reduce){#cfgcanvas .npl,#cfgcanvas .npr{animation:none!important;opacity:0}}
 </style>
 
 <div class="app">
@@ -2829,7 +2835,7 @@ function openNotes(refresh){const ctx=noteCtx(),me=ROLES[S.role]?.name||"";const
 async function saveNote(){const t=$("#notetext"),txt=(t?.value||"").trim();if(!txt){toast("Skriv något först");t?.focus();return}const name=($("#notename")?.value||"").trim();ls.set("myrby.notename",name);if(!S.db){toast("Ingen anslutning");return}
   const ctx=noteCtx();try{await S.db.collection("notes").add({text:txt,type:S.ntype||"Förslag",name,ctx,createdAt:Date.now(),done:false,by:S.uid||"",draft:D.ui?.kind?JSON.stringify({spec:D.spec,ui:{kind:D.ui.kind},fmix:D.drawing?.fmix||null}).slice(0,4000):""});S.ndraft="";if(t)t.value="";S.nperm=false;toast("Anteckning sparad, tack!");openNotes(true)}catch(e){if(e&&e.code==="invalid_argument"){S.nperm=true;S.ndraft=txt;openNotes(true);toast("Du har bara läsbehörighet, se rutan")}else toast("Kunde inte spara, försök igen")}}
 const INK_SEL="line,path,polyline,polygon,rect,circle,text";
-function inkIn(cv,prev){const svg=cv.querySelector("svg.pretty");if(!svg||!prev.size)return false;let n=0;svg.querySelectorAll(INK_SEL).forEach(e=>{if(e.closest("defs")||e.classList.contains("wpulse")||prev.has(e.outerHTML)||n>700)return;n++;const tg=e.tagName;
+function inkIn(cv,prev){const svg=cv.querySelector("svg.pretty");if(!svg||!prev.size)return false;let n=0;svg.querySelectorAll(INK_SEL).forEach(e=>{if(e.closest("defs")||e.classList.contains("wpulse")||e.classList.contains("npr")||prev.has(e.outerHTML)||n>700)return;n++;const tg=e.tagName;
   if((tg==="line"||tg==="path"||tg==="polyline")&&!e.getAttribute("stroke-dasharray")){e.setAttribute("pathLength","1000");e.classList.add("ink")}else e.classList.add("inkf")});return n>0}
 /* ===== Stallbyggaren: material, hästnamn, 3D, stallgång, ångra, byggklossar, avslutning ===== */
 const FILLC={"Gran":["#dcb67e","#b88f55","#ecd2a2"],"Toffee":["#6e4a2c","#4f331d","#8a6040"],"Ek":["#b88a55","#93693a","#cfa575"],"Plast Ash Grey":["#6c7173","#5a5e60","#808587"],"Plast Mineral Grey":["#8b8f91","#73777a","#a3a7a9"],"Plast Canyon Brown":["#6d4a3a","#56392c","#86604f"],"Plast Sand Beige":["#cdb68f","#b39b72","#ddc9a6"],"Plast svart":["#2c2c2c","#1b1b1b","#444"]};
@@ -3943,6 +3949,20 @@ const _ed134=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed134(host
    rum när rummen ritats. Första gången en sort dyker upp pulserar den tre gånger, sedan ligger den kvar. */
 /* v143: pulsen kommer varje gång man kommer till sitt avsnitt (Mått: väggar, Boxar: boxväggar och fronter, Rum: rum) och första gången en sort syns */
 const RS_PG={matt:["wall"],boxA:["box","front"],rum:["room"],rumx:["room"],rumy:["room"]};
+/* v154: allt som läggs in pulserar tre gånger, en gång.
+   Regel: bara det som just tillkom, aldrig vid omritning, flytt eller laddning av ett sparat stall. */
+function newPulse(dr,lay,F){const now=Date.now(),cur={};
+  lay.forEach(o=>{if(o.m&&o.m.id&&o.m.t!=="gap")cur[o.m.id]=1});
+  const prev=S.seenObj,same=S.seenRef===dr.walls||S.seenDr===dr;S.newT=S.newT||{};
+  if(prev&&same){const add=Object.keys(cur).filter(id=>!prev[id]);if(add.length&&add.length<=12)add.forEach(id=>S.newT[id]=now)}
+  S.seenObj=cur;S.seenDr=dr;S.seenRef=dr.walls;
+  const out=[];lay.forEach(o=>{const m=o.m;if(!m||!m.id)return;const t0=S.newT[m.id];if(!t0||now-t0>3300)return;
+    const w=+m.w||0,d=+m.d||0,age=-(now-t0)/1000;
+    if(o.door||d<600){const c=o.tf(w/2,d/2),r=Math.max(700,w*.7);
+      out.push(`<g pointer-events="none" style="--np:${age}s"><circle class="wpulse npl" cx="${c[0]}" cy="${c[1]}" r="${r}" fill="none" stroke="#c9a24e" stroke-width="${70*F}"/><circle class="wpulse wp2 npl" cx="${c[0]}" cy="${c[1]}" r="${r}" fill="#c9a24e" fill-opacity=".2"/></g>`)}
+    else{const pts=[[0,0],[w,0],[w,d],[0,d]].map(p=>o.tf(...p)),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys),ww=Math.max(...xs)-x,hh=Math.max(...ys)-y,in_=60*F;
+      out.push(`<rect class="npr" style="--np:${age}s" pointer-events="none" x="${x+in_}" y="${y+in_}" width="${ww-2*in_}" height="${hh-2*in_}" rx="${120*F}" fill="#c9a24e" fill-opacity=".16" stroke="#c9a24e" stroke-width="${60*F}"/>`)}});
+  return out.join("")}
 function rsHintPg(pg){S.hintT=S.hintT||{};if(S.hintPg!==pg){S.hintPg=pg;(RS_PG[pg]||[]).forEach(t=>S.hintT[t]=Date.now())}}
 function rsHint(t){D.ui.hint=D.ui.hint||{};S.hintT=S.hintT||{};if(!D.ui.hint[t]){D.ui.hint[t]=1;if(!S.hintT[t]||Date.now()-S.hintT[t]>4600)S.hintT[t]=Date.now()}return !!S.hintT[t]&&Date.now()-S.hintT[t]<4600}
 function rsHandles(dr,lay,F,pg,lvl){lvl=lvl==null?9:lvl;rsHintPg(pg);const out=[],WT=230,T=(o,x,y)=>o.tf(x,y),ring=(a,b,c)=>{const cx=(a[0]+b[0])/2,cy=(a[1]+b[1])/2;c=c||"#b8862f";return `<circle class="wpulse" cx="${cx}" cy="${cy}" r="${650*F}" fill="none" stroke="${c}" stroke-width="${70*F}"/><circle class="wpulse wp2" cx="${cx}" cy="${cy}" r="${650*F}" fill="${c}" fill-opacity=".22"/>`};
@@ -4232,6 +4252,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
   g.push(...tags);
   const late=[];
   if((interactive||lvl>=1)&&!paint&&typeof cfgPgKey==="function"){const pgk=cfgPgKey()||"";if(pgk!=="sum"&&pgk!=="kund")late.push(rsHandles(dr,lay,F,pgk,lvl))}
+  if(!paint&&typeof D!=="undefined"&&dr===D.drawing)late.push(newPulse(dr,lay,F));
   if(lvl>=2)ovfInfo(dr).forEach(ov=>{const base=wallBase(dr,ov.k);lay.filter(o=>!o.door&&o.k===ov.k&&o.m.t!=="gap").forEach(o=>{const w=+o.m.w,d=+o.m.d||0,rel=o.start-base;if(rel+w<=ov.len+1)return;const x0=Math.max(0,ov.len-rel),P=pts=>pts.map(p=>o.tf(...p).join(",")).join(" ");
       late.push(`<polygon points="${P([[0,0],[w,0],[w,d],[0,d]])}" fill="none" stroke="#b23a30" stroke-width="${26*F}" stroke-dasharray="${90*F} ${60*F}" pointer-events="none"/><polygon points="${P([[x0,0],[w,0],[w,d],[x0,d]])}" fill="#b23a30" fill-opacity=".16" stroke="none" pointer-events="none"/>`)});
     const last=lay.filter(o=>!o.door&&o.k===ov.k).sort((a,b)=>b.start-a.start)[0];if(!last)return;const ex=ov.len+base,rel=ex-last.start,w2=+last.m.w,xm=(rel+w2)/2,a=last.tf(rel,-WT*2.2),b=last.tf(w2,-WT*2.2),pc=last.tf(xm,-WT*3.6),pw=1500*F,ph=380*F;
