@@ -1859,6 +1859,64 @@ html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[d
 #wiz .pintro-tr span::before{content:"✓ ";color:#c9a86a;font-weight:900}
 #wiz .pintro-x{position:absolute;top:9px;right:10px;width:24px;height:24px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#efe7d6;font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center}
 #wiz .pintro-x:hover{background:rgba(255,255,255,.22)}
+/* v128: boxar på båda långsidor och gavlarna i samma steg */
+#wiz .absame{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:9px 12px;margin:2px 0 10px;cursor:pointer;font:inherit;color:var(--ink)}
+#wiz .absame b{display:block;font-size:.9rem}
+#wiz .absame small{display:block;font-size:.76rem;color:var(--ink-3);margin-top:1px}
+#wiz .absw{width:38px;height:22px;border-radius:999px;background:#cfc6b2;position:relative;flex:none;transition:background .2s}
+#wiz .absw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+#wiz .absame[aria-pressed="true"] .absw{background:var(--green)}
+#wiz .absame[aria-pressed="true"] .absw::after{left:19px}
+#wiz .abside{border:1.5px solid var(--line);border-radius:14px;background:#faf8f3;margin-bottom:8px}
+#wiz .abside.on{border-color:var(--green);background:#fff}
+#wiz .abh{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;background:none;font:inherit;color:var(--ink);text-align:left}
+#wiz button.abh{cursor:pointer}
+#wiz button.abh:hover{background:rgba(35,65,42,.04);border-radius:13px}
+#wiz .abh b{flex:1;font-size:.95rem}
+#wiz .abb{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:900;font-size:.72rem;flex:none}
+#wiz .abb.g{background:#8a6a2c}
+#wiz .abs{font-size:.78rem;color:var(--ink-3);text-align:right;line-height:1.3}
+#wiz button.abh .abs::after{content:" ›";color:var(--green);font-weight:700}
+#wiz .abx{width:26px;height:26px;border-radius:50%;border:0;background:#f1ede3;color:var(--ink-2);font-size:16px;line-height:1;cursor:pointer}
+#wiz .abbody{padding:0 12px 12px}
+#wiz .abbody{display:grid;gap:10px}
+#wiz .abbody>*{margin:0!important}
+#wiz .abside.on{position:relative}
+#wiz .abbody .bigstep{position:absolute;top:6px;right:10px;padding:0!important;gap:0}
+#wiz .abbody .bigstep::before{display:none!important}
+#wiz .abbody .bigstep button{width:34px!important;height:34px!important;font-size:1.1rem!important}
+#wiz .abbody .bigstep>div{height:34px!important;min-width:58px!important;padding-top:3px!important}
+#wiz .abbody .bigstep .num{font-size:1.3rem!important}
+#wiz .abbody .bigstep>div span{font-size:.66rem!important}
+#wiz .abside.on .abh{min-height:46px}
+#wiz .abbody .seg .opt,#wiz .abbody .sizechips button{min-height:36px!important;height:36px!important;padding-top:0!important;padding-bottom:0!important}
+#wiz .abbody .bwin input{height:36px!important}
+#wiz .abbody .bwpick{padding:0!important;box-shadow:none!important;background:none!important;border-radius:0!important;gap:6px!important;max-width:none}
+#wiz .abbody .bwpick .hint3{display:none}
+#wiz .abbody .resline{padding:7px 10px!important;font-size:.8rem!important;line-height:1.35}
+#wiz .abside.on .abh{padding-bottom:6px}
+#wiz .cfg-q:has(.absame) .lead{margin-bottom:8px}
+#wiz .abg{grid-template-columns:1fr 1fr;margin-top:0}
+#wiz .abg .gstep{border:1.5px solid var(--line);border-radius:10px;padding:5px 6px 5px 10px;gap:6px}
+#wiz .abg .gstep button{width:30px;height:30px;font-size:1rem}
+#wiz .abadd{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c9c0ab;border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;font:inherit;color:var(--green)}
+#wiz .abadd:hover{border-color:var(--green)}
+#wiz .abadd b{display:block;font-size:.92rem}
+#wiz .abadd small{display:block;font-size:.76rem;color:var(--ink-3)}
+#wiz .abplus{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--green);display:grid;place-items:center;font-size:16px;flex:none}
+/* v128: introkortet större och tydligare (när skärmen är hög nog) */
+@media (min-height:800px){
+#wiz .pintro{padding:20px 20px 18px;gap:14px;border-radius:18px;margin-bottom:8px}
+#wiz .pintro-ov{font-size:11px}
+#wiz .pintro-t{font-size:1.9rem;margin-top:-2px}
+#wiz .pintro-steps{gap:8px}
+#wiz .pintro-steps div{padding:12px 12px 13px;gap:6px;border-radius:12px}
+#wiz .pintro-steps b{font-size:.98rem;gap:8px}
+#wiz .pintro-steps i{width:24px;height:24px;font-size:.78rem}
+#wiz .pintro-steps small{font-size:.82rem;line-height:1.35}
+#wiz .pintro-tr{font-size:.86rem;gap:4px 18px}
+#wiz .pintro-x{top:12px;right:12px;width:28px;height:28px;font-size:17px}
+}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2392,18 +2450,41 @@ function toggleExtra(dr,key){const f=extraFind(dr,key);
 }
 function suggestCounts(dr){if(D.ui?.touchedN)return;const r=sizeRule(dr.front),pref=r.type==="fixed"?3500:3500;
   ["N","S"].forEach(k=>{const c=dr.cfg[k];c.auto=true;c.n=Math.max(1,Math.floor(wallAvail(dr,k)/pref));autoFill(dr,k)})}
-function boxCountScreen(k,title){const dr=D.drawing,c=dr.cfg[k],bx=(dr.walls[k]||[]).filter(m=>m.t==="box"),ws=[...new Set(bx.map(m=>m.w))],r=sizeRule(dr.front),mode=c.mode==="sista"?"fast":c.mode==="per"?"per":c.mode==="fast"?"fast":"lika",minW=r.type==="fixed"?r.list[0]:r.min;
+function boxCountScreen(k,title,inner){const dr=D.drawing,c=dr.cfg[k],bx=(dr.walls[k]||[]).filter(m=>m.t==="box"),ws=[...new Set(bx.map(m=>m.w))],r=sizeRule(dr.front),mode=c.mode==="sista"?"fast":c.mode==="per"?"per":c.mode==="fast"?"fast":"lika",minW=r.type==="fixed"?r.list[0]:r.min;
   const sel=Math.min((D.ui.bsel||{})[k]||0,Math.max(0,bx.length-1)),rest=c.rest||0,aw=aisle(dr);
   const strip=mode==="per"&&bx.length?`<div class="wstrip" role="group" aria-label="Boxarna längs väggen">${bx.map((m,i)=>`<button type="button" class="wseg ${sel===i?"on":""}" style="flex:${m.w} 1 0" data-bsel="${k}:${i}" aria-pressed="${sel===i}"><b>Box ${i+1}</b><span class="num">${mm(m.w)}</span></button>`).join("")}${rest>0?`<span class="wrest" style="flex:${rest} 1 0" title="Kvar mot väggen"><span class="num">${mm(rest)}</span></span>`:""}</div>
      <div class="wsel"><span class="bwl">Box ${sel+1}, bredd</span>${widthPick("w-box:"+k+":"+sel,bx[sel].w,dr.front)}</div>`:"";
   const gab=k!=="S"?"":`<div class="bwpick lform"><span class="bwl">Boxar längs gavlarna (L-form)</span><p class="hint3">Vill du ha boxarna i ett L? Lägg boxar längs en gavel. Med 0 boxar på långsida B går stallgången längs långsidan.</p><div class="gsteps">${[["W","Vänster gavel"],["E","Höger gavel"]].map(([g,lab])=>{const n=(dr.walls[g]||[]).filter(m=>m.t==="box").length;return `<div class="gstep"><span>${lab}</span><button type="button" data-sn="${g}" data-v="-1" aria-label="Färre boxar, ${lab.toLowerCase()}">−</button><b class="num">${n}</b><button type="button" data-sn="${g}" data-v="1" aria-label="Fler boxar, ${lab.toLowerCase()}">+</button></div>`}).join("")}</div></div>`;
-  return `<h2>${title}</h2><p class="lead">Välj antal boxar och hur breda de ska vara${r.type==="fixed"?`, ${esc(prod(dr.front)?.name)} finns bara i vissa storlekar`:""}.</p>
+  return `${inner?"":`<h2>${title}</h2><p class="lead">Välj antal boxar och hur breda de ska vara${r.type==="fixed"?`, ${esc(prod(dr.front)?.name)} finns bara i vissa storlekar`:""}.</p>`}
    <div class="bigstep"><button type="button" data-sn="${k}" data-v="-1" aria-label="Färre">−</button><div><b class="num">${bx.length}</b><span>boxar</span></div><button type="button" data-sn="${k}" data-v="1" aria-label="Fler">+</button></div>
    ${bx.length?`<div class="bwpick"><span class="bwl">Bredd per box</span><div class="seg seg3"><button type="button" class="opt" data-smode="${k}" data-v="lika" aria-pressed="${mode==="lika"}">Fyll jämnt</button><button type="button" class="opt" data-smode="${k}" data-v="fast" aria-pressed="${mode==="fast"}">Samma bredd</button><button type="button" class="opt" data-smode="${k}" data-v="per" aria-pressed="${mode==="per"}">Olika bredd</button></div>
    ${mode==="fast"?widthPick("w-std:"+k,c.std,dr.front):""}${strip}</div>
    ${depthPick(k,c.d||bx[0]?.d||3500)}
    ${(c.rest||0)>0||c.align==="end"?`<div class="bwpick"><span class="bwl">Boxarna står mot</span><div class="seg"><button type="button" class="opt" data-salign="${k}" data-v="start" aria-pressed="${c.align!=="end"}">Vänster gavel</button><button type="button" class="opt" data-salign="${k}" data-v="end" aria-pressed="${c.align==="end"}">Höger gavel</button></div><p class="hint3">Det som blir över (${mm(c.rest||0)} mm) hamnar på andra sidan.</p></div>`:""}`:""}
-   <div class="resline ${c.err||(bx.length&&aw<2500)?"bad":""}">${c.err?esc(c.err):bx.length?`<b>${bx.length} boxar à ${ws.map(mm).join(" / ")} mm</b> · ${mm(rest)} mm kvar mot väggen${rest>=Math.max(minW,2900)?", det får plats en box till":""}`:"Inga boxar längs den här väggen"}${bx.length?(aw<2500?` · ${aw<=0?"Boxarna på långsidorna möts, minska djupet.":`Stallgången blir bara ${mm(aw)} mm, minst 2 500 mm rekommenderas.`}`:c.err?"":` · <span style="white-space:nowrap">stallgång ${mm(aw)} mm</span>`):""}</div>${gab}`}
+   <div class="resline ${c.err||(bx.length&&aw<2500)?"bad":""}">${c.err?esc(c.err):bx.length?`<b>${bx.length} boxar à ${ws.map(mm).join(" / ")} mm</b> · ${mm(rest)} mm kvar mot väggen${rest>=Math.max(minW,2900)?", det får plats en box till":""}`:"Inga boxar längs den här väggen"}${bx.length?(aw<2500?` · ${aw<=0?"Boxarna på långsidorna möts, minska djupet.":`Stallgången blir bara ${mm(aw)} mm, minst 2 500 mm rekommenderas.`}`:c.err?"":` · <span style="white-space:nowrap">stallgång ${mm(aw)} mm</span>`):""}</div>${inner?"":gab}`}
+/* v128: långsida A, B och gavlarna i samma steg (Carl 12/11) */
+function abGable(dr){return ["W","E"].map(g=>(dr.walls[g]||[]).filter(m=>m.t==="box").length)}
+function abSame(){const u=D.ui||{},dr=D.drawing;if(u.bsame!==undefined)return !!u.bsame;if(!dr||!dr.cfg)return true;const a=dr.cfg.N||{},b=dr.cfg.S||{},g=abGable(dr);
+  return !(g[0]+g[1])&&(a.mode||"lika")===(b.mode||"lika")&&(a.d||3500)===(b.d||3500)&&(a.mode!=="fast"||a.std===b.std)&&a.mode!=="per"}
+function abSig(dr){const c=dr.cfg?.N||{};return JSON.stringify([c.n,c.mode,c.std,c.d,c.align,c.ws])}
+function abMirror(){const dr=D.drawing;if(!dr||!dr.cfg?.N||!dr.walls)return false;const sig=abSig(dr);if(D.ui.bsig===sig)return false;D.ui.bsig=sig;
+  const a=dr.cfg.N,d=a.d||(dr.walls.N||[]).find(m=>m.t==="box")?.d||3500;dr.cfg.S=dr.cfg.S||{};
+  Object.assign(dr.cfg.S,{n:a.n||0,mode:a.mode||"lika",std:a.std||3500,d,align:a.align,ws:a.ws?[...a.ws]:a.ws,auto:true});
+  (dr.walls.S||[]).forEach(m=>{if(m.t==="box"||(m.t==="room"&&!m.dset))m.d=d});
+  const t0=toast;toast=()=>{};try{autoAll(dr);fitBoxes(dr)}finally{toast=t0}return true}
+function boxesScreen(){const dr=D.drawing,same=abSame(),g=abGable(dr),gOn=g[0]+g[1]>0;let open=D.ui.bopen||"N";if(open==="S"&&same)open="N";
+  const sum=k=>{const bx=(dr.walls[k]||[]).filter(m=>m.t==="box");return bx.length?`${bx.length} ${bx.length===1?"box":"boxar"} · ${mm(dr.cfg?.[k]?.d||bx[0].d||3500)} djup`:"Inga boxar"};
+  const head=(k,lab,txt,btn)=>`<${btn?`button type="button" data-bopen="${k}" aria-expanded="false"`:"div"} class="abh"><span class="abb${k==="G"?" g":""}">${k==="N"?"A":k==="S"?"B":"G"}</span><b>${lab}</b>${txt||""}</${btn?"button":"div"}>`;
+  const side=(k,lab)=>open===k?`<div class="abside on">${head(k,lab,"",0)}<div class="abbody">${boxCountScreen(k,"",1)}</div></div>`
+    :`<div class="abside">${head(k,lab,`<span class="abs">${k==="S"&&same?"Speglar A · ":""}${sum(k)}</span>`,1)}</div>`;
+  const gsum=`${g[0]?`${g[0]} vänster`:""}${g[0]&&g[1]?" · ":""}${g[1]?`${g[1]} höger`:""}`;
+  const gab=open==="G"?`<div class="abside on">${`<div class="abh"><span class="abb g">G</span><b>Gavlarna</b><button type="button" class="abx" data-gclose aria-label="Ta bort boxarna längs gavlarna">×</button></div>`}<div class="abbody"><div class="gsteps abg">${[["W","Vänster"],["E","Höger"]].map(([k,lab],i)=>`<div class="gstep"><span>${lab}</span><button type="button" data-sn="${k}" data-v="-1" aria-label="Färre boxar, ${lab.toLowerCase()} gavel">−</button><b class="num">${g[i]}</b><button type="button" data-sn="${k}" data-v="1" aria-label="Fler boxar, ${lab.toLowerCase()} gavel">+</button></div>`).join("")}</div><p class="hint3">Djup och bredd följer långsidan. Med 0 boxar på långsida B går stallgången längs långsidan.</p></div></div>`
+    :gOn?`<div class="abside">${head("G","Gavlarna",`<span class="abs">${gsum}</span>`,1)}</div>`
+    :`<button type="button" class="abadd" data-bopen="G"><span class="abplus">+</span><span><b>Boxar längs gaveln</b><small>För ett L- eller U-format stall</small></span></button>`;
+  return `<h2>Hur många boxar längs väggarna?</h2><p class="lead">Ställ in varje långsida, eller gör båda likadana.</p>
+   <button type="button" class="absame" data-bsame aria-pressed="${same}"><span class="absw"></span><span><b>Likadant på båda långsidor</b><small>${same?"B speglar A. Stäng av för att ändra B själv.":"Slå på så blir B likadan som A."}</small></span></button>
+   ${side("N","Långsida A")}${side("S","Långsida B")}${gab}`}
+const _rw128=renderWiz;renderWiz=function(){try{const pg=wizPages()[S.wizStep||0];if(pg&&pg.key==="boxA"&&D.drawing){if(D.ui.bsame===undefined)D.ui.bsame=abSame()?1:0;if(abSame()&&abMirror())saveD()}}catch(e){}return _rw128.apply(this,arguments)};
 /* Standarddjup = Monitors mellanväggsartiklar: intervall om 100 mm i steg om 85 mm (545 till 645 … 4285 till 4385). Nominellt mått = mitten. */
 const MV_STD=Array.from({length:23},(_,i)=>2465+85*i); // 2465 … 4335 (2415 till 2515 … 4285 till 4385)
 const MV_POP=[3000,3500,4000]; /* snabbval för kunden (Nikki 11/11), övriga mått skrivs in */
@@ -2900,7 +2981,7 @@ function sumHTML(){const dr=D.drawing,sp=D.spec||{},pr=D.project||{},stall=D.ui.
     const vent=D.ui.more?.vent||D.ui.vg?.done?[dr.intag?`Friskluftsintag i ${bx("N").length+bx("S").length} boxar`:"",+dr.fans?`${dr.fans} fläkt${+dr.fans>1?"ar":""} ${dr.fanType==="vagg"?"på väggen":"i taket"}`:""].filter(Boolean).join(" · "):"";
     const names=dr.names?Object.keys(dr.names).length:0,extra=[names?`${names} namnskylt${names>1?"ar":""}`:"",dr.note?"kommentar":"",(D.attachments?.length||window.__pubFiles?.length)?`${(D.attachments?.length||0)+(window.__pubFiles?.length||0)} bild${(D.attachments?.length||0)+(window.__pubFiles?.length||0)>1?"er":""}`:""].filter(Boolean).join(" · ");
     C.push(card("Stallet",[row("Mått",D.ui.measured||D.ui.mchoice==="ja"?`${mm(dr.L)} × ${mm(dr.W)} mm, takhöjd ${mm(dr.ceil)} mm`:"Vi tar måtten tillsammans","s-matt"),row("Ingångar",SR["Ingångar"]||"","s-ing")]));
-    C.push(card("Boxar",[row("Långsida A",ws("N"),"s-boxA"),row("Långsida B",ws("S"),"s-boxB"),row("Fönster idag",SR["Fönster idag"]||"","s-win")]));
+    C.push(card("Boxar",[row("Långsida A",ws("N"),"s-boxA"),row("Långsida B",ws("S"),"s-boxA"),row("Fönster idag",SR["Fönster idag"]||"","s-win")]));
     C.push(card("Front",[row("Front",fr||"","s-front")]));
     C.push(card("Utförande",[row("Mellanvägg",SR["Mellanvägg"]||"","p-vagg"),row("Fyllning",SR["Fyllning"]||"","p-fyll"),row("Yta",SR["Ytbehandling"]||"","p-yta"),row("Stolpar",SR["Stolpar"]||"","p-stolpe"),row("Dekorbräda",SR["Dekorbräda"]||"","p-dekor")]));
     C.push(card("Rum",[row("Rum",rooms.join(", "),"s-extra"),row("Ventilation",vent,"s-vent"),row("Bilder och hästnamn",extra,"d-mer")]))}
@@ -3052,8 +3133,7 @@ function wizScreens(){
      <details class="more3"><summary>Takhöjd (normalt minst 2 700 mm)</summary><div class="mf" style="margin-top:8px;max-width:240px"><label for="wm-ceil">Takhöjd</label><input id="wm-ceil" type="text" inputmode="numeric" data-wm="ceil" value="${dr.ceil}"><em>mm</em></div></details>`},
    {id:"s-ing",pg:"ing",sec:"Stallet",sub:"Ingångar",html:()=>`<h2>Var kommer man in i stallet?</h2><p class="lead">Kryssa i väggarna som har en ytterdörr. Den ritas in direkt.</p><div class="movetip">${svg("move",22)}<span><b>Dra dörren i ritningen</b>Ta tag i dörren och dra den längs väggen. Måttet här under följer med.</span></div>
      <div class="xlist entr">${[["door-W","Gaveln till vänster","Ytterdörr"],["door-N","Långsida A","Ytterdörr"],["door-S","Långsida B","Ytterdörr"],["door-E","Gaveln till höger","Ytterdörr"]].map(([k,t,sub])=>{const f=extraFind(dr,k),on=!!f;return `<div class="xrow ${on?"on":""}"><button type="button" class="xtog" data-ingang="${k}" aria-pressed="${on}"><span class="tick">${svg("check",14)}</span><b>${t}</b></button>${ib("room:"+k,1)}${on?xFields(k,f.m,t,true):`<span class="xdef">${sub}</span>`}</div>`}).join("")}</div>`},
-   {id:"s-boxA",pg:"boxA",sec:"Boxar",sub:"Långsida A",html:()=>boxCountScreen("N","Hur många boxar längs långsida A?")},
-   {id:"s-boxB",pg:"boxB",sec:"Boxar",sub:"Långsida B",html:()=>boxCountScreen("S","…och längs långsida B?")},
+   {id:"s-boxA",pg:"boxA",sec:"Boxar",sub:"Boxar",html:()=>boxesScreen()},
    {id:"s-win",pg:"win",sec:"Boxar",sub:"Fönster",html:()=>`<h2>Var sitter fönstren idag?</h2><p class="lead">Fönstren sitter oftast mitt i boxens yttervägg. Markera var de finns, så syns ljuset i ritningen och du får förslag på nya fönster senare. Helt frivilligt.</p>
      <div class="xlist"><div class="xrow ${dr.winBox?"on":""}"><button type="button" class="xtog" data-winbox="1" aria-pressed="${!!dr.winBox}"><span class="tick">${svg("check",14)}</span><b>Ett fönster i varje box</b></button><span class="xdef">mitt på boxens yttervägg</span></div></div>
      <div class="movetip">${svg("move",22)}<span><b>Dra fönstret dit det sitter</b>Fler fönster, till exempel på gavlarna eller i ett rum? Dra in klossen Fönster under ritningen, eller tryck på knappen här under.</span></div>${winList()}
@@ -4310,6 +4390,11 @@ document.addEventListener("click",async e=>{
   if(d.fbox){const dr=D.drawing,L=fmixList(),b=L.includes(D.ui.fbrush)?D.ui.fbrush:L[L.length-1];dr.fmix=dr.fmix||{};const cur=(dr.fmix[d.fbox])||dr.front;if(cur===b&&b!==dr.front)delete dr.fmix[d.fbox];else if(b===dr.front)delete dr.fmix[d.fbox];else dr.fmix[d.fbox]=b;saveD();wizRefresh();return}
   if(d.fside){const dr=D.drawing,L=fmixList(),b=L.includes(D.ui.fbrush)?D.ui.fbrush:L[L.length-1];dr.fmix=dr.fmix||{};layout(dr).filter(o=>o.m.t==="box"&&o.k===d.fside).forEach(o=>{if(b===dr.front)delete dr.fmix[o.nr];else dr.fmix[o.nr]=b});saveD();wizRefresh();return}
   if(d.sfront){D.drawing.front=d.sfront;onFrontChange(D.drawing);suggestCounts(D.drawing);saveD();wizRefresh();return}
+  if(d.bsame!==undefined){const on=!abSame();D.ui.bsame=on?1:0;if(on){D.ui.bsig=null;if(D.ui.bopen==="S")D.ui.bopen="N"}saveD();wizRefresh();return}
+  if(d.bopen){if(d.bopen==="S"&&abSame())D.ui.bsame=0;D.ui.bopen=d.bopen;saveD();wizRefresh();return}
+  if(d.gclose!==undefined){const dr=D.drawing;["W","E"].forEach(g=>{const c=dr.cfg?.[g];if(c){c.n=0;c.auto=true;autoFill(dr,g)}});autoAll(dr);fitBoxes(dr);D.ui.bopen="N";saveD();wizRefresh();return}
+  if(d.sn&&(d.sn==="W"||d.sn==="E")&&+d.v>0)D.ui.bsame=0;
+  if(d.sn==="S"||d.smode==="S"||d.sd==="S"||d.salign==="S")D.ui.bsame=0;
   if(d.sn){D.ui.measured=true;const dr=D.drawing;dr.cfg=dr.cfg||{};dr.cfg[d.sn]=dr.cfg[d.sn]||{n:0,mode:"lika",std:3500,d:(dr.cfg.N||{}).d||3500,auto:true};const c=dr.cfg[d.sn],cur=(dr.walls[d.sn]||[]).filter(m=>m.t==="box").length;c.n=Math.max(0,Math.min(20,cur+ +d.v));c.auto=true;D.ui.touchedN=true;autoFill(dr,d.sn);if(d.sn==="W"||d.sn==="E"){autoAll(dr);autoFill(dr,d.sn);autoAll(dr);fitBoxes(dr)}saveD();wizRefresh();return}
   if(d.salign){const c=D.drawing.cfg[d.salign];c.align=d.v;autoAll(D.drawing);saveD();wizRefresh();return}
   if(d.smode){const c=D.drawing.cfg[d.smode];if(d.v==="per"&&c.mode!=="per")c.ws=(D.drawing.walls[d.smode]||[]).filter(m=>m.t==="box").map(m=>m.w);if(d.v==="fast"&&c.mode!=="fast"&&c.mode!=="sista"){const b0=(D.drawing.walls[d.smode]||[]).find(m=>m.t==="box");c.std=nearestSize(Math.min(b0?.w||3500,4000),D.drawing.front)}c.mode=d.v;c.auto=true;autoFill(D.drawing,d.smode);saveD();wizRefresh(true);return}
