@@ -1933,6 +1933,20 @@ html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[d
 #wiz .abct[aria-pressed="true"] .abcb::after{content:"";width:8px;height:4px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
 .pcorner rect+rect{transition:transform .15s}
 .pcorner:hover rect+rect{fill:#2f5d3a}
+/* v132 */
+.wpulse{transform-box:fill-box;transform-origin:center;animation:wpulse 1s ease-out 3;opacity:0;pointer-events:none}
+.wpulse.wp2{animation-name:wpulse2}
+@keyframes wpulse{0%{opacity:1;transform:scale(.25)}100%{opacity:0;transform:scale(1.25)}}
+@keyframes wpulse2{0%{opacity:1;transform:scale(.2)}60%{opacity:.6}100%{opacity:0;transform:scale(.9)}}
+.vcname{font-size:.78rem;font-weight:700;color:var(--ink);margin-left:4px;white-space:nowrap}
+.vcname small{font-weight:400;color:var(--ink-3);font-size:.72rem}
+.sm-done{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px;padding:14px 16px;border-radius:14px;background:linear-gradient(160deg,#f3f6ef,#eaf0e5);box-shadow:inset 0 0 0 1.5px #cdd9c6}
+.sm-dico{width:38px;height:38px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none}
+.sm-dtx{flex:1;min-width:180px;display:grid;gap:2px}
+.sm-dtx b{font-family:var(--f-display,"EB Garamond",serif);font-weight:500;font-size:1.3rem;color:var(--green);line-height:1.1}
+.sm-dtx span{font-size:.84rem;color:var(--ink-2);line-height:1.4}
+.sm-dact{display:flex;gap:8px;flex-wrap:wrap}
+.sm-dact .btn{white-space:nowrap}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2461,8 +2475,15 @@ function toggleExtra(dr,key){const f=extraFind(dr,key);
   if(f&&f.door){doors(dr).splice(f.i,1)}
   else if(f){dr.walls[f.k].splice(f.i,1)}
   else if(key.startsWith("door-")){const k=key.slice(5,6),w=EXTRAS.find(e=>e[0]===key)?.[2]||2000;doors(dr).push({id:uid2(),t:"door",k,w,p:doorClamp(dr,k,(k==="N"||k==="S")?dr.L-w-1000:(dr.W-w)/2,w),xk:key,ctr:true})}
-  else{const ms=dr.walls.S=dr.walls.S||[];const base=roomBase(key),x=EXTRAS.find(e=>e[0]===base)||[base,"room",2500];let at=0;while(at<ms.length&&ms[at].t==="room")at++;ms.splice(at,0,{id:uid2(),t:"room",w:x[2],d:dr.cfg?.S?.d||3500,name:base,win:false,xk:key})}
-  autoAll(dr);fitBoxes(dr);
+  else{const base=roomBase(key),x=EXTRAS.find(e=>e[0]===base)||[base,"room",2500],rw=x[2];
+    const free=k=>{const ms=dr.walls[k]||[];return wallLen2(dr,k)-ms.filter(m=>!m.autoRest).reduce((a,m)=>a+(+m.w||0),0)};
+    const gapAt=k=>(dr.walls[k]||[]).findIndex(m=>m.t==="gap"&&m.gapBox&&+m.w>=rw);
+    const room={id:uid2(),t:"room",w:rw,d:3500,name:base,win:false,xk:key};let k=["S","N","W","E"].find(k=>gapAt(k)>=0);
+    if(k){const ms=dr.walls[k],i=gapAt(k),g=ms[i];g.w=+g.w-rw;ms.splice(i+1,0,room);if(g.w<300){if(g.w>0)room.w+=0;ms.splice(i,1)}}
+    else{k=["S","N","W","E"].find(k=>free(k)>=rw)||"S";if(free(k)<rw)boxLock(dr,k);const ms=dr.walls[k]=dr.walls[k]||[];if(!ms.length&&wallLen2(dr,k)-rw>=300)ms.push({id:uid2(),t:"gap",w:wallLen2(dr,k)-rw,gapBox:true});ms.push(room)}
+    room.d=dr.cfg?.[k]?.d||dr.cfg?.S?.d||3500;
+    if(free(k)<0&&typeof toast==="function")toast(`${base} får inte plats, se det röda i ritningen`)}
+  autoAll(dr);
 }
 function suggestCounts(dr){if(D.ui?.touchedN)return;const r=sizeRule(dr.front),pref=r.type==="fixed"?3500:3500;
   ["N","S"].forEach(k=>{const c=dr.cfg[k];c.auto=true;c.n=Math.max(1,Math.floor(wallAvail(dr,k)/pref));autoFill(dr,k)})}
@@ -2480,7 +2501,7 @@ function boxCountScreen(k,title,inner){const dr=D.drawing,c=dr.cfg[k],bx=(dr.wal
    <div class="resline ${c.err||(bx.length&&aw<2500)?"bad":""}">${c.err?esc(c.err):bx.length?`<b>${bx.length} boxar à ${ws.map(mm).join(" / ")} mm</b> · ${mm(rest)} mm kvar mot väggen${rest>=Math.max(minW,2900)?", det får plats en box till":""}`:"Inga boxar längs den här väggen"}${bx.length?(aw<2500?` · ${aw<=0?"Boxarna på långsidorna möts, minska djupet.":`Stallgången blir bara ${mm(aw)} mm, minst 2 500 mm rekommenderas.`}`:c.err?"":` · <span style="white-space:nowrap">stallgång ${mm(aw)} mm</span>`):""}</div>${inner?"":gab}`}
 /* v128: långsida A, B och gavlarna i samma steg (Carl 12/11) */
 function abGable(dr){return ["W","E"].map(g=>(dr.walls[g]||[]).filter(m=>m.t==="box").length)}
-function abSame(){const u=D.ui||{},dr=D.drawing;if(u.bsame!==undefined)return !!u.bsame;if(!dr||!dr.cfg)return true;const a=dr.cfg.N||{},b=dr.cfg.S||{},g=abGable(dr);
+function abSame(){return false;const u=D.ui||{},dr=D.drawing;if(u.bsame!==undefined)return !!u.bsame;if(!dr||!dr.cfg)return true;const a=dr.cfg.N||{},b=dr.cfg.S||{},g=abGable(dr);
   return !(g[0]+g[1])&&(a.mode||"lika")===(b.mode||"lika")&&(a.d||3500)===(b.d||3500)&&(a.mode!=="fast"||a.std===b.std)&&a.mode!=="per"}
 function abSig(dr){const c=dr.cfg?.N||{};return JSON.stringify([c.n,c.mode,c.std,c.d,c.align,c.ws])}
 function abMirror(){const dr=D.drawing;if(!dr||!dr.cfg?.N||!dr.walls)return false;const sig=abSig(dr);if(D.ui.bsig===sig)return false;D.ui.bsig=sig;
@@ -2497,8 +2518,7 @@ function boxesScreen(){const dr=D.drawing,same=abSame(),g=abGable(dr),gOn=g[0]+g
   const gab=open==="G"?`<div class="abside on">${`<div class="abh"><span class="abb g">G</span><b>Gavlarna</b><button type="button" class="abx" data-gclose aria-label="Ta bort boxarna längs gavlarna">×</button></div>`}<div class="abbody"><div class="gsteps abg">${[["W","Vänster"],["E","Höger"]].map(([k,lab],i)=>`<div class="gstep"><span>${lab}</span><button type="button" data-sn="${k}" data-v="-1" aria-label="Färre boxar, ${lab.toLowerCase()} gavel">−</button><b class="num">${g[i]}</b><button type="button" data-sn="${k}" data-v="1" aria-label="Fler boxar, ${lab.toLowerCase()} gavel">+</button></div>`).join("")}</div><p class="hint3">Djup och bredd följer långsidan. Med 0 boxar på långsida B går stallgången längs långsidan.</p>${(()=>{const CI=cornerInfo(dr);if(!CI.length)return "";const lay=layout(dr);return `<div class="abcorner"><span class="bwl">Hörnen</span>${CI.map(c=>{const nr=lay.find(o=>!o.door&&o.k===c.row&&o.i===c.rIdx)?.nr;return `<button type="button" class="abct" data-cornert="${c.key}" aria-pressed="${c.on}"><span class="abcb"></span>Box ${nr} tar hörnet ${CORNER_TXT[c.key]}</button>`}).join("")}<p class="hint3">Eller dra boxens vägg ut till kanten i ritningen.</p></div>`})()}</div></div>`
     :gOn?`<div class="abside">${head("G","Gavlarna",`<span class="abs">${gsum}</span>`,1)}</div>`
     :`<button type="button" class="abadd" data-bopen="G"><span class="abplus">+</span><span><b>Boxar längs gaveln</b><small>För ett L- eller U-format stall</small></span></button>`;
-  return `<h2>Hur många boxar längs väggarna?</h2><p class="lead">Ställ in varje långsida, eller gör båda likadana.</p>
-   <button type="button" class="absame" data-bsame aria-pressed="${same}"><span class="absw"></span><span><b>Likadant på båda långsidor</b><small>${same?"B speglar A. Stäng av för att ändra B själv.":"Slå på så blir B likadan som A."}</small></span></button>
+  return `<h2>Hur många boxar längs väggarna?</h2><p class="lead">Tryck på en sida för att ändra den. Du kan också dra boxarna i ritningen.</p>
    ${side("N","Långsida A")}${side("S","Långsida B")}${gab}`}
 const _rw128=renderWiz;renderWiz=function(){try{const pg=wizPages()[S.wizStep||0];if(pg&&pg.key==="boxA"&&D.drawing){if(D.ui.bsame===undefined)D.ui.bsame=abSame()?1:0;if(abSame()&&abMirror())saveD()}}catch(e){}return _rw128.apply(this,arguments)};
 /* Standarddjup = Monitors mellanväggsartiklar: intervall om 100 mm i steg om 85 mm (545 till 645 … 4285 till 4385). Nominellt mått = mitten. */
@@ -2668,7 +2688,7 @@ function frontSVG(S,P,kAt,o){if(o.balls==="med"||o.balls==="utan")S={...S,posts:
     if(!o.plast)for(let i=0;i<np;i+=2){const x=s.x0+(i+.5)*L/np;out.push(ln(x,S.fill*.12,x+L/np*.06,S.fill*.82,`stroke="${fc[2]}" stroke-width="${fx(6*k)}" opacity=".4"`))}
     let bb=S.fill;
     if(S.decor){const [y0,y1]=S.decor;bb=y1;out.push(poly([[s.x0,y0],[s.x1,y0],[s.x1,y1],[s.x0,y1]],`fill="${fc?fc[1]:S.dec}" stroke="${fr.b}" stroke-width="${fx(10*k)}"`));
-      const m=(cl(s.x0)+s.x1)/2,ry=(y1-y0)*.27,rx=Math.min((s.x1-cl(s.x0))*.2,320);if(rx>120){const a=P(m,(y0+y1)/2);out.push(`<ellipse cx="${fx(a[0])}" cy="${fx(a[1])}" rx="${fx(rx*k)}" ry="${fx(ry*k)}" fill="${fc?fc[0]:S.decIn}" stroke="#b08a3e" stroke-width="${fx(6*k)}" opacity=".95"/>`)}}
+      }
     const nb=Math.max(1,Math.round(L/S.pitch));for(let i=1;i<nb;i++){const t=i/nb,x=s.x0+t*L;if(x<xmin)continue;out.push(ln(x,bb,x,s.top(t)-S.frame*.35,`stroke="${fr.a}" stroke-width="${fx(S.bar*k)}" stroke-linecap="round"`))}
     const fw=fx(S.frame*k);
     out.push(ln(s.x0,S.fill,s.x1,S.fill,`stroke="${fr.a}" stroke-width="${fw}"`),ln(s.x0,bb,s.x1,bb,`stroke="${fr.a}" stroke-width="${fx(S.frame*.8*k)}"`),ln(s.x0,28,s.x1,28,`stroke="${fr.b}" stroke-width="${fw}"`));
@@ -2732,7 +2752,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
   F.push({d:-1e12,s:poly([[0,0,0],[L,0,0],[L,0,W],[0,0,W]],`fill="#e6dfd0" stroke="${ink}" stroke-width="2"`)});
   const lay=layout(dr);
   lay.forEach(o=>{const {m,tf}=o,w=+m.w,d=+m.d||0;if(m.t!=="box"&&m.t!=="room")return;if(lvl<2)return;if(m.t==="room"&&lvl<5)return;const q=[tf(-(o.cx0||0),0),tf(w+(o.cx1||0),0),tf(w+(o.cx1||0),d),tf(-(o.cx0||0),d)];
-    F.push({d:-1e11,s:poly(q.map(p=>[p[0],0,p[1]]),`fill="${m.t==="room"?"#dfe6da":m.t==="box"&&bedOn(lvl)?"#ead7a1":"#e7ebe1"}" stroke="${m.t==="box"&&bedOn(lvl)?"#c8ac6c":"#b9c4b1"}" stroke-width="1.2"`)+(m.t==="box"&&bedOn(lvl)?bedSVG(w,d,o.nr+(o.k==="S"?50:0),(x,y,h)=>{const q=tf(x,y);return pr(q[0],h,q[1])},[1.5,1.35,1.25,1.15,1.05]):"")+(()=>{const c=tf(w/2,d/2),p=pr(c[0],0,c[1]);return m.t==="box"?`<text x="${fx(p[0])}" y="${fx(p[1]+6)}" text-anchor="middle" font-family="EB Garamond,serif" font-size="40" font-weight="600" fill="${ink}" opacity=".9" ${bedOn(lvl)?`stroke="#fbf3dc" stroke-width="6" paint-order="stroke"`:""}>${o.nr}</text>`:`<text x="${fx(p[0])}" y="${fx(p[1]+5)}" text-anchor="middle" font-family="EB Garamond,serif" font-style="italic" font-size="14" fill="${ink}">${esc(m.name||"Rum")}</text>`})()});
+    F.push({d:-1e11,s:poly(q.map(p=>[p[0],0,p[1]]),`fill="${m.t==="room"?"#dfe6da":m.t==="box"&&bedOn(lvl)?"#ead7a1":"#e7ebe1"}" stroke="${m.t==="box"&&bedOn(lvl)?"#c8ac6c":"#b9c4b1"}" stroke-width="1.2"`)+(m.t==="box"&&bedOn(lvl)?bedSVG(w+(o.cx0||0)+(o.cx1||0),d,o.nr+(o.k==="S"?50:0),(x,y,h)=>{const q=tf(x-(o.cx0||0),y);return pr(q[0],h,q[1])},[1.5,1.35,1.25,1.15,1.05]):"")+(()=>{const c=tf(w/2,d/2),p=pr(c[0],0,c[1]);return m.t==="box"?`<text x="${fx(p[0])}" y="${fx(p[1]+6)}" text-anchor="middle" font-family="EB Garamond,serif" font-size="40" font-weight="600" fill="${ink}" opacity=".9" ${bedOn(lvl)?`stroke="#fbf3dc" stroke-width="6" paint-order="stroke"`:""}>${o.nr}</text>`:`<text x="${fx(p[0])}" y="${fx(p[1]+5)}" text-anchor="middle" font-family="EB Garamond,serif" font-style="italic" font-size="14" fill="${ink}">${esc(m.name||"Rum")}</text>`})()});
     if(lvl>=3){const p0=tf(0,d),p1=tf(w,d),c=tf(w/2,d+10);if(m.t==="box"){const f=o.f||dr.front,S=frontProfile(f,w,m.dir),P=(x,y)=>{const q=tf(x,d);return pr(q[0],y,q[1])};F.push({d:dep(c[0],c[1]),s:frontSVG(S,P,()=>K*.95,{balls:dr.balls,fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:m.dir,pre:"i3",post:dr.post,noHw:true,decor:hasDecor(dr,f)})})}
       else{const nm=(m.name||"").toLowerCase(),spol=openBay(m),ms=dr.walls[o.k]||[],len0=o.k==="N"||o.k==="S"?dr.L:null;
         const sides=[[0,ms[o.i-1]],[w,ms[o.i+1]]].filter(([x,nb])=>!(spol&&nb&&(nb.t==="box"||openBay(nb)))&&!(!nb&&len0&&(o.start+x<=60||o.start+x>=len0-60))).map(([x])=>{const a=tf(x,0),b=tf(x,d),mm2=tf(x,d/2);return {d:dep(mm2[0],mm2[1])+1,s:panel([a[0],a[1]],[b[0],b[1]],{solid:2600,solidC:"#e6ece2"})}});
@@ -2749,7 +2769,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
   return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stallet i 3D" class="v3d"><defs>${BRASS("i3")}</defs><ellipse cx="0" cy="${fx((bx[1]+bx[3])/2+20)}" rx="${fx((bx[2]-bx[0])*.48)}" ry="${fx((bx[3]-bx[1])*.3)}" fill="#1e3932" opacity=".07"/>${body}</svg>`}
 
 /* --- stallgången i perspektiv --- */
-function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMax(dr,"S"),zA=dN,zB=W-dS,camZ=(zA+zB)/2,camY=1600,camX=-1800+(pos||0)/100*Math.max(0,L-3000),FOC=520,CX=500,CY=300,CEIL=Math.max(3000,+dr.ceil||2900),ink="#26352e",fc=fillC(dr.fill)||["#dcc39a","#b2905e","#efdcb8"];
+function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMax(dr,"S"),zA=dN,zB=W-dS,camZ=walkCamZ(dr,zA,zB),camY=1600,camX=-1800+(pos||0)/100*Math.max(0,L-3000),FOC=520,CX=500,CY=300,CEIL=Math.max(3000,+dr.ceil||2900),ink="#26352e",fc=fillC(dr.fill)||["#dcc39a","#b2905e","#efdcb8"];
   const pr=(X,Y,Z)=>{const d=Math.max(80,X-camX);return [CX+FOC*(Z-camZ)/d,CY-FOC*(Y-camY)/d]},fx=v=>v.toFixed(1);
   const poly=(pts,att)=>`<polygon points="${pts.map(p=>pr(...p).map(fx).join(",")).join(" ")}" ${att}/>`;
   const ln=(a,b,att)=>{const p=pr(...a),q=pr(...b);return `<line x1="${fx(p[0])}" y1="${fx(p[1])}" x2="${fx(q[0])}" y2="${fx(q[1])}" ${att}/>`};
@@ -2759,7 +2779,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   G.push(poly([[near,0,zA],[L,0,zA],[L,0,zB],[near,0,zB]],`fill="#e3dccd"`));
   for(let x=Math.ceil(near/600)*600;x<L;x+=600){if(Math.round(x/600)%2)G.push(ln([x,0,zA],[x,0,zB],`stroke="#d6cdb8" stroke-width="1"`))}
   /* v106: halm på golvet inne i boxarna (syns i de närmaste boxarna vid sidan av fronterna), inget i stallgången (Carl) */
-  if(bedOn(lvl)){layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="box"&&o.start+(+o.m.w)>near+60).forEach(o=>{const w=+o.m.w,d=+o.m.d,x0=o.start,X=x=>x0+x,Z=y=>o.k==="N"?y:W-y,xa=Math.max(near+40,x0);
+  if(bedOn(lvl)){layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="box"&&o.start+(+o.m.w)>near+60).forEach(o=>{const w=+o.m.w+(o.cx0||0)+(o.cx1||0),d=+o.m.d,x0=o.start-(o.cx0||0),X=x=>x0+x,Z=y=>o.k==="N"?y:W-y,xa=Math.max(near+40,x0);
       G.push(poly([[xa,0,Z(0)],[x0+w,0,Z(0)],[x0+w,0,Z(d)],[xa,0,Z(d)]],`fill="#e9d398"`));
       const S2=bedStrands(w,d,o.nr+(o.k==="S"?50:0)).filter(t=>X(Math.min(t.x1,t.x2,t.cx))>near+60),f=v=>v.toFixed(1),P=BED_C.map(()=>[]);
       S2.forEach(t=>{const a=pr(X(t.x1),t.h*.3,Z(t.y1)),b=pr(X(t.x2),t.h*.3,Z(t.y2)),c=pr(X(t.cx),t.h*.3+10,Z(t.cy)),k=Math.min(.26,FOC/Math.max(300,X(t.cx)-camX));P[t.c].push([`M${f(a[0])} ${f(a[1])}Q${f(c[0])} ${f(c[1])} ${f(b[0])} ${f(b[1])}`,k])});
@@ -2785,6 +2805,17 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
       s+=ln([x,top,zF],[x,top,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)}
     s+=ln([x,1300,zF],[x,1300,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s)});
   if(lvl===2)layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="box"&&o.start+(+o.m.w)>near+100).forEach(o=>{const z0=o.k==="N"?0:W,z1=o.k==="N"?+o.m.d:W-(+o.m.d),x0=Math.max(near+100,o.start),x1=o.start+(+o.m.w);G.push(poly([[x0,0,z0],[x1,0,z0],[x1,0,z1],[x0,0,z1]],`fill="#e7ebe1" stroke="#9fae97" stroke-width="1.2" stroke-dasharray="6 4"`))});
+  const GW=side=>{if(lvl<3)return;const lay=layout(dr),pl=lvl>=4?partList(dr).filter(p=>p.o.k===side):[],Xf=o=>side==="W"?+o.m.d:L-(+o.m.d),Xw=side==="W"?0:L;
+    lay.filter(o=>o.k===side&&o.m.t==="box").forEach(o=>{const a=o.start,b=o.start+(+o.m.w),X1=Xf(o),xa=Math.max(near+40,Math.min(Xw,X1)),xb=Math.max(Xw,X1);if(xb<=near+40)return;G.push(poly([[xa,0,a],[xb,0,a],[xb,0,b],[xa,0,b]],`fill="${bedOn(lvl)?"#e9d398":"#e7ebe1"}"`))});
+    const fronts=()=>lay.filter(o=>o.k===side&&o.m.t==="box").forEach(o=>{const X=Xf(o);if(X<=near+60)return;const w=+o.m.w,f=o.f||dr.front,S2=frontProfile(f,w,o.m.dir),P=(x,y)=>pr(X,y,side==="W"?o.start+x:o.start+w-x),kAt=()=>Math.min(.26,FOC/Math.max(300,X-camX));
+      G.push(frontSVG(S2,P,kAt,{balls:dr.balls,fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:o.m.dir,xmin:-1e9,pre:"wk",post:dr.post,decor:hasDecor(dr,f)}))});
+    const parts=()=>pl.map(p=>({p,Z:p.o.start+p.x})).sort((u,v)=>Math.abs(v.Z-camZ)-Math.abs(u.Z-camZ)).forEach(({p,Z})=>{const xa=side==="W"?0:L-p.d,xb=side==="W"?p.d:L,x0=Math.max(near+40,xa);if(xb<=x0)return;
+      const k=Math.min(.26,FOC/Math.max(300,(x0+xb)/2-camX)),tat=p.w==="mv-tat"||p.w==="egen",H=tat?2320:1300;let s2=poly([[x0,0,Z],[xb,0,Z],[xb,H,Z],[x0,H,Z]],`fill="${p.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
+      const nP=Math.max(1,Math.round((xb-x0)/140));for(let i=1;i<nP;i++){const x=x0+(xb-x0)*i/nP;s2+=ln([x,0,Z],[x,H,Z],`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`)}
+      if(!tat){const nb=Math.max(1,Math.round((xb-x0)/105));for(let i=1;i<nb;i++){const x=x0+(xb-x0)*i/nb;s2+=ln([x,1300,Z],[x,2320,Z],`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`)}}
+      s2+=ln([x0,2320,Z],[xb,2320,Z],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)+ln([x0,1300,Z],[xb,1300,Z],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s2)});
+    if(side==="W"){fronts();parts()}else{parts();fronts()}};
+  GW("E");
   const rows=layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&((o.m.t==="box"&&lvl>=3)||(o.m.t==="room"&&lvl>=5))).map(o=>({o,z:o.k==="N"?+o.m.d:W-(+o.m.d),x0:o.start,x1:o.start+(+o.m.w)}));
   rows.sort((p,q)=>q.x0-p.x0).forEach(({o,z,x0,x1})=>{if(x1<near)return;const xs=Math.max(x0,near),len=x1-xs,pt=(t,y)=>[xs+t*len,y,z],box=o.m.t==="box";
     if(!box){const H=2600,nm=(o.m.name||"").toLowerCase(),k=Math.min(.26,FOC/Math.max(300,(x0+x1)/2-camX)),zB=o.k==="N"?0:W,wall=`fill="#e6ece2" stroke="${ink}" stroke-width="1.2"`;let s="";
@@ -2802,6 +2833,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
       G.push(s);return}
     const f=o.f||dr.front,S=frontProfile(f,x1-x0,o.m.dir),P=(x,y)=>pr(x0+x,y,z),kAt=x=>Math.min(.26,FOC/Math.max(300,x0+x-camX));
     G.push(frontSVG(S,P,kAt,{balls:dr.balls,fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:o.m.dir,xmin:near-x0,pre:"wk",post:dr.post,decor:hasDecor(dr,f)}))});
+  GW("W");
   /* v104: halm som tittar ut under fronterna och några lösa strån i stallgången (Carl) */
   if(false&&bedOn(lvl)){let out="";rows.filter(r=>r.o.m.t==="box").forEach(({o,z,x0,x1})=>{const xs=Math.max(x0,near+150);if(x1<=xs+100)return;const len=x1-xs,sg=o.k==="N"?1:-1,AW=(zB-zA)/2;
       let sd=Math.abs(Math.round((o.nr+(o.k==="S"?50:0))*7919))%233280+17;const r=()=>(sd=(sd*9301+49297)%233280)/233280;
@@ -2831,7 +2863,8 @@ function viewBar(lvl){if(lvl<1)return "";if(lvl<2&&D.ui.view&&D.ui.view!=="plan"
    <span class="vsp"></span>${HIST.i>0||HIST.i<HIST.stack.length-1?`<button type="button" class="vbtn" data-hundo ${HIST.i<=0?"disabled":""} title="Ångra">↶<span> Ångra</span></button><button type="button" class="vbtn" data-hredo ${HIST.i>=HIST.stack.length-1?"disabled":""} title="Gör om">↷<span> Gör om</span></button>`:""}</div>`}
 function viewPick(){const dr=D.drawing,sp=D.spec||{},cur=sp.front;
   const fr=fmixOn()?"":`<label class="vpick"><span>Front</span><select data-vfront aria-label="Byt front">${FRONTS().map(p=>`<option value="${esc(p.id)}" ${p.id===cur?"selected":""}>${esc(p.name)}</option>`).join("")}</select></label>`;
-  return `<span class="vpicks">${fr}<span class="vwall" role="group" aria-label="Väggfärg"><span>Vägg</span>${Object.keys(WALLC).map(k=>`<button type="button" class="vsw" data-wallc="${k}" style="background:${WALLC[k][0]}" aria-pressed="${(dr.wallC||"Ljus")===k}" title="${k}" aria-label="Väggfärg ${k}"></button>`).join("")}</span></span>`}
+  const lack=/ulverlack/.test(sp.finish||""),curC=lack?(sp.ral||"RAL 9005"):"zink",cols=[["zink","Varmförzinkat","#b4b9ba"],...Object.entries(RALC).map(([id,[n,c]])=>[id,n,c])],cn=cols.find(c=>c[0]===curC)||cols[0];
+  return `<span class="vpicks">${fr}<span class="vwall" role="group" aria-label="Färg på fronter och mellanväggar"><span>Färg</span>${cols.map(([id,n,c])=>`<button type="button" class="vsw" data-vcol="${id}" style="background:${c}" aria-pressed="${curC===id}" title="${n}${id!=="zink"?" · "+id:""}" aria-label="Färg ${n}"></button>`).join("")}<b class="vcname">${esc(cn[1])}${cn[0]!=="zink"?` <small>${cn[0]}</small>`:""}</b></span></span>`}
 function canvasInner(dr,lvl,opts){const v=viewMode();if(v==="iso")return iso3d(dr,lvl);if(v==="walk")return walk3d(dr,D.ui.walk||0,lvl);return planPretty(dr,opts)}
 
 /* --- hästnamn --- */
@@ -2954,7 +2987,7 @@ function montQs(){const pr=D.project||{};const q=(path,t,opts)=>`<div class="mq"
   return ""}
 const GUIDE={
  dorrbox:[{q:"Ska hästarna kunna gå rakt ut från boxen?",o:[["Ja, direkt ut i hagen",["bd-rak","bd-valvd"]],["Nej, bara mot stallgången",["bd-optimal"]],["Vi har murade väggar och bygger själva",["bd-mur"]]]}],
- tillbeh:[{q:"Hur tvättar och sköter ni hästarna?",m:1,o:[["Vi behöver en spolspilta",["spolspilta"]],["Vill torka hästen snabbt efter ridning",["solarium"]],["Det har vi redan",[]]]},
+ tillbeh:[{q:"Hur tvättar och sköter ni hästarna?",hideIf:()=>!!D.drawing&&["N","S","W","E"].some(k=>(D.drawing.walls[k]||[]).some(m=>m.t==="room"&&/^Spolspilta/i.test(m.name||""))),m:1,o:[["Vi behöver en spolspilta",["spolspilta"]],["Vill torka hästen snabbt efter ridning",["solarium"]],["Det har vi redan",[]]]},
   {q:"Hur känns luften i stallet?",o:[["Instängd eller fuktig",["ventilation"]],["Bra som den är",[]]]},
   {q:"Vad behövs i boxarna?",m:1,o:[["Mjukt och halksäkert underlag",["gummimattor"]],["Foder och vatten",["krubbor"]],["Skydda väggarna mot sparkar",["vaggbekladnad"]],["Lite extra lyx",["dekor"]]]}],
  ute:[{q:"Vad ska hästarna ha ute?",o:[["Några egna boxar ute",["utebox-3x3","utebox-35","utebox-4x3"]],["Lösdrift för flera hästar",["ligghall-tra","ligghall-stal"]],["Bara skydd mot väder och vind",["vindskydd"]],["Något helt eget",["utestall"]]]}],
@@ -3004,10 +3037,10 @@ function sumHTML(){const dr=D.drawing,sp=D.spec||{},pr=D.project||{},stall=D.ui.
   const more=(D.items||[]).filter(i=>!stall||!["fronter","mellan"].includes(prod(i.product)?.cat)).map(i=>prodName(i.product)).filter(Boolean);
   C.push(card("Mer till gården",[row("Produkter",more.join(", "),"m-mer")]));
   C.push(card("Detaljer",[row("Montering",[pr.mount,pr.floor].filter(Boolean).join(" · "),"d-mont"),row("När",pr.when||"","d-nar"),row("Övrigt",D.notes?D.notes.slice(0,80)+(D.notes.length>80?"…":""):"","d-mer")]));
-  return `<h2>Så här blir ditt stall</h2><p class="lead">Gå igenom dina val i lugn och ro. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit.</p><div class="sm-list">${C.join("")}</div><p class="sm-ok">${svg("check",16)} Ser allt bra ut? Gå vidare så skickar du förslaget i nästa steg. Inget är bindande.</p>`}
+  return `<h2>Så här blir ditt stall</h2><p class="lead">Gå igenom dina val i lugn och ro. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit.</p><div class="sm-list">${C.join("")}</div><div class="sm-done"><span class="sm-dico">${svg("check",20)}</span><div class="sm-dtx"><b>Ser allt bra ut?</b><span>I nästa steg skickar du förslaget till oss. Inget är bindande, vi hör av oss inom en arbetsdag.</span></div><div class="sm-dact"><button type="button" class="btn sm ghost" data-view="iso">Se stallet i 3D</button><button type="button" class="btn sm" data-wskip>Ja, gå vidare ${svg("chev",16)}</button></div></div>`}
 function mmCard(id){const p=prod(id),has=inDrawing(id),on=has||D.items.some(i=>i.product===id),u=img(id);return `<button type="button" class="mmc" ${has?`data-wjump="s-extra" title="Finns redan i ritningen"`:`data-wpick="${id}"`} aria-pressed="${on}"><span class="ph" ${ph(u)}>${fallback(u)}${badge(id)}</span><span class="mmc-b"><b>${esc(p.name)}</b><small>${esc(USP[id]||p.tag||"")}</small><span class="mmc-add">${has?svg("check",14)+" Finns i ritningen":on?svg("check",14)+" Tillagd":"+ Lägg till"}</span></span>${ib(id)}</button>`}
 function guideHTML(cat){const G=GUIDE[cat]||[];D.ui.guide=D.ui.guide||{};const st=D.ui.guide[cat]||{};let recs=[];
-  const qs=G.map((g,qi)=>{const sel=st[qi]||[];sel.forEach(oi=>recs.push(...(g.o[oi]?.[1]||[])));return `<div class="gq"><b class="mq-t"><span class="gnum">${qi+1}</span>${esc(g.q)}${g.m?` <small class="faint">Välj gärna flera</small>`:""}</b><div class="seg">${g.o.map((o,oi)=>`<button type="button" class="opt" data-gopt="${cat}:${qi}:${oi}" aria-pressed="${sel.includes(oi)}">${esc(o[0])}</button>`).join("")}</div></div>`}).join("");
+  let vis=0;const qs=G.map((g,qi)=>{if(g.hideIf&&g.hideIf())return "";vis++;const sel=st[qi]||[];sel.forEach(oi=>recs.push(...(g.o[oi]?.[1]||[])));return `<div class="gq"><b class="mq-t"><span class="gnum">${vis}</span>${esc(g.q)}${g.m?` <small class="faint">Välj gärna flera</small>`:""}</b><div class="seg">${g.o.map((o,oi)=>`<button type="button" class="opt" data-gopt="${cat}:${qi}:${oi}" aria-pressed="${sel.includes(oi)}">${esc(o[0])}</button>`).join("")}</div></div>`}).join("");
   recs=[...new Set(recs)].filter(id=>prod(id));
   return `<div class="guide">${qs}${recs.length?`<div class="grec"><p class="mbox-h">${svg("star",16)} Vår rekommendation för er</p><div class="mmgrid">${recs.map(mmCard).join("")}</div></div>`:`<p class="hintline">Svara på frågorna så visar vi vad som passar.</p>`}</div>`}
 const DCODE=()=>{const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let c="";for(let i=0;i<6;i++)c+=a[Math.floor(Math.random()*a.length)];return c};
@@ -3659,6 +3692,10 @@ function cornerInfo(dr){const out=[];if(!dr||!dr.walls)return out;const ro=rowOf
 const _el130=edgeList;edgeList=function(dr){const L=_el130(dr),cs=cornerInfo(dr).filter(c=>c.on);if(!cs.length)return L;
   return L.filter(e=>!cs.some(c=>e.o.k===c.row&&e.o.i===c.rIdx&&(c.g==="W"?e.x===0:e.x===+e.o.m.w)))
     .map(e=>cs.some(c=>e.o.k===c.g&&e.o.i===c.gIdx&&(c.end===0?e.x===0:e.x===+e.o.m.w))?{...e,outer:false,corner:true}:e)};
+/* v132: en gavelbox som slutar ute på golvet (inte mot en långsidesbox) behöver mellanvägg på den sidan */
+const _el132=edgeList;edgeList=function(dr){return _el132(dr).map(e=>{if(!e.outer||(e.o.k!=="W"&&e.o.k!=="E"))return e;const sp=gableSpan(dr,e.o.k),abs=e.o.start+e.x;return (abs>sp.y0+60&&abs<sp.y1-60)?{...e,outer:false}:e})};
+function walkCamZ(dr,zA,zB){const g=dr.walls?.W||[];if(!g.some(m=>m.t==="box"||m.t==="room"))return (zA+zB)/2;let pos=gableSpan(dr,"W").y0;const occ=[];for(const m of g){if(m.t==="box"||m.t==="room")occ.push([pos,pos+(+m.w||0)]);pos+=+m.w||0}
+  let cur=zA;const fr=[];occ.sort((a,b)=>a[0]-b[0]).forEach(([a,b])=>{if(a>cur)fr.push([cur,Math.min(a,zB)]);cur=Math.max(cur,b)});if(cur<zB)fr.push([cur,zB]);const ok=fr.filter(([a,b])=>b-a>800).sort((p,q)=>(q[1]-q[0])-(p[1]-p[0]));return ok.length?(ok[0][0]+ok[0][1])/2:(zA+zB)/2}
 function cornerSet(dr,key,on){dr.corner=dr.corner||{};if(on)dr.corner[key]=true;else delete dr.corner[key]}
 const _ed130=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed130(host,getDr,onLive,onEnd);if(!host)return;
   const pd=host.onpointerdown,pm=host.onpointermove,pu=host.onpointerup;let cs=null;
@@ -3920,7 +3957,8 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
   const late=[];
   // befintliga fönster på ytterväggen
   allWins(dr).forEach(x=>{const [cx,cy]=fanXY(dr,x,WT),h=x.k==="N"||x.k==="S",a=h?[cx-x.w/2,cy]:[cx,cy-x.w/2],b=h?[cx+x.w/2,cy]:[cx,cy+x.w/2],i=wins(dr).indexOf(x);
-    late.push(`<g data-wwin="${i}" style="cursor:grab"><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${C.aisle}" stroke-width="${WT+20}"/><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${C.glass}" stroke-width="${WT*.5}"/><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${C.line}" stroke-width="7"/><rect x="${Math.min(a[0],b[0])-200}" y="${Math.min(a[1],b[1])-200}" width="${Math.abs(b[0]-a[0])+400}" height="${Math.abs(b[1]-a[1])+400}" fill="transparent"/></g>`)});
+    const pulse=S.winPulse&&S.winPulse.id===x.id&&Date.now()-S.winPulse.t<3200?`<circle class="wpulse" cx="${(a[0]+b[0])/2}" cy="${(a[1]+b[1])/2}" r="${Math.max(700,x.w*.75)}" fill="none" stroke="#c9a24e" stroke-width="${70*F}"/><circle class="wpulse wp2" cx="${(a[0]+b[0])/2}" cy="${(a[1]+b[1])/2}" r="${Math.max(700,x.w*.75)}" fill="#c9a24e" fill-opacity=".18" stroke="none"/>`:"";
+    late.push(`${pulse}<g data-wwin="${i}" style="cursor:grab"><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${C.aisle}" stroke-width="${WT+20}"/><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${C.glass}" stroke-width="${WT*.5}"/><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${C.line}" stroke-width="7"/><rect x="${Math.min(a[0],b[0])-200}" y="${Math.min(a[1],b[1])-200}" width="${Math.abs(b[0]-a[0])+400}" height="${Math.abs(b[1]-a[1])+400}" fill="transparent"/></g>`)});
   if(lvl>=2&&A>800)g.push(T(L/2,ay+A*.05,`STALLGÅNG  ·  ${mm(A)} MM`,`text-anchor="middle" ${sans} font-size="${Math.min(A*.16,Math.max(L,W)*.02)}" fill="${C.ink}" opacity=".7" letter-spacing="${A*.04}" font-weight="700"`));
   // måttkedjor, mörka, tydliga och kant i kant över hela väggen
   const DC="#4f6f80",DT="#2f3b35",FS=Math.max(L,W)*.0215,TK=FS*.22,SW=FS*.028;
@@ -4477,6 +4515,7 @@ document.addEventListener("click",async e=>{
   if(d.dopen){D.ui.dopen=D.ui.dopen||{};D.ui.dopen[d.dopen]=!D.ui.dopen[d.dopen];wizRefresh();return}
   if(d.balls!==undefined&&t.closest("[data-balls]")){D.drawing.balls=d.balls;saveD();wizRefresh();return}
   if(d.ydbox){const o=layout(D.drawing).find(x=>x.m.t==="box"&&x.nr===+d.ydbox);if(o){o.m.yd=!o.m.yd;saveD();wizRefresh()}return}
+  if(d.vcol){D.spec=D.spec||{};if(d.vcol==="zink")D.spec.finish="Varmförzinkad";else{if(!/ulverlack/.test(D.spec.finish||""))D.spec.finish="Pulverlack (RAL)";D.spec.ral=d.vcol}D.ui.chosen=D.ui.chosen||{};D.ui.chosen.finish=true;syncSpec();saveD();wizRefresh();return}
   if(d.wallc){D.drawing.wallC=d.wallc;saveD();cfgPanelRefresh();return}
   if(d.tiphang!==undefined){D.ui.tipHang=true;saveD();cfgPanelRefresh();return}
   if(d.wopen){D.ui.wopen=D.ui.wopen||{};D.ui.wopen[d.wopen]=!D.ui.wopen[d.wopen];wizRefresh();return}
@@ -4488,7 +4527,7 @@ document.addEventListener("click",async e=>{
   if(d.nejn){D.ui.nej=D.ui.nej||{n:10,len:3500};D.ui.nej.n=Math.max(1,Math.min(60,(D.ui.nej.n||10)+ +d.nejn));applyNej();saveD();wizRefresh();return}
   if(d.nejlen!==undefined){D.ui.nej=D.ui.nej||{n:10,len:3500};D.ui.nej.len=+d.nejlen;applyNej();saveD();wizRefresh();return}
   if(d.winbox){D.ui.measured=true;if(D.drawing.winBox)clearBoxWins(D.drawing);else applyBoxWins(D.drawing);saveD();wizRefresh();return}
-  if(d.winadd){D.ui.measured=true;autoWindow(D.drawing);saveD();wizRefresh();toast("Fönster tillagt, dra det dit det sitter");return}
+  if(d.winadd){D.ui.measured=true;const nid=autoWindow(D.drawing);S.winPulse={id:nid,t:Date.now()};saveD();wizRefresh();toast("Fönster tillagt, dra det dit det sitter");return}
   if(d.windel){D.drawing.wins=wins(D.drawing).filter(x=>x.id!==d.windel);saveD();wizRefresh();return}
   if(d.ingang){D.ui.measured=true;toggleExtra(D.drawing,d.ingang);if(extraFind(D.drawing,d.ingang)&&/[NS]$/.test(d.ingang))centerDoor(D.drawing,d.ingang);if(extraFind(D.drawing,d.ingang)&&/[WE]$/.test(d.ingang))centerGableDoor(D.drawing,d.ingang);saveD();wizRefresh();return}
   if(d.sxadd){toggleExtra(D.drawing,nextRoomKey(D.drawing,d.sxadd));saveD();wizRefresh();return}
