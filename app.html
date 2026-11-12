@@ -3105,7 +3105,7 @@ function dragLegend(){return addLib()}
 function addLib(){const op=S.vmenu==="add",dr=D.drawing;
   let PG=[],cur=0;try{PG=wizPages();cur=S.wizStep||0}catch(_){}
   const done=k=>{const i=PG.findIndex(p=>p.key===k);return i>=0&&i<cur},gI=done("ing"),gB=done("boxA"),gW=done("win"),gR=done("rum");
-  if(!dr||!gB)return ""; /* visas först efter boxsteget */
+  if(!dr||!gI)return ""; /* v164: visas från boxsteget (efter Ingångar) */
   const btn=`<button type="button" class="vm-btn al-btn" data-vm="add" aria-expanded="${op}" aria-haspopup="dialog"><i class="al-plus">${op?"×":"+"}</i><b>Lägg till</b></button>`;
   if(!op)return `<span class="vm vm-add">${btn}</span>`;
     const lock=()=>"";
