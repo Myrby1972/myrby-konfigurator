@@ -4027,6 +4027,14 @@ const _af159=autoFill;autoFill=function(dr,k){
   _af159(dr,k);let g=0;S.doorDrop=S.doorDrop||0;while(c.err&&c.n>1&&g++<20){c.n--;S.doorDrop++;_af159(dr,k)}
   for(let i=ms.length-1;i>=0;i--)if(ms[i].doorGap)ms.splice(i,1);
   const base=wallBase(dr,k);
+  /* v161: en dörr på väggen hamnar exakt där man släpper den. Ligger den nära ett mellanrum (≤ 400 mm) snäpper den dit och alla boxar blir lika breda;
+     annars delar boxarna på var sin sida upp sin del jämnt. Faller tillbaka på snäpp om det inte går (fasta storlekar, rum på väggen, för smala boxar). */
+  if(ds.length===1&&ds[0].exact&&(c.mode||"lika")==="lika"&&ms.every(m=>m.t==="box")){const d=ds[0],gp=gaps[0],w=+gp.w,len=wallLen2(dr,k),r=sizeRule(dr.front),n=ms.length;
+    const s0=Math.max(0,Math.min(len-w,Math.round(((+d.p||0)-base)/10)*10));let pos=0,bd=1e12;for(let j=0;j<=n;j++){bd=Math.min(bd,Math.abs(pos-s0));if(j<n)pos+=+ms[j].w||0}
+    if(bd>400&&r.type!=="fixed"&&n>0){const L1=s0,R1=len-s0-w,mn=r.min||2500,mx=Math.min(r.max||6000,6000);const ok=(seg,c2)=>c2===0?seg<1:seg/c2>=mn&&seg/c2<=mx;
+      const n0=Math.round(n*L1/(L1+R1||1));let nl=-1;for(const t of [n0,n0-1,n0+1,n0-2,n0+2])if(t>=0&&t<=n&&ok(L1,t)&&ok(R1,n-t)){nl=t;break}
+      if(nl>=0){const split=(seg,c2)=>{if(!c2)return [];const b=Math.floor(seg/c2/10)*10,a2=Array(c2).fill(b);a2[c2-1]=seg-b*(c2-1);return a2};const ws=[...split(L1,nl),...split(R1,n-nl)];
+        ms.forEach((m,i)=>m.w=ws[i]);ms.splice(nl,0,gp);d.p=Math.round(base+L1);d.ctr=false;return}}}
   ds.forEach((d,n)=>{const gp=gaps[n],cx=(+d.p||0)+(+d.w||0)/2-base;let pos=0,best=0,bd=1e12;
     for(let j=0;j<=ms.length;j++){const dd=Math.abs(pos+gp.w/2-cx);if(dd<bd&&!(j>0&&j<ms.length&&ms[j-1].doorGap&&false)){bd=dd;best=j}if(j<ms.length)pos+=+ms[j].w||0}
     let at=0;for(let j=0;j<best;j++)at+=+ms[j].w||0;ms.splice(best,0,gp);d.p=Math.round(base+at);d.ctr=false});
@@ -4035,15 +4043,15 @@ function doorRefill(dr,ks,say){if(!dr)return;const before={};(ks||["N","S"]).for
   (ks||["N","S"]).forEach(k=>{if(dr.cfg?.[k]?.auto)autoFill(dr,k)});
   if(!say||typeof toast!=="function")return;const ch=(ks||["N","S"]).find(k=>(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join()!==before[k]&&(dr.walls[k]||[]).some(m=>m.doorGap));
   if(!ch)return;const bx=(dr.walls[ch]||[]).filter(m=>m.t==="box"),w=bx[0]?+bx[0].w:0,same=bx.every(m=>+m.w===w),side=ch==="N"?"långsida A":"långsida B";
-  setTimeout(()=>toast(S.doorDrop?`En box färre på ${side}, så att det blir en fri passage vid ingången`:same?`Boxarna på ${side} är ${mm(w)} mm breda nu, så att det blir en fri passage vid ingången`:`Boxarna på ${side} har flyttat sig, så att det blir en fri passage vid ingången`),60)}
+  setTimeout(()=>toast(S.doorDrop?`En box färre på ${side}, så att det blir en fri passage vid ingången`:same?`Boxarna på ${side} är ${mm(w)} mm breda nu, så att det blir en fri passage vid ingången`:(()=>{const ms=dr.walls[ch]||[],gi=ms.findIndex(m=>m.doorGap),l=ms.slice(0,gi).filter(m=>m.t==="box"),r=ms.slice(gi+1).filter(m=>m.t==="box");return l.length&&r.length?`Ingången står där du släppte den. Boxarna är ${mm(+l[0].w)} mm till vänster och ${mm(+r[0].w)} mm till höger om den`:`Boxarna på ${side} har flyttat sig, så att det blir en fri passage vid ingången`})()),60)}
 {const _te=toggleExtra;toggleExtra=function(dr,key){if(String(key).startsWith("door-")){S.dBefore={};["N","S"].forEach(k=>S.dBefore[k]=(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w).join())}const r=_te(dr,key);if(String(key).startsWith("door-")&&!extraFind(dr,key))doorRefill(dr,null,false);return r}}
-{const _cd=centerDoor;centerDoor=function(dr,key){_cd(dr,key);doorRefill(dr,null,true)}}
-{const _sp=setDoorPos;setDoorPos=function(dr,key,P){_sp(dr,key,P);doorRefill(dr,null,false)}}
+{const _cd=centerDoor;centerDoor=function(dr,key){const f0=extraFind(dr,key);if(f0&&f0.m)delete f0.m.exact;_cd(dr,key);doorRefill(dr,null,true)}}
+{const _sp=setDoorPos;setDoorPos=function(dr,key,P){_sp(dr,key,P);const f0=extraFind(dr,key);if(f0&&f0.m)f0.m.exact=true;doorRefill(dr,null,true)}}
 {const _mw=moveDoorWall;moveDoorWall=function(dr,key,k2){_mw(dr,key,k2);doorRefill(dr,null,true)}}
 {const _sw=setExtraW;setExtraW=function(dr,key,v){_sw(dr,key,v);if(String(key).startsWith("door-"))doorRefill(dr,null,true)}}
 {const _ed159=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed159(host,getDr,onLive,onEnd);if(!host)return;const pd=host.onpointerdown,pu=host.onpointerup;let dd=false;
-  host.onpointerdown=e=>{dd=!!(e.target.closest&&e.target.closest("[data-door]"));return pd&&pd.call(host,e)};
-  host.onpointerup=e=>{const r=pu&&pu.call(host,e);if(dd){dd=false;const dr=getDr();if(dr&&(dr.doors||[]).some(d=>d.k==="N"||d.k==="S")){doorRefill(dr,null,true);try{saveD()}catch(_){}try{cfgPanelRefresh()}catch(_){}}}return r}}}
+  host.onpointerdown=e=>{const de=e.target.closest&&e.target.closest("[data-door]");dd=de?de.dataset.door:false;return pd&&pd.call(host,e)};
+  host.onpointerup=e=>{const r=pu&&pu.call(host,e);if(dd){const did=dd;dd=false;const dr=getDr();const dm=dr&&(dr.doors||[]).find(x=>x.id===did);if(dm&&!dm.ctr)dm.exact=true;if(dr&&(dr.doors||[]).some(d=>d.k==="N"||d.k==="S")){doorRefill(dr,null,true);try{saveD()}catch(_){}try{cfgPanelRefresh()}catch(_){}}}return r}}}
 /* v154: allt som läggs in pulserar tre gånger, en gång.
    Regel: bara det som just tillkom, aldrig vid omritning, flytt eller laddning av ett sparat stall. */
 function newPulse(dr,lay,F){const now=Date.now(),cur={};
