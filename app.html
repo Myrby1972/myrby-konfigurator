@@ -1917,6 +1917,13 @@ html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[d
 #wiz .pintro-tr{font-size:.86rem;gap:4px 18px}
 #wiz .pintro-x{top:12px;right:12px;width:28px;height:28px;font-size:17px}
 }
+/* v129: introkortets siffror och rubriker på exakt samma nivå (Carl 12/11) */
+#wiz .pintro-steps div{grid-template-rows:auto 1fr}
+#wiz .pintro-steps b{align-items:flex-start;line-height:16px;min-height:32px}
+#wiz .pintro-steps i{height:18px;margin-top:-1px}
+#wiz .pintro-steps small{margin-top:-2px}
+@media (max-height:799px){#wiz .pintro{gap:6px;padding-top:11px;padding-bottom:10px}}
+@media (min-height:800px){#wiz .pintro-steps b{line-height:20px;min-height:40px}#wiz .pintro-steps i{height:24px;margin-top:-2px}#wiz .pintro-steps small{margin-top:0}}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
