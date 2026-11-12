@@ -1729,6 +1729,224 @@ body.pub #wiz .cfg-steps{margin-left:28px;margin-right:auto}
 .pubmodal .pm-lbl{font-weight:700;font-size:.92rem;margin-top:6px}
 .pubmodal .pm-btns{display:grid;gap:10px;margin-top:6px}
 .pubmodal .btn.block{width:100%;justify-content:center}
+/* ===== v125: hela flödet utan scroll (Carl 12/11) – tätare, inget borttaget ===== */
+html body #wiz .cfg-q .wiz-scroll{padding-top:18px;padding-bottom:20px}
+html body #wiz .cfg-q .cfgstep .qblock{gap:11px;padding-bottom:16px}
+html body #wiz .cfg-q .cfgstep .qblock h2{font-size:clamp(1.7rem,2.1vw,1.95rem)}
+html body #wiz .cfg-q .cfgstep .qblock .lead{font-size:.95rem;line-height:1.45}
+html body #wiz .cfg-q .mini{flex-wrap:nowrap;margin:0 0 10px;gap:5px}
+html body #wiz .cfg-q .mini span{font-size:.74rem;padding:5px 9px;white-space:nowrap}
+html body #wiz .movetip{gap:12px;padding:11px 14px;margin:0;border-radius:14px;background:radial-gradient(120% 90% at 100% 0,rgba(201,169,106,.16),transparent 60%),linear-gradient(160deg,#284a31,#1b3022)}
+html body #wiz .movetip b{font-size:.95rem}
+html body #wiz .movetip span{font-size:.86rem;line-height:1.42}
+html body #wiz .movetip svg{width:20px;height:20px}
+/* boxar */
+html body #wiz .cfg-q .bigstep{justify-content:flex-start;gap:0;padding:0}
+html body #wiz .cfg-q .bigstep::before{content:"Antal boxar";margin-right:auto;font-weight:700;color:var(--ink);font-size:.95rem}
+html body #wiz .cfg-q .bigstep>div{min-width:76px;height:46px;display:flex;align-items:baseline;justify-content:center;gap:4px;padding-top:6px;background:#fff;box-shadow:inset 0 1.5px 0 var(--green),inset 0 -1.5px 0 var(--green)}
+html body #wiz .cfg-q .bigstep .num{font-size:1.75rem}
+html body #wiz .cfg-q .bigstep>div span{font-size:.72rem;color:var(--ink-3)}
+html body #wiz .cfg-q .bigstep button{width:46px;height:46px;border-radius:0;font-size:1.4rem;box-shadow:none}
+html body #wiz .cfg-q .bigstep button:first-of-type{border-radius:13px 0 0 13px}
+html body #wiz .cfg-q .bigstep button:last-of-type{border-radius:0 13px 13px 0}
+html body #wiz .cfg-q .bwpick{padding:10px 12px;gap:7px}
+html body #wiz .cfg-q .bwpick .bwl{font-size:.68rem}
+html body #wiz .cfg-q .seg3 .opt{min-height:36px;font-size:.84rem}
+html body #wiz .cfg-q .bwchips{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+html body #wiz .cfg-q .bwchips .sizechips{flex-wrap:nowrap;padding:0;overflow:visible}
+html body #wiz .cfg-q .bwchips .sizechips button{height:36px;padding:0 10px;font-size:.82rem}
+html body #wiz .cfg-q .bwchips .bwin{max-width:none;flex:1;min-width:96px}
+html body #wiz .cfg-q .bwchips .bwin input{height:36px;font-size:.92rem}
+html body #wiz .cfg-q .bwchips .bwin label{display:none}
+html body #wiz .cfg-q .bwpick .hint3{font-size:.76rem;margin:0}
+html body #wiz .cfg-q .resline{padding:9px 12px;font-size:.88rem}
+html body #wiz .cfg-q .lform{margin-top:0}
+html body #wiz .cfg-q .lform .hint3{margin:0}
+html body #wiz .cfg-q .gsteps{grid-template-columns:1fr 1fr;gap:10px;margin-top:2px}
+html body #wiz .cfg-q .gstep{gap:6px}
+html body #wiz .cfg-q .gstep span{font-size:.84rem}
+html body #wiz .cfg-q .gstep button{width:30px;height:30px;font-size:1rem}
+html body #wiz .cfg-q .gstep b{min-width:18px;font-size:1rem}
+/* ingångar, rum, fönster */
+html body #wiz .cfg-q .xlist{gap:7px}
+html body #wiz .cfg-q .xrow{min-height:46px}
+html body #wiz .cfg-q .xfields{padding-top:10px}
+html body #wiz .cfg-q .skipcard{padding-top:12px;padding-bottom:12px}
+/* fronter: 3 × 3 */
+html body #wiz .cfg-q .fgal:not(.small){grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+html body #wiz .cfg-q .fgal:not(.small) .fgi{padding:7px 7px 26px!important;gap:3px;border-radius:13px}
+html body #wiz .cfg-q .fgal:not(.small) .fgi .fgimg{aspect-ratio:auto;height:58px}
+html body #wiz .cfg-q .fgal:not(.small) .fgt{padding:0 2px}
+html body #wiz .cfg-q .fgal:not(.small) .fgt b{font-size:.86rem;line-height:1.15}
+html body #wiz .cfg-q .fgal:not(.small) .fgt small{font-size:.7rem;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+html body #wiz .cfg-q .fgal:not(.small) .fgtag{position:absolute;left:7px;bottom:8px;margin:0;font-size:.56rem;padding:2px 6px}
+html body #wiz .cfg-q .fgal:not(.small) .fgi>.pbadge{left:10px!important;top:10px!important;height:18px;padding:0 7px;font-size:.56rem}
+html body #wiz .cfg-q .fgal .fgi>.ibtn{right:7px;bottom:6px;transform:scale(.8);transform-origin:right bottom}
+html body #wiz .cfg-q .fgal .fgi>.ibtn em{display:none}
+/* mellanväggar: två kolumner, bild till vänster */
+html body #wiz .cfg-q .fgal.small{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+html body #wiz .cfg-q .fgal.small .fgi{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;column-gap:10px;row-gap:0;padding:7px 30px 7px 8px!important;min-height:58px;text-align:left;border-radius:13px}
+html body #wiz .cfg-q .fgal.small .fgi .fgimg{grid-row:1/3;width:44px;height:44px;aspect-ratio:auto}
+html body #wiz .cfg-q .fgal.small .fgi>.pbadge{position:static;grid-column:2;grid-row:1;justify-self:start;height:auto;padding:0;background:none;color:var(--gold-2,#8a6a2c);font-size:.58rem;margin:0 0 1px}
+html body #wiz .cfg-q .fgal.small .fgt{grid-column:2;padding:0}
+html body #wiz .cfg-q .fgal.small .fgt b{font-size:.86rem;line-height:1.15}
+html body #wiz .cfg-q .fgal.small .fgt small{font-size:.72rem}
+html body #wiz .cfg-q .fgal.small .fgi>.ibtn{right:7px;bottom:auto!important;top:50%!important;transform:translateY(-50%) scale(.8);transform-origin:right center}
+html body #wiz .cfg-q .fgal.small .fgi .bo-ck{display:none}
+html body #wiz .cfg-q .fgal.small .fgi:last-child:nth-child(odd){grid-column:1/-1}
+/* fyllning: tre kolumner, färgprov som list */
+html body #wiz .cfg-q .swgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+html body #wiz .cfg-q .swi{padding:8px 8px 9px!important;gap:2px;justify-items:start;border-radius:13px}
+html body #wiz .cfg-q .swi .swbig{width:100%;height:30px;border-radius:8px}
+html body #wiz .cfg-q .swi b{font-size:.86rem}
+html body #wiz .cfg-q .swi small{font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+html body #wiz .cfg-q .swi>.ibtn{top:auto!important;bottom:7px;right:7px;transform:scale(.8);transform-origin:right bottom}
+/* stolpar, yta, montering m.fl.: tätare kort */
+html body #wiz .cfg-q .cfgstep .qcards{gap:8px}
+html body #wiz .cfg-q .cfgstep .qc{padding:12px 13px;min-height:0;gap:3px}
+html body #wiz .cfg-q .cfgstep .qc b{font-size:1rem}
+html body #wiz .cfg-q .cfgstep .qc small{font-size:.8rem}
+html body #wiz .cfg-q [data-pg="stolp"] .qcards{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* mer till gården: tre flikar */
+html body #wiz .cfg-q [data-pg="mer"] .gview{display:flex;background:#eef0e9;border-radius:12px;padding:3px;gap:3px}
+html body #wiz .cfg-q [data-pg="mer"] .gview .opt{flex:1;min-height:36px;font-size:.84rem;padding:0 8px;white-space:nowrap}
+html body #wiz .cfg-q [data-pg="mer"]:not(:has([data-gview="win"][aria-pressed="true"])) .winrem{display:none}
+html body #wiz .cfg-q [data-pg="mer"]:has([data-gview="win"][aria-pressed="true"]) :is(.mcathint,.mcat,.catintro,.guide,.mmgrid:not(.winrem .mmgrid)){display:none}
+html body #wiz .cfg-q [data-pg="mer"] .winrem{margin:0}
+html body #wiz .cfg-q [data-pg="mer"] .mcat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+html body #wiz .cfg-q [data-pg="mer"] .mcat .pill{min-height:36px;font-size:.84rem;justify-content:flex-start;padding:0 12px}
+html body #wiz .cfg-q [data-pg="mer"] .hintline{font-size:.8rem;margin:0}
+html body #wiz .cfg-q [data-pg="mer"] .catintro{font-size:.84rem;margin:0}
+html body #wiz .cfg-q .guide{gap:8px}
+html body #wiz .cfg-q .gq{padding:10px 12px;gap:7px}
+html body #wiz .cfg-q .gq .mq-t{font-size:.9rem}
+html body #wiz .gq .seg{flex-wrap:wrap;gap:6px}
+html body #wiz .cfg-q .gq .seg .opt{min-height:32px;padding:0 11px;font-size:.8rem;flex:none}
+/* övrigt: hästnamn i fem kolumner */
+html body #wiz .cfg-q [data-pg="dmer"] textarea{min-height:76px;height:76px}
+html body #wiz .cfg-q .updrop{padding:10px 12px}
+html body #wiz .cfg-q .hn{padding:11px 12px}
+html body #wiz .cfg-q .hn-g{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+html body #wiz .cfg-q .hn-g label{font-size:.6rem;letter-spacing:.05em;text-transform:uppercase}
+html body #wiz .cfg-q .hn-g input{min-height:32px;padding:4px 7px;font-size:.92rem}
+/* summering */
+html body #wiz .cfg-q .sm-list{gap:8px}
+html body #wiz .cfg-q .sm-card{padding:2px 0;border-radius:13px}
+html body #wiz .cfg-q .sm-t{margin:6px 14px 0;font-size:.62rem}
+html body #wiz .cfg-q .sm-row{padding:5px 14px;gap:8px;font-size:.84rem;grid-template-columns:minmax(0,6.4em) minmax(0,1fr) auto}
+html body #wiz .cfg-q .sm-ed{font-size:0;width:16px;height:16px;background:center/14px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2323412a' stroke-width='2.2'%3E%3Cpath d='M14 4l6 6-10 10H4v-6z'/%3E%3C/svg%3E")}
+html body #wiz .cfg-q .sm-ed svg{display:none}
+html body #wiz .cfg-q .sm-ok{font-size:.84rem;margin:0}
+/* kund: två och två */
+html body #wiz .cfg-q [data-pg="kund"] .qblock{grid-template-columns:1fr 1fr;column-gap:10px;row-gap:9px;padding-bottom:10px}
+html body #wiz .cfg-q [data-pg="kund"] .qblock>*{grid-column:1/-1}
+html body #wiz .cfg-q [data-pg="kund"] .qblock>label.field{grid-column:auto}
+html body #wiz .cfg-q [data-pg="kund"] .qblock>label.field:only-of-type,html body #wiz .cfg-q [data-pg="kund"] .qblock>.fgrid{grid-column:1/-1}
+html body #wiz .cfg-q [data-pg="kund"] .bigopts.two{grid-template-columns:1fr 1fr;gap:8px;margin:0}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt{padding:9px 12px;gap:10px;border-radius:13px;box-shadow:inset 0 0 0 1.5px var(--line)}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt .bo-ic{width:32px;height:32px;border-radius:9px}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt .bo-ic svg{width:18px;height:18px}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt b{font-size:1.08rem}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt small{font-size:.72rem}
+html body #wiz .cfg-q [data-pg="kund"] .field>span{font-size:.74rem}
+html body #wiz .cfg-q [data-pg="kund"] .input{min-height:40px;height:40px}
+html body #wiz .cfg-q [data-pg="kund"] .flab{margin:2px 0 -3px;font-size:.8rem}
+/* v125 forts.: fronter, mer, summering, kund */
+html body #wiz .cfg-q .fgal:not(.small) .fgi .fgimg{height:46px}
+html body #wiz .cfg-q .fgal .fgi .bo-ck{width:20px;height:20px;top:10px;right:10px}
+html body #wiz .cfg-q .fgal .fgi .bo-ck svg{width:12px;height:12px}
+html body #wiz .cfg-q [data-pg="front"] .seg .opt,html body #wiz .cfg-q [data-pg="vagg"] .seg .opt{min-height:38px;font-size:.86rem}
+html body #wiz .cfg-q [data-pg="mer"] .gview .opt{min-height:34px;border-radius:9px;box-shadow:none;background:transparent}
+html body #wiz .cfg-q [data-pg="mer"] .gview .opt[aria-pressed="true"]{background:var(--green);color:#fff}
+html body #wiz .cfg-q [data-pg="mer"] .mcat{grid-template-columns:repeat(3,minmax(0,1fr))}
+html body #wiz .cfg-q [data-pg="mer"] .mcat .pill{min-height:32px;font-size:.74rem;padding:0 8px;line-height:1.15;white-space:normal;text-align:left}
+html body #wiz .cfg-q [data-pg="mer"]:has([data-gview="guide"][aria-pressed="true"]) .mcathint{display:none}
+html body #wiz .cfg-q [data-pg="mer"] .gq{padding:8px 11px;gap:6px}
+html body #wiz .cfg-q [data-pg="mer"] .gnum{width:20px;height:20px;font-size:.7rem}
+/* summering i två spalter, värdet under rubriken */
+html body #wiz .cfg-q .sm-list{display:block;column-count:2;column-gap:8px}
+html body #wiz .cfg-q .sm-card{break-inside:avoid;margin:0 0 8px;display:block}
+html body #wiz .cfg-q .sm-t{margin:7px 12px 1px}
+html body #wiz .cfg-q .sm-row{display:grid;grid-template-columns:minmax(0,1fr) 16px;grid-template-rows:auto auto;column-gap:6px;row-gap:0;padding:4px 10px 5px 12px;align-items:center}
+html body #wiz .cfg-q .sm-row .sm-k{grid-column:1;grid-row:1;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+html body #wiz .cfg-q .sm-row .sm-v{grid-column:1;grid-row:2;font-size:.8rem;line-height:1.25}
+html body #wiz .cfg-q .sm-row .sm-ed{grid-column:2;grid-row:1/3}
+/* kund */
+html body #wiz .cfg-q [data-pg="kund"].cfgstep{gap:0}
+html body #wiz .cfg-q [data-pg="kund"] .qblock{padding:8px 0 8px;row-gap:7px}
+html body #wiz .cfg-q [data-pg="kund"] .qblock+.qblock{padding-top:9px}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt{display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:9px;align-items:center;padding:7px 10px}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt .bo-ic{width:28px;height:28px;border-radius:8px}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt .bo-t{gap:0}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt b{font-size:.98rem}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt small{font-size:.68rem;line-height:1.2}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt .bo-ck{position:absolute;top:6px;right:6px;width:16px;height:16px}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt{position:relative}
+html body #wiz .cfg-q [data-pg="kund"] .field{gap:3px}
+html body #wiz .cfg-q [data-pg="kund"] .fgrid{gap:10px}
+html body #wiz .cfg-q [data-pg="kund"] .input,html body #wiz .cfg-q [data-pg="kund"] .ddbtn{min-height:38px;height:38px}
+html body #wiz .cfg-q [data-pg="kund"] .flab{margin:0}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox{padding:8px 0 0;background:none;box-shadow:none}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox .sb-t{font-size:.78rem;margin:0 0 4px;color:var(--ink-3)}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox .sure{display:flex;flex-wrap:wrap;gap:3px 12px;margin:0;padding:0}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox .sure li{font-size:.76rem}
+html body #wiz .cfg-q [data-pg="kund"] .pubconsent{font-size:.8rem;padding:6px 0;margin:0}
+/* v125 forts. 2 */
+html body #wiz .cfg-q .sm-card{margin:0 0 7px;padding:0 0 2px}
+html body #wiz .cfg-q .sm-t{margin:0;padding:8px 12px 2px!important;font-size:.6rem!important}
+html body #wiz .cfg-q .sm-t::before{display:none!important}
+html body #wiz .cfg-q .sm-row{padding:3px 8px 4px 12px}
+html body #wiz .cfg-q .sm-row .sm-v{font-size:.78rem}
+html body #wiz .cfg-q [data-pg="sum"] .qblock .lead{font-size:.88rem}
+html body #wiz .cfg-q [data-pg="kund"] .qblock .input{height:38px!important;min-height:38px!important;padding-top:0;padding-bottom:0}
+html body #wiz .cfg-q [data-pg="kund"] .qblock{padding:6px 0}
+html body #wiz .cfg-q [data-pg="kund"] .qblock+.qblock{padding-top:7px}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox .sure li{display:inline-flex}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt .bo-ck{top:5px;right:5px;width:14px;height:14px}
+html body #wiz .cfg-q [data-pg="kund"] .bigopt .bo-t{padding-right:12px}
+html body #wiz .cfg-q [data-pg="mer"] .gq .seg .opt{min-height:29px;font-size:.78rem;padding:0 10px}
+html body #wiz .cfg-q [data-pg="mer"] .guide{gap:6px}
+html body #wiz .cfg-q [data-pg="mer"] .gq{padding:7px 10px;gap:5px}
+html body #wiz .cfg-q [data-pg="mer"] .qblock{gap:9px}
+html body #wiz .cfg-q .sm-list.sm2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;column-count:auto}
+html body #wiz .cfg-q .sm2 .sm-col{display:grid;gap:7px;align-content:start;min-width:0}
+html body #wiz .cfg-q .sm2 .sm-card{margin:0}
+html body #wiz .cfg-q .wiz-scroll{padding-bottom:10px}
+html body #wiz .cfg-q .cfgstep .qblock:last-child{padding-bottom:6px}
+html body #wiz .cfg-q .sm-ok{margin-top:2px;font-size:.8rem}
+html body #wiz .cfg-q [data-pg="kund"] .qblock{padding:4px 0;row-gap:5px}
+html body #wiz .cfg-q [data-pg="kund"] .qblock+.qblock{padding-top:6px}
+html body #wiz .cfg-q [data-pg="kund"] .field>span{margin:0}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox{padding-top:4px}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox .sb-t{font-size:.74rem;margin-bottom:2px}
+html body #wiz .cfg-q [data-pg="kund"] .sendbox .sure li{font-size:.72rem}
+html body #wiz .cfg-q [data-pg="kund"] .qblock .lead{font-size:.9rem}
+html body #wiz .cfg-q .fgal:not(.small) .fgi>.pbadge{position:absolute!important;left:11px!important;top:11px!important;z-index:3}
+html body #wiz .cfg-q .fgal .fgi>.bo-ck,html body #wiz .cfg-q .fgal .fgi .bo-ck{width:20px!important;height:20px!important;min-width:0!important;top:10px!important;right:10px!important}
+html body #wiz .cfg-q [data-pg="mer"] .gview .opt:not([aria-pressed="true"]){box-shadow:none!important;background:transparent!important;color:var(--green)}
+html body #wiz .cfg-q .bwchips .bwin input{padding-top:0!important;padding-bottom:0!important}
+html body #wiz .cfg-q .bwchips .bwin{min-height:0}
+html body #wiz .cfg-q [data-pg="front"] .qblock{gap:9px}
+html body #wiz .cfg-q .fgal:not(.small){gap:6px}
+html body #wiz .cfg-q .fgal:not(.small) .fgi .fgimg{height:40px}
+html body #wiz .cfg-q [data-pg="front"] .seg .opt{min-height:34px}
+html body #wiz .cfg-q [data-pg="front"] .dbox{padding:9px 12px;display:grid;gap:6px}
+html body #wiz .cfg-q [data-pg="front"] .dbox .mbox-h{margin:0;font-size:.9rem}
+html body #wiz .cfg-q [data-pg="front"] .dbox .fx-help{margin:0;font-size:.8rem}
+html body #wiz .cfg-q [data-pg="front"] .dbox .seg .opt{min-height:32px;font-size:.8rem}
+html body #wiz .cfg-q [data-pg="front"] .dbox .fx-sum{margin:0;font-size:.74rem;display:flex;gap:12px}
+html body #wiz .cfg-q [data-pg="mer"] .mmgrid{gap:7px}
+html body #wiz .cfg-q [data-pg="mer"] .mmc{grid-template-columns:62px minmax(0,1fr)!important;gap:10px!important;padding:8px 10px!important;min-height:0!important;align-items:center}
+html body #wiz .cfg-q [data-pg="mer"] .mmc .ph{width:62px!important;height:62px!important;aspect-ratio:auto!important;border-radius:9px}
+html body #wiz .cfg-q [data-pg="mer"] .mmc .mmc-b{gap:2px!important;padding-right:34px}
+html body #wiz .cfg-q [data-pg="mer"] .mmc .mmc-b b{font-size:1.02rem!important;line-height:1.15}
+html body #wiz .cfg-q [data-pg="mer"] .mmc .mmc-b small{font-size:.76rem!important;line-height:1.3}
+html body #wiz .cfg-q [data-pg="mer"] .mmc .mmc-add{min-height:28px!important;padding:0 10px!important;font-size:.76rem!important;margin-top:3px}
+html body #wiz .cfg-q [data-pg="mer"] .mmc>.ibtn{position:absolute;right:8px;top:8px;bottom:auto!important}
+html body #wiz .cfg-q [data-pg="mer"] .mmc>.ibtn em{display:none}
+html body #wiz .cfg-q [data-pg="mer"] .winrem{padding:11px 12px}
+html body #wiz .cfg-q [data-pg="mer"] .winrem .fx-help{font-size:.82rem;margin:4px 0 0}
+html body #wiz .cfg-q [data-pg="mer"] .mmc .ph{align-self:center!important;max-height:62px!important;min-height:0!important;grid-row:auto!important}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2777,7 +2995,7 @@ function sumHTML(){const dr=D.drawing,sp=D.spec||{},pr=D.project||{},stall=D.ui.
   const more=(D.items||[]).filter(i=>!stall||!["fronter","mellan"].includes(prod(i.product)?.cat)).map(i=>prodName(i.product)).filter(Boolean);
   C.push(card("Mer till gården",[row("Produkter",more.join(", "),"m-mer")]));
   C.push(card("Detaljer",[row("Montering",[pr.mount,pr.floor].filter(Boolean).join(" · "),"d-mont"),row("När",pr.when||"","d-nar"),row("Övrigt",D.notes?D.notes.slice(0,80)+(D.notes.length>80?"…":""):"","d-mer")]));
-  return `<h2>Så här blir ditt stall</h2><p class="lead">Gå igenom dina val i lugn och ro. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit.</p><div class="sm-list">${C.join("")}</div><p class="sm-ok">${svg("check",16)} Ser allt bra ut? Gå vidare så skickar du förslaget i nästa steg. Inget är bindande.</p>`}
+  return `<h2>Så här blir ditt stall</h2><p class="lead">Gå igenom dina val i lugn och ro. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit.</p>${C.length>=7?`<div class="sm-list sm2"><div class="sm-col">${[C[0],C[1],C[3]].join("")}</div><div class="sm-col">${[C[2],...C.slice(4)].join("")}</div></div>`:`<div class="sm-list">${C.join("")}</div>`}<p class="sm-ok">${svg("check",16)} Ser allt bra ut? Gå vidare så skickar du förslaget i nästa steg. Inget är bindande.</p>`}
 function mmCard(id){const p=prod(id),has=inDrawing(id),on=has||D.items.some(i=>i.product===id),u=img(id);return `<button type="button" class="mmc" ${has?`data-wjump="s-extra" title="Finns redan i ritningen"`:`data-wpick="${id}"`} aria-pressed="${on}"><span class="ph" ${ph(u)}>${fallback(u)}${badge(id)}</span><span class="mmc-b"><b>${esc(p.name)}</b><small>${esc(USP[id]||p.tag||"")}</small><span class="mmc-add">${has?svg("check",14)+" Finns i ritningen":on?svg("check",14)+" Tillagd":"+ Lägg till"}</span></span>${ib(id)}</button>`}
 function guideHTML(cat){const G=GUIDE[cat]||[];D.ui.guide=D.ui.guide||{};const st=D.ui.guide[cat]||{};let recs=[];
   const qs=G.map((g,qi)=>{const sel=st[qi]||[];sel.forEach(oi=>recs.push(...(g.o[oi]?.[1]||[])));return `<div class="gq"><b class="mq-t"><span class="gnum">${qi+1}</span>${esc(g.q)}${g.m?` <small class="faint">Välj gärna flera</small>`:""}</b><div class="seg">${g.o.map((o,oi)=>`<button type="button" class="opt" data-gopt="${cat}:${qi}:${oi}" aria-pressed="${sel.includes(oi)}">${esc(o[0])}</button>`).join("")}</div></div>`}).join("");
@@ -2920,18 +3138,18 @@ function wizScreens(){
      <div class="dimin"><div class="mf"><label for="wm-L">Längd</label><input id="wm-L" type="text" inputmode="numeric" data-wm="L" value="${dr.L}" placeholder="t.ex. 24000"><em>mm</em></div><span class="dimx">×</span><div class="mf"><label for="wm-W">Bredd</label><input id="wm-W" type="text" inputmode="numeric" data-wm="W" value="${dr.W}" placeholder="t.ex. 11500"><em>mm</em></div></div>
      <p class="hintline">Golvyta <b id="areaout">${(dr.L*dr.W/1e6).toLocaleString("sv-SE",{maximumFractionDigits:1})} m²</b></p>
      <details class="more3"><summary>Takhöjd (normalt minst 2 700 mm)</summary><div class="mf" style="margin-top:8px;max-width:240px"><label for="wm-ceil">Takhöjd</label><input id="wm-ceil" type="text" inputmode="numeric" data-wm="ceil" value="${dr.ceil}"><em>mm</em></div></details>`},
-   {id:"s-ing",pg:"ing",sec:"Stallet",sub:"Ingångar",html:()=>`<h2>Var kommer man in i stallet?</h2><p class="lead">Tryck på de väggar som har en ytterdörr. De ritas in direkt, och du kan dra dem i ritningen.</p>
+   {id:"s-ing",pg:"ing",sec:"Stallet",sub:"Ingångar",html:()=>`<h2>Var kommer man in i stallet?</h2><p class="lead">Kryssa i väggarna som har en ytterdörr. Den ritas in direkt.</p><div class="movetip">${svg("move",22)}<span><b>Dra dörren i ritningen</b>Ta tag i dörren och dra den längs väggen. Måttet här under följer med.</span></div>
      <div class="xlist entr">${[["door-W","Gaveln till vänster","Ytterdörr"],["door-N","Långsida A","Ytterdörr"],["door-S","Långsida B","Ytterdörr"],["door-E","Gaveln till höger","Ytterdörr"]].map(([k,t,sub])=>{const f=extraFind(dr,k),on=!!f;return `<div class="xrow ${on?"on":""}"><button type="button" class="xtog" data-ingang="${k}" aria-pressed="${on}"><span class="tick">${svg("check",14)}</span><b>${t}</b></button>${ib("room:"+k,1)}${on?xFields(k,f.m,t,true):`<span class="xdef">${sub}</span>`}</div>`}).join("")}</div>`},
    {id:"s-boxA",pg:"boxA",sec:"Boxar",sub:"Långsida A",html:()=>boxCountScreen("N","Hur många boxar längs långsida A?")},
    {id:"s-boxB",pg:"boxB",sec:"Boxar",sub:"Långsida B",html:()=>boxCountScreen("S","…och längs långsida B?")},
    {id:"s-win",pg:"win",sec:"Boxar",sub:"Fönster",html:()=>`<h2>Var sitter fönstren idag?</h2><p class="lead">Fönstren sitter oftast mitt i boxens yttervägg. Markera var de finns, så syns ljuset i ritningen och du får förslag på nya fönster senare. Helt frivilligt.</p>
      <div class="xlist"><div class="xrow ${dr.winBox?"on":""}"><button type="button" class="xtog" data-winbox="1" aria-pressed="${!!dr.winBox}"><span class="tick">${svg("check",14)}</span><b>Ett fönster i varje box</b></button><span class="xdef">mitt på boxens yttervägg</span></div></div>
-     <p class="lead" style="margin-top:10px">Fler fönster, till exempel på gavlarna eller i ett rum? Dra in klossen Fönster under ritningen, eller tryck på knappen här under.</p>${winList()}
+     <div class="movetip">${svg("move",22)}<span><b>Dra fönstret dit det sitter</b>Fler fönster, till exempel på gavlarna eller i ett rum? Dra in klossen Fönster under ritningen, eller tryck på knappen här under.</span></div>${winList()}
      <button type="button" class="skipcard" data-wskip="1"><span><b>Hoppa över fönstren</b><small>Du kan lägga till dem senare.</small></span>${svg("chev",18)}</button>`},
-   {id:"s-front",pg:"front",sec:"Front",sub:"Front",html:()=>`<h2>Vilken front gillar du?</h2><p class="lead">Fronten är boxens ansikte mot stallgången. Välj den du gillar. Du kan alltid byta senare.</p>
+   {id:"s-front",pg:"front",sec:"Front",sub:"Front",html:()=>`<h2>Vilken front gillar du?</h2><p class="lead">Boxens ansikte mot stallgången. Du kan alltid byta senare.</p>
      ${D.drawing?`<div class="seg fx-mode"><button type="button" class="opt" data-fmode="1" aria-pressed="${!fmixOn()}">Samma front överallt</button><button type="button" class="opt" data-fmode="2" aria-pressed="${fmixOn()}">Blanda olika fronter</button></div>`:""}
      ${fmixOn()?`<p class="hintline">${fmixList().length<2?`Du har <b>${esc(prod(fmixList()[0])?.name||"")}</b>. Välj nu fronten du vill blanda med.`:"Fler fronter? Tryck på dem. Tryck igen för att ta bort."}</p>`:""}
-     <div class="fgal">${FRONTS().filter(p=>true||D.ui.moreF||fmixOn()||["optimal","baryard","janslund","faro"].includes(p.id)||p.id===f).map(p=>{const r=sizeRule(p.id),mx=fmixOn(),on=mx?fmixList().includes(p.id):f===p.id;return `<button type="button" class="fgi" ${mx?`data-fmixpick="${p.id}"`:`data-pick1="spec.front" data-v="${p.id}"`} aria-pressed="${on}" ${mx&&on?`style="--fc:${fmixColor(p.id)}"`:""}>${mx&&on?`<span class="fx-cnt" style="background:${fmixColor(p.id)}">${(fmixCounts()[p.id]||0)===1?"1 box":(fmixCounts()[p.id]||0)+" boxar"}</span>`:""}<span class="fgimg" ${ph(img(p.id))}></span>${ib(p.id)}${badge(p.id)}<span class="fgt"><b>${esc(p.name)}</b><small>${esc(frontFrom(p.id)||BENEFIT.front[p.id]||"")}</small></span><span class="fgtag">${r.type==="fixed"?"Fasta storlekar":"Valfri längd"}</span><span class="bo-ck">${svg("check",16)}</span></button>`}).join("")}</div>${doorBox()}${fmixOn()?`<div class="fx-hint">${svg("check",16)}<span><b>Fördela direkt i ritningen</b><br>Markera en front och tryck på boxarna i ritningen. Du ser resultatet direkt.</span></div><div class="mob-fx">${fmixPanel()}</div>`:""}`},
+     <div class="fgal">${FRONTS().filter(p=>true||D.ui.moreF||fmixOn()||["optimal","baryard","janslund","faro"].includes(p.id)||p.id===f).map(p=>{const r=sizeRule(p.id),mx=fmixOn(),on=mx?fmixList().includes(p.id):f===p.id;return `<button type="button" class="fgi" ${mx?`data-fmixpick="${p.id}"`:`data-pick1="spec.front" data-v="${p.id}"`} aria-pressed="${on}" ${mx&&on?`style="--fc:${fmixColor(p.id)}"`:""}>${mx&&on?`<span class="fx-cnt" style="background:${fmixColor(p.id)}">${(fmixCounts()[p.id]||0)===1?"1 box":(fmixCounts()[p.id]||0)+" boxar"}</span>`:""}<span class="fgimg" ${ph(img(p.id))}></span>${ib(p.id)}${badge(p.id)}<span class="fgt"><b>${esc(p.name)}</b><small>${esc(frontFrom(p.id)||BENEFIT.front[p.id]||"")}</small></span><span class="fgtag">${r.type==="fixed"?"Fasta mått":"Valfri längd"}</span><span class="bo-ck">${svg("check",16)}</span></button>`}).join("")}</div>${doorBox()}${fmixOn()?`<div class="fx-hint">${svg("check",16)}<span><b>Fördela direkt i ritningen</b><br>Markera en front och tryck på boxarna i ritningen. Du ser resultatet direkt.</span></div><div class="mob-fx">${fmixPanel()}</div>`:""}`},
    {id:"p-vagg",pg:"vagg",sec:"Utförande",sub:"Mellanvägg",auto:true,done:()=>!!sp.wall&&!wmixOn()&&sp.wall!=="egen",html:()=>{const mx=wmixOn(),WL=wmixList(),wc=wmixCounts(),card=(id,inner)=>{const on=mx?WL.includes(id):sp.wall===id;return `<button type="button" class="fgi" ${mx?`data-wmixpick="${id}"`:`data-pick1="spec.wall" data-v="${id}"`} aria-pressed="${on}" ${mx&&on?`style="--fc:${wmixColor(id)}"`:""}>${mx&&on?`<span class="fx-cnt" style="background:${wmixColor(id)}">${wc[id]||0} st</span>`:""}${inner}<span class="bo-ck">${svg("check",16)}</span></button>`};
      return `<h2>Hur ska mellanväggarna vara?</h2><p class="lead">Mellan boxarna. Galler låter hästarna se varandra, tät vägg ger lugn.</p>
      ${D.drawing?`<div class="seg fx-mode"><button type="button" class="opt" data-wmode="1" aria-pressed="${!mx}">Samma vägg överallt</button><button type="button" class="opt" data-wmode="2" aria-pressed="${mx}">Blanda olika väggar</button></div>`:""}
@@ -2942,12 +3160,12 @@ function wizScreens(){
    {id:"p-fyll",pg:"fyll",sec:"Utförande",sub:"Fyllning",html:()=>`<h2>Vilket material i plankorna?</h2><p class="lead">Fyllningen är plankorna i nedre delen av fronten och väggarna.</p>
      <div class="swgrid">${FILL.map(x=>`<button type="button" class="swi" data-pick1="spec.fill" data-v="${esc(x)}" aria-pressed="${sp.fill===x}" ${okF.includes(x)?"":"disabled title='Finns inte för "+esc(fn)+"'"}><span class="swbig" style="background:${SWATCH[x]}"></span>${ib("fill:"+x,1)}<b>${esc(x.replace("Plast ","").replace(/^svart$/,"Svart"))}</b><small>${x.startsWith("Plast")?"Plast":x==="Toffee"?"Bambu":"Trä"}</small>${fillTag(x,okF)}</button>`).join("")}</div>`},
    {id:"p-yta",pg:"yta",sec:"Utförande",sub:"Yta",html:()=>`<h2>Hur ska stålet se ut?</h2><p class="lead">Varmförzinkat är standard och håller i decennier. Vill du ha färg väljer du pulverlack.</p>${(()=>{const L=lackSum();const s2=L?"+ "+krs(vat(L))+" för hela stallet":"Pris beror på val";return choice("spec.finish",[{v:"Varmförzinkad",t:"Varmförzinkat",s:"Standard",info:"fin:Varmförzinkad",p:"Ingår i priset",lo:true},{v:"Pulverlack (RAL)",t:"Pulverlackerat",s:"Valfri RAL-kulör",info:"fin:Pulverlack (RAL)",p:s2},{v:"Förzinkad + pulverlack",t:"Förzinkat + lack",s:"Extra rosttåligt",info:"fin:Förzinkad + pulverlack",p:s2}],sp.finish)})()}${/ulverlack/.test(sp.finish||"")?`<p class="hintline" style="margin-top:14px">Vilken kulör? Valfri RAL går bra, här är de vanligaste. Syns i 3D och i stallgången.</p><div class="swgrid ral">${Object.entries(RALC).map(([id,[n,c]])=>`<button type="button" class="swi ralb" data-pick1="spec.ral" data-v="${id}" aria-pressed="${(sp.ral||"RAL 9005")===id}"><span class="swbig" style="background:${c}"></span><b>${n}</b><small>${id}</small></button>`).join("")}</div>`:""}`},
-   {id:"p-stolpe",pg:"stolp",sec:"Utförande",sub:"Stolpar",html:()=>`<h2>Vilka stolpar?</h2><p class="lead">Med Strömsholm, Emmaboda, Fårö och Baryard räknas måttet från stolpe till stolpe, så en bredare stolpe gör boxen lite bredare i ritningen.</p><p class="lead">En stolpe vid varje mellanvägg: mellan två boxar, mot ett rum och i slutet av varje boxrad. Mot yttervägg behövs ingen stolpe${f==="rotbrunna"?" (Rotbrunna har stolpe även där)":""}.</p>${choice("spec.post",postOpts("mid"),sp.post)}`},
+   {id:"p-stolpe",pg:"stolp",sec:"Utförande",sub:"Stolpar",html:()=>`<h2>Vilka stolpar?</h2><p class="lead">En stolpe vid varje mellanvägg: mellan två boxar, mot ett rum och i slutet av varje boxrad. Mot yttervägg behövs ingen stolpe${f==="rotbrunna"?" (Rotbrunna har stolpe även där)":""}.</p>${choice("spec.post",postOpts("mid"),sp.post)}<div class="movetip">${svg("move",22)}<span><b>Bredare stolpe, bredare box</b>Med Strömsholm, Emmaboda, Fårö och Baryard räknas måttet från stolpe till stolpe, så en bredare stolpe gör boxen lite bredare i ritningen.</span></div>`},
    {id:"p-dekor",pg:"dekor",sec:"Utförande",sub:"Dekorbräda",html:()=>`<h2>Dekorbräda?</h2><p class="lead">En dekorbräda är en list i mässingston längs fronten. Ett exklusivt avslut, men inget måste.</p>${f==="stromsholm"?`<p class="lead">Strömsholm levereras alltid med dekorbräda.</p>`:""}${choice("spec.decor",[{v:"med",t:"Med dekorbräda",info:"decor",p:MP.decor[f]===0?"Ingår i fronten":MP.decor[f]?"+"+krs(vat(MP.decor[f]))+"/box":"Offereras"},{v:"utan",t:"Utan",p:"Ingår i priset",lo:true}],f==="stromsholm"?"med":sp.decor)}
      <h3 class="h3gap">Mässingskulor på stolparna?</h3><p class="lead">En kula i mässing på varje stolpe. Syns i 3D och stallgången.</p>
      <div class="seg"><button type="button" class="opt" data-balls="med" aria-pressed="${D.drawing?.balls==="med"}">Med kulor</button><button type="button" class="opt" data-balls="utan" aria-pressed="${D.drawing?.balls==="utan"}">Utan kulor</button><button type="button" class="opt" data-balls="" aria-pressed="${!D.drawing?.balls}">Som modellen</button></div>`},
-   {id:"s-extra",pg:"rum",sec:"Rum",sub:"Rum",html:()=>`<h2>Vilka rum ska finnas?</h2><p class="lead">Tryck på de rum du vill ha. De hamnar i ritningen direkt.</p><div class="movetip">${svg("move",22)}<span><b>Flytta rummen i ritningen</b>Ta tag i ett rum, till exempel spolspiltan, och dra det dit du vill ha det. Du kan också dra in rum från byggklossarna under ritningen.</span></div>
-     <div class="xlist">${EXTRAS.filter(e=>e[1]==="room").map(([k,,,label])=>{const m=extraMod(dr,k),on=!!m;return `<div class="xrow ${on?"on":""}"><button type="button" class="xtog" data-sx="${k}" aria-pressed="${on}"><span class="tick">${svg("check",14)}</span><b>${esc(label||k)}</b></button>${ib("room:"+k,1)}${on?xFields(k,m,label):`<span class="xdef">${mm(EXTRAS.find(e=>e[0]===k)[2])} mm · ${SHOW_PRICES?(EXTRAS.find(e=>e[0]===k)[1]==="door"?"från "+krs(vat(MP.door(EXTRAS.find(e=>e[0]===k)[2]).p)):"offereras"):"standardbredd"}</span>`}${on?`<button type="button" class="linkbtn xmore" data-sxadd="${esc(k)}">+ Lägg till ${esc((label||k).toLowerCase())} till</button>`:""}</div>${roomCopies(dr,k).map((ck,j)=>{const cm=extraMod(dr,ck);return cm?`<div class="xrow on xcopy"><button type="button" class="xtog" data-sx="${esc(ck)}" aria-pressed="true"><span class="tick">${svg("check",14)}</span><b>${esc(label||k)} ${j+2}</b></button>${xFields(ck,cm,label)}</div>`:""}).join("")}`}).join("")}</div>`},
+   {id:"s-extra",pg:"rum",sec:"Rum",sub:"Rum",html:()=>`<h2>Vilka rum ska finnas?</h2><p class="lead">Tryck på de rum du vill ha. De hamnar i ritningen direkt.</p><div class="movetip">${svg("move",22)}<span><b>Flytta rummen i ritningen</b>Ta tag i ett rum och dra det dit du vill. Du kan också dra in rum från byggklossarna under ritningen.</span></div>
+     <div class="xlist">${EXTRAS.filter(e=>e[1]==="room").map(([k,,,label])=>{const m=extraMod(dr,k),on=!!m;return `<div class="xrow ${on?"on":""}"><button type="button" class="xtog" data-sx="${k}" aria-pressed="${on}"><span class="tick">${svg("check",14)}</span><b>${esc(label||k)}</b></button>${ib("room:"+k,1)}${on?xFields(k,m,label):`<span class="xdef">${mm(EXTRAS.find(e=>e[0]===k)[2])} mm${SHOW_PRICES?" · "+(EXTRAS.find(e=>e[0]===k)[1]==="door"?"från "+krs(vat(MP.door(EXTRAS.find(e=>e[0]===k)[2]).p)):"offereras"):""}</span>`}${on?`<button type="button" class="linkbtn xmore" data-sxadd="${esc(k)}">+ Lägg till ${esc((label||k).toLowerCase())} till</button>`:""}</div>${roomCopies(dr,k).map((ck,j)=>{const cm=extraMod(dr,ck);return cm?`<div class="xrow on xcopy"><button type="button" class="xtog" data-sx="${esc(ck)}" aria-pressed="true"><span class="tick">${svg("check",14)}</span><b>${esc(label||k)} ${j+2}</b></button>${xFields(ck,cm,label)}</div>`:""}).join("")}`}).join("")}</div>`},
    {id:"s-fin",pg:"rum",sec:"Rum",html:()=>`<button type="button" class="linkbtn" data-wadv="1" style="justify-self:start">Finjustera enskilda boxar, dörrar och fönster →</button>`},
    {id:"s-vent",pg:"rumx",sec:"Rum",sub:"Tillval",html:()=>`<h2>Ventilation i stallet?</h2><p class="lead">Ett valfritt tillägg. Hoppa gärna över det om du vill.</p>
      <details class="more3 big opt3" data-more="vent" ${D.ui.more?.vent?"open":""}><summary><span class="o3-ic">${svg("star",18)}</span><span class="o3-t"><small>Valfritt</small><b>Ventilation</b><em>Friskluftsintag och fläktar</em></span><span class="o3-chev">${svg("chev",18)}</span></summary><p class="lead" style="margin-top:8px">Frisk luft håller hästarna friska. Syns i ritningen.</p>
@@ -2960,8 +3178,9 @@ function wizScreens(){
    
    ]),
    {id:"m-mer",pg:"mer",sec:"Mer till gården",html:()=>`<h2>${stall?"Något mer till gården?":"Vad är du intresserad av?"}</h2><p class="lead">Vi hjälper dig att plocka ihop resten. Svara på några frågor så föreslår vi det som passar. Allt är valfritt.</p>
+     <div class="gview seg fx-mode"><button type="button" class="opt" data-gview="guide" aria-pressed="${D.ui.gview!=="all"&&!(D.ui.gview==="win"&&stall&&dr)}">${svg("star",16)} Hjälp mig välja</button>${stall&&dr?`<button type="button" class="opt" data-gview="win" aria-pressed="${D.ui.gview==="win"}">Fönster</button>`:""}<button type="button" class="opt" data-gview="all" aria-pressed="${D.ui.gview==="all"}">Alla produkter</button></div>
      ${stall&&dr?(()=>{const n=allWins(dr).length;return `<div class="dbox winrem"><p class="mbox-h">${svg("star",16)} ${n?`Du markerade ${n} fönster i stallet`:"Inga fönster i stallet?"}</p><p class="fx-help">${n?"Gamla fönster släpper in kyla och drag, och galler inuti skyddar glaset från hästarna. Myrbys stålfönster har termoglas, invändigt galler och 10 års garanti. Vill du byta samtidigt som inredningen monteras?":"Dagsljus gör stallet trivsammare för både hästar och människor. Ett fönster per box är en vanlig standard. Lägg till, så placerar vi ett fönster mitt i varje box i ritningen. Du kan sedan flytta dem som du vill."}</p><div class="mmgrid">${mmCard("stalfonster")}${mmCard("trafonster")}</div></div>`})():""}
-     <div class="gview seg fx-mode"><button type="button" class="opt" data-gview="guide" aria-pressed="${D.ui.gview!=="all"}">${svg("star",16)} Hjälp mig välja</button><button type="button" class="opt" data-gview="all" aria-pressed="${D.ui.gview==="all"}">Visa alla produkter</button></div>
+     
      <p class="hintline mcathint">Gummimattor, krubbor, vattenkoppar och ventilation finns under <b>Stall- &amp; boxtillbehör</b>.</p>
      <div class="pills mcat">${MORE_CATS.map(id=>{const n=D.items.filter(i=>prod(i.product)?.cat===id).length;return `<button type="button" class="pill" data-wcat="${id}" aria-pressed="${wizCat===id}">${esc(catName(id))}${n?` <span class="n num">${n}</span>`:""}</button>`}).join("")}</div>
      <p class="catintro">${esc(CAT_INTRO[wizCat]||"")}</p>${D.ui.gview!=="all"?guideHTML(wizCat):""}${D.items.filter(i=>MORE_CATS.includes(prod(i.product)?.cat)).length?`<div class="mmsel"><p class="mbox-h">${svg("check",16)} Valt till gården</p><div class="mmchips">${D.items.filter(i=>MORE_CATS.includes(prod(i.product)?.cat)).map(i=>`<button type="button" class="mmchip" data-wpick="${i.product}">${esc(prodName(i.product))} <span aria-hidden="true">×</span></button>`).join("")}</div></div>`:""}
