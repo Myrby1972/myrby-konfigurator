@@ -2698,7 +2698,8 @@ const hasExtra=(dr,key)=>!!extraFind(dr,key);
 function fitBoxes(dr){const K=["W","E","N","S"],n0={};K.forEach(k=>n0[k]=dr.cfg?.[k]?.n);
   /* v123: gavlarnas längd beror på långsidorna och tvärtom (L-form), så räkna om allt tills inget sticker ut */
   const over=k=>{const c=dr.cfg?.[k];if(!c||!c.auto||!(c.n>0))return false;const ro=rowOff(dr),len=(k==="N"||k==="S")?dr.L-ro.a-ro.b:gableSpan(dr,k).len;return used(dr,k)>len+1||(!!c.err&&(c.rest||0)<0)};
-  for(let guard=0;guard<60;guard++){autoAll(dr);const k=K.find(over);if(!k)break;dr.cfg[k].n--}
+  const narrowed=[];for(let guard=0;guard<10;guard++){autoAll(dr);const k=K.find(over);if(!k)break;const c=dr.cfg[k];if(c.mode&&c.mode!=="lika"){c.mode="lika";narrowed.push(k);continue}break} /* v170: smalare först, sedan rött – ingen box tas bort av sig själv */
+  if(narrowed.length&&typeof toast==="function")setTimeout(()=>{try{toast("Boxarna gjordes smalare för att få plats: "+narrowed.map(k=>WALL_NAMES[k]).join(", "))}catch(_){}},60)
   const fixed=K.filter(k=>dr.cfg?.[k]&&n0[k]!=null&&dr.cfg[k].n!==n0[k]).map(k=>`${WALL_NAMES[k]}: ${dr.cfg[k].n} boxar`);
   if(fixed.length&&typeof toast==="function")toast("Färre boxar så att allt får plats. "+fixed.join(", "))}
 function toggleExtra(dr,key){const f=extraFind(dr,key);
@@ -4017,8 +4018,8 @@ const _ed134=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed134(host
       if(rs.t==="edge"){const ms=dr.walls[rs.k],keep=rs.gapRef;if(ms[rs.i].t==="box"||(rs.kind==="pair"&&ms[rs.i+1].t==="box"))rsPer(dr,rs.k);rs.gapRef=rs.kind==="gap"?ms[rs.i+1]:rs.kind==="lgap"?ms[rs.i-1]:null}}
     const p=toPlan(e);if(!p)return;const lng=k=>k==="N"||k==="S";
     if(rs.t==="edge"){const u=(lng(rs.k)?p.x:p.y)-wallBase(dr,rs.k),nw=rsApply(dr,rs,u,e.altKey),m=dr.walls[rs.k][rs.i];S.dragTip={x:p.x,y:p.y,t:`${mm(nw)} mm${m.t==="box"?` · ${m2(nw,+m.d||3500)} m²`:""}`}}
-    else if(rs.t==="front"){const k=rs.k,raw=k==="N"?p.y:k==="S"?dr.W-p.y:k==="W"?p.x:dr.L-p.x;const d=Math.max(2000,Math.min(5000,rsSnap(raw,e.altKey)));dr.cfg=dr.cfg||{};dr.cfg[k]=dr.cfg[k]||{n:0,mode:"lika",std:3500,auto:true};dr.cfg[k].d=d;(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"||(m.t==="room"&&!m.dset))m.d=d});autoAll(dr);S.dragTip={x:p.x,y:p.y,t:`djup ${mm(d)} mm`}}
-    else{if(rs.a==="L")dr.L=Math.max(5000,Math.min(80000,rsSnap(rs.L0+(e.clientX-rs.x0)/rs.sc,e.altKey)));else dr.W=Math.max(4000,Math.min(30000,rsSnap(rs.W0+(e.clientY-rs.y0)/rs.sc,e.altKey)));D.ui.measured=true;autoAll(dr);S.dragTip={x:p.x,y:p.y,t:`${mm(dr.L)} × ${mm(dr.W)} mm`};
+    else if(rs.t==="front"){const k=rs.k,raw=k==="N"?p.y:k==="S"?dr.W-p.y:k==="W"?p.x:dr.L-p.x;const oth=k==="N"?"S":k==="S"?"N":null,mxD=oth&&depthMax(dr,oth)>0?Math.max(2000,dr.W-depthMax(dr,oth)-2000):5000,raw2=rsSnap(raw,e.altKey),d=Math.max(2000,Math.min(5000,mxD,raw2));dr.cfg=dr.cfg||{};dr.cfg[k]=dr.cfg[k]||{n:0,mode:"lika",std:3500,auto:true};dr.cfg[k].d=d;(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"||(m.t==="room"&&!m.dset))m.d=d});autoAll(dr);S.dragTip={x:p.x,y:p.y,t:`djup ${mm(d)} mm${raw2>mxD&&d===mxD?" · minst 2 m stallgång":""}`}}
+    else{if(rs.a==="L")dr.L=Math.max(5000,Math.min(80000,rsSnap(rs.L0+(e.clientX-rs.x0)/rs.sc,e.altKey)));else{const mnW=depthMax(dr,"N")+depthMax(dr,"S")+2000,raw=rsSnap(rs.W0+(e.clientY-rs.y0)/rs.sc,e.altKey);dr.W=Math.max(4000,mnW,Math.min(30000,raw));rs.minHit=raw<mnW}D.ui.measured=true;autoAll(dr);S.dragTip={x:p.x,y:p.y,t:`${mm(dr.L)} × ${mm(dr.W)} mm${rs.a!=="L"&&rs.minHit?" · minst 2 m stallgång":""}`};
       try{const iL=document.getElementById("wm-L"),iW=document.getElementById("wm-W"),ao=document.getElementById("areaout");if(iL)iL.value=dr.L;if(iW)iW.value=dr.W;if(ao)ao.textContent=(dr.L*dr.W/1e6).toLocaleString("sv-SE",{maximumFractionDigits:1})+" m²";
         const live=rs.a==="L"?iL:iW;if(live){const mf=live.closest(".mf");if(mf&&!mf.classList.contains("rs-live"))mf.classList.add("rs-live")}}catch(_){}}
     onLive()};
@@ -4363,6 +4364,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
   const late=[];
   if((interactive||lvl>=1)&&!paint&&typeof cfgPgKey==="function"){const pgk=cfgPgKey()||"";if(pgk!=="sum"&&pgk!=="kund")late.push(rsHandles(dr,lay,F,pgk,lvl))}
   if(!paint&&typeof D!=="undefined"&&dr===D.drawing)late.push(newPulse(dr,lay,F));
+  lay.filter(o=>o.ovf).forEach(o=>{const w=+o.m.w,d=+o.m.d||0,P=pts=>pts.map(q=>o.tf(...q).join(",")).join(" "),c=o.tf(w/2,d/2);late.push(`<g pointer-events="none"><polygon points="${P([[0,0],[w,0],[w,d],[0,d]])}" fill="#fbecec" fill-opacity=".96" stroke="#b03a36" stroke-width="${40*F}" stroke-dasharray="${160*F} ${90*F}"/><text x="${c[0]}" y="${c[1]+90*F}" text-anchor="middle" font-family="Lato,Arial,sans-serif" font-weight="700" font-size="${Math.min(260,(+o.m.w||1000)/7)*F}" fill="#8f2f2c">får inte plats</text></g>`)});
   if(lvl>=2)ovfInfo(dr).forEach(ov=>{const base=wallBase(dr,ov.k);lay.filter(o=>!o.door&&o.k===ov.k&&o.m.t!=="gap").forEach(o=>{const w=+o.m.w,d=+o.m.d||0,rel=o.start-base;if(rel+w<=ov.len+1)return;const x0=Math.max(0,ov.len-rel),P=pts=>pts.map(p=>o.tf(...p).join(",")).join(" ");
       late.push(`<polygon points="${P([[0,0],[w,0],[w,d],[0,d]])}" fill="none" stroke="#b23a30" stroke-width="${26*F}" stroke-dasharray="${90*F} ${60*F}" pointer-events="none"/><polygon points="${P([[x0,0],[w,0],[w,d],[x0,d]])}" fill="#b23a30" fill-opacity=".16" stroke="none" pointer-events="none"/>`)});
     const last=lay.filter(o=>!o.door&&o.k===ov.k).sort((a,b)=>b.start-a.start)[0];if(!last)return;const ex=ov.len+base,rel=ex-last.start,w2=+last.m.w,xm=(rel+w2)/2,a=last.tf(rel,-WT*2.2),b=last.tf(w2,-WT*2.2),pc=last.tf(xm,-WT*3.6),pw=1500*F,ph=380*F;
@@ -4545,8 +4547,8 @@ function floorSize(w,f){const r=sizeRule(f);if(r.type==="fixed"){const c=r.list.
 function nearestSize(w,f){const r=sizeRule(f);if(r.type==="fixed")return r.list.reduce((a,b)=>Math.abs(b-w)<Math.abs(a-w)?b:a);return Math.max(r.min,Math.min(r.max,Math.round(w)))}
 function sizeOK(w,f){const r=sizeRule(f);return r.type==="fixed"?r.list.includes(+w):(+w>=r.min&&+w<=r.max)}
 function computeWidths(avail,n,mode,std,f,ws){
-  if(n<=0||avail<=0)return {w:[],rest:avail,err:""};
-  const r=sizeRule(f);
+  if(n<=0)return {w:[],rest:avail,err:""};
+  const r=sizeRule(f);if(avail<=0){const mw=r.type==="fixed"?r.list[0]:r.min;return {w:Array(n).fill(mw),rest:avail-n*mw,err:`${n} boxar får inte plats`}} /* v170: boxar försvinner aldrig, de visas rött */
   if(mode==="sista"){const s=nearestSize(std,f);const arr=Array(n-1).fill(s);const lastRaw=avail-s*(n-1);const last=floorSize(lastRaw,f);
     if(last==null)return {w:[...arr,lastRaw],rest:0,err:`Sista boxen blir ${mm(lastRaw)} mm, för smal för ${prod(f)?.name}. Minska antalet eller standardbredden.`};
     return {w:[...arr,last],rest:avail-s*(n-1)-last,err:""}}
@@ -5335,7 +5337,7 @@ const _af163=autoFill;autoFill=function(dr,k){const ms=dr.walls[k]=dr.walls[k]||
   for(let g=0;g<30;g++){const ph={id:uid2(),t:"gap",w:tot,doorGap:true};ms.push(ph);_af163(dr,k);const pi=ms.indexOf(ph);if(pi>=0)ms.splice(pi,1);clean();
     if(!ms.some(m=>m.t==="box"||m.t==="room")){after();return}
     if(doorPlace(dr,k,ms,sp,len,c,"lika")||doorPlace(dr,k,ms,sp,len,c,"flow")||doorPlace(dr,k,ms,sp,len,c,"fit"))break;
-    if(c.n<=0||ms.some(m=>m.t==="room")){doorPlace(dr,k,ms,sp,len,c,"force");break}/* v169: med rum på väggen tas ingen box bort, då visas den röda rutan med förslag */c.n--;S.doorDrop++}
+    doorPlace(dr,k,ms,sp,len,c,"force");break /* v170: ingen box tas bort av sig själv – får det inte plats visas det rött med förslag (Carl) */}
   if(c.n<n0&&typeof toast==="function"&&!S.noDoorToast){clearTimeout(S.ddT);const nm=(typeof WALL_NAMES!=="undefined"&&WALL_NAMES[k])||k;S.ddT=setTimeout(()=>{try{toast(c.n?`${nm}: ${c.n} ${c.n===1?"box":"boxar"} får plats vid sidan av ingången`:`Det får inte plats någon box på ${String(nm).toLowerCase()} vid sidan av ingången`)}catch(_){}},90)}
   after()};
 
@@ -5384,6 +5386,17 @@ function winSync(dr,say){if(!dr||!dr.walls)return;const W=wins(dr);let moved=0,d
   const sync=key=>{const byNr=dr[key];if(!byNr&&!dr[key+"Id"])return;const sh={};Object.entries(byNr||{}).forEach(([nr,v])=>{const id=prev[nr];if(id)sh[id]=v});dr[key+"Id"]=sh;
     if(!same){const nb={};Object.entries(cur).forEach(([nr,id])=>{if(sh[id]!=null)nb[nr]=sh[id]});dr[key]=nb}};
   sync("names");sync("fmix");if(!same){dr._nrMap=cur;out.forEach(o=>{if(o.m&&o.m.t==="box"&&o.nr)o.f=(dr.fmix||{})[o.nr]||dr.front})}else if(!dr._nrMap)dr._nrMap=cur}catch(_){}return out}}
+
+/* v170: grundplattan (Carl 12/11).
+   1) Minst 2 m stallgång: djupet stannar där (knappar och blått handtag), ytterväggen likaså. Skrivs ett för smalt mått tas långsida B bort (Ångra finns).
+   3) Det som inte får plats ritas inne i stallet, tätt intill och över raden, rött och halvgenomskinligt – aldrig utanför väggen. */
+{const _sbd170=setBoxD;setBoxD=function(k,v){const dr=D.drawing;if(dr&&(k==="N"||k==="S")){const oth=k==="N"?"S":"N",od=depthMax(dr,oth);if(od>0){const mx=Math.max(2000,dr.W-od-2000);if(+v>mx){v=mx;setTimeout(()=>{try{toast(`Djupet blir ${mm(mx)} mm så att stallgången blir minst 2 000 mm`)}catch(_){}},50)}}}return _sbd170(k,v)}}
+{const _af170=autoFill;autoFill=function(dr,k){_af170(dr,k);try{if((k==="N"||k==="S")&&!S.aisleFix&&aisle(dr)<2000&&(dr.walls.S||[]).some(m=>m.t==="box")&&(dr.walls.N||[]).some(m=>m.t==="box"||m.t==="room")){S.aisleFix=1;dr.cfg.S.n=0;dr.cfg.S.auto=true;_af170(dr,"S");S.aisleFix=0;
+    clearTimeout(S.afT);S.afT=setTimeout(()=>{try{toast("Stallet är för smalt för boxar på båda långsidorna. Gör stallet bredare för att få boxar på långsida B")}catch(_){}},80)}}catch(_){S.aisleFix=0}}}
+{const _aa170=autoAll;autoAll=function(dr){_aa170(dr);try{if(!dr||S.aisleFix)return;const hasS=(dr.walls.S||[]).some(m=>m.t==="box");if(aisle(dr)<2000&&hasS&&(dr.walls.N||[]).some(m=>m.t==="box"||m.t==="room")){S.aisleFix=1;dr.cfg=dr.cfg||{};dr.cfg.S=dr.cfg.S||{mode:"lika",std:3500,d:3500};dr.cfg.S.n=0;dr.cfg.S.auto=true;_aa170(dr);S.aisleFix=0;
+    clearTimeout(S.afT);S.afT=setTimeout(()=>{try{toast("Stallet är för smalt för två rader med stallgång. Boxarna på långsida B togs bort – Ångra finns uppe till höger")}catch(_){}},80)}}catch(_){S.aisleFix=0}}}
+{const _lay170=layout;layout=function(dr){const out=_lay170(dr);try{if(!dr||!dr.walls)return out;const T={N:x0=>(x,y)=>[x0+x,y],S:x0=>(x,y)=>[x0+x,dr.W-y],W:y0=>(x,y)=>[y,y0+x],E:y0=>(x,y)=>[dr.L-y,y0+x]};
+  ["N","S","W","E"].forEach(k=>{const base=wallBase(dr,k),len=wallLen2(dr,k);out.filter(o=>o.k===k&&!o.door&&o.m&&o.m.t!=="gap").forEach(o=>{const w=+o.m.w||0;if(o.start+w>base+len+1){o.start=Math.max(base,base+len-w);o.tf=T[k](o.start);o.ovf=true}})})}catch(_){}return out}}
 </script>
 
 </html>
