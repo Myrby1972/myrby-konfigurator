@@ -2141,6 +2141,43 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 @keyframes npr{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
 #cfgcanvas .npr,#cfgcanvas .npr.inkf{opacity:0;animation:npr 1s ease-in-out 3!important;animation-delay:var(--np,0s)!important}
 @media (prefers-reduced-motion:reduce){#cfgcanvas .npl,#cfgcanvas .npr{animation:none!important;opacity:0}}
+/* v155: Lägg till-biblioteket */
+#wiz .vm-add{position:relative}
+#wiz .al-btn{background:var(--green,#23412a)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 6px 16px rgba(35,65,42,.22);gap:9px;padding-left:10px}
+#wiz .al-btn b{color:#fff;font-weight:800}
+#wiz .al-btn[aria-expanded="true"]{box-shadow:0 0 0 4px rgba(35,65,42,.18)}
+#wiz .al-plus{font-style:normal;width:24px;height:24px;border-radius:50%;background:#fff;color:#23412a;display:grid;place-items:center;font-size:19px;font-weight:900;line-height:1}
+#wiz .al-pop{width:460px;max-width:calc(100vw - 32px);padding:6px 0 0;max-height:min(78vh,720px);overflow:auto}
+#wiz .al-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:10px 20px 8px}
+#wiz .al-h b{font:500 1.5rem/1.1 var(--f-display,"EB Garamond",serif);color:var(--ink)}
+#wiz .al-h span{font-size:.85rem;color:var(--ink-2)}
+#wiz .al-g{padding:10px 20px 12px;border-top:1px solid #efe9dc}
+#wiz .al-g.lk{background:#faf8f3}
+#wiz .al-gt{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+#wiz .al-gt b{font:900 .78rem/1 Lato,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#4c5449}
+#wiz .al-lock{font-size:.78rem;color:var(--ink-2);font-weight:700;background:#efe9dc;border-radius:999px;padding:4px 10px}
+#wiz .al-row{display:flex;flex-wrap:wrap;gap:8px}
+#wiz .al-it{display:inline-flex;align-items:center;gap:9px;border:1.5px solid #cfd6c8;border-radius:12px;padding:8px 12px;font-weight:700;font-size:1rem;background:#fff;min-height:46px;color:var(--ink);cursor:pointer}
+#wiz .al-it svg{width:30px;height:22px;flex:none}
+#wiz .al-it:hover:not(:disabled){border-color:#23412a}
+#wiz .al-it.on{background:#eef3ea;border-color:#23412a}
+#wiz .al-it.on::after{content:"✓";color:#23412a;font-weight:900}
+#wiz .al-it:disabled{opacity:.45;border-style:dashed;cursor:default}
+#wiz .al-br{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 0;font-weight:700;font-size:1rem}
+#wiz .al-stp{display:inline-flex;align-items:center;border-radius:10px;overflow:hidden;height:38px;background:#23412a}
+#wiz .al-stp button{border:0;background:none;color:#fff;width:38px;height:100%;font-weight:900;font-size:1.1rem;cursor:pointer}
+#wiz .al-stp button:disabled{opacity:.35;cursor:default}
+#wiz .al-stp b{background:#fff;height:100%;display:grid;place-items:center;min-width:44px;font:500 1.25rem/1 var(--f-display,"EB Garamond",serif)}
+#wiz .al-n{margin:8px 0 0;font-size:.85rem;color:var(--ink-2)}
+#wiz .al-leg{background:#f6f2e8;padding:12px 20px 14px;border-top:1px solid #efe9dc;display:grid;gap:7px}
+#wiz .al-leg b{font:900 .78rem/1 Lato,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#4c5449}
+#wiz .al-leg div{display:flex;gap:16px;flex-wrap:wrap;font-size:.92rem;font-weight:700}
+#wiz .al-leg i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+@media (max-width:700px){#wiz .al-pop{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:auto;max-width:none;border-radius:20px 20px 0 0;max-height:80vh;z-index:9999}}
+#wiz .al-mob{display:none}
+@media (max-width:900px){#wiz .cfg-plan{position:relative}#wiz .al-mob{display:block;position:absolute;right:12px;bottom:12px;z-index:30}#wiz .al-mob .al-btn{height:52px;padding:0 18px 0 12px;font-size:1rem;border-radius:999px}#wiz .al-mob .vm{position:static}}
+#wiz .vm-add .al-pop{left:auto!important;right:0!important;transform:none!important;z-index:80}
+@media (max-width:900px){#wiz .vm-add .al-pop{left:0!important}}
 </style>
 
 <div class="app">
@@ -3061,7 +3098,30 @@ function viewPick(){const dr=D.drawing,sp=D.spec||{},cur=sp.front,op=S.vmenu||""
   const fr=fmixOn()?"":`<span class="vm"><button type="button" class="vm-btn" data-vm="front" aria-haspopup="listbox" aria-expanded="${op==="front"}"><small>Front</small><b>${esc(prod(cur)?.name||"Välj")}</b><i class="vm-car"></i></button>${op==="front"?`<div class="vm-pop" role="listbox">${FRONTS().map(p=>{const r=sizeRule(p.id);return `<button type="button" class="vm-it" role="option" data-vfpick="${esc(p.id)}" aria-selected="${p.id===cur}"><span class="vm-ck">${p.id===cur?"✓":""}</span><span class="vm-tx"><b>${esc(p.name)}</b><small>${r.type==="fixed"?"Fasta storlekar":"Valfri längd"}</small></span></button>`}).join("")}</div>`:""}</span>`;
   const cl=`<span class="vm"><button type="button" class="vm-btn" data-vm="color" aria-haspopup="listbox" aria-expanded="${op==="color"}"><small>Färg</small><i class="vm-sw" style="background:${cn[2]}"></i><b>${esc(cn[1])}</b><i class="vm-car"></i></button>${op==="color"?`<div class="vm-pop vm-cols" role="listbox"><p class="vm-h">Fronter och mellanväggar</p>${cols.map(([id,n,c,sub])=>`<button type="button" class="vm-it" role="option" data-vcol="${id}" aria-selected="${curC===id}"><i class="vm-sw lg" style="background:${c}"></i><span class="vm-tx"><b>${esc(n)}</b><small>${esc(sub)}${id!=="zink"?" · pulverlack":""}</small></span><span class="vm-ck">${curC===id?"✓":""}</span></button>`).join("")}</div>`:""}</span>`;
   return `<span class="vpicks">${fr}${cl}</span>`}
-function dragLegend(){const op=S.vmenu==="legend";return `<span class="vm"><button type="button" class="vm-btn vm-leg" data-vm="legend" aria-expanded="${op}"><i class="vm-dots"><i style="background:#23412a"></i><i style="background:#b8862f"></i><i style="background:#3f6f8f"></i></i><b>Dra i ritningen</b><i class="vm-car"></i></button>${op?`<div class="vm-pop vm-lgd"><p class="vm-h">Ta tag i handtagen och dra</p><div class="vm-l"><i class="hd" style="background:#23412a"></i><span><b>Ytterväggar</b>Stallets längd och bredd</span></div><div class="vm-l"><i class="hd" style="background:#b8862f"></i><span><b>Boxväggar och rum</b>Bredare eller smalare</span></div><div class="vm-l"><i class="hd hz" style="background:#3f6f8f"></i><span><b>Fronten</b>Djupare eller grundare boxar</span></div><div class="vm-l"><i class="hd mv">✥</i><span><b>Mitt i en box eller ett rum</b>Flytta den längs väggen</span></div></div>`:""}</span>`}
+function dragLegend(){return addLib()}
+/* v155: "+ Lägg till" – bibliotek med det man redan gått igenom, ersätter menyn "Dra i ritningen" */
+function addLib(){const op=S.vmenu==="add",dr=D.drawing;
+  const btn=`<button type="button" class="vm-btn al-btn" data-vm="add" aria-expanded="${op}" aria-haspopup="dialog"><i class="al-plus">${op?"×":"+"}</i><b>Lägg till</b></button>`;
+  if(!op||!dr)return `<span class="vm vm-add">${btn}</span>`;
+  let PG=[],cur=0;try{PG=wizPages();cur=S.wizStep||0}catch(_){}
+  const at=k=>PG.findIndex(p=>p.key===k),st=k=>{const i=at(k);return i<0||i<=cur?"":i===cur+1?"Nästa steg":"Senare"};
+  const lock=t=>t?`<span class="al-lock">${t}</span>`:"";
+  const ic={N:'<rect x="11" y="1" width="8" height="4"/>',S:'<rect x="11" y="17" width="8" height="4"/>',W:'<rect x="0" y="7" width="4" height="8"/>',E:'<rect x="26" y="7" width="4" height="8"/>'};
+  const wi=k=>`<svg viewBox="0 0 30 22" aria-hidden="true"><rect x="2" y="3" width="26" height="16" fill="none" stroke="#b9b2a2" stroke-width="2"/><g fill="#23412a">${ic[k]}</g></svg>`;
+  const it=(attr,lab,on,msg,ico,dis)=>`<button type="button" class="al-it${on?" on":""}" ${dis?"disabled":attr+" data-alclose"+(on?"":` data-almsg="${esc(msg)}"`)} aria-pressed="${!!on}">${ico||""}<span>${esc(lab)}</span></button>`;
+  const lI=st("ing"),lB=st("boxA"),lW=st("win"),lR=st("rum");
+  const DOORS=[["door-N","N","Långsida A","långsida A"],["door-S","S","Långsida B","långsida B"],["door-W","W","Gavel vänster","vänster gavel"],["door-E","E","Gavel höger","höger gavel"]];
+  const g1=`<div class="al-g${lI?" lk":""}"><div class="al-gt"><b>Ingångar</b>${lock(lI)}</div><div class="al-row">${DOORS.map(([key,k,lab,ll])=>it(`data-ingang="${key}"`,lab,!!extraFind(dr,key),`Ingång på ${ll} tillagd. Dra den dit den sitter.`,wi(k),lI)).join("")}</div></div>`;
+  const nb=k=>(dr.walls[k]||[]).filter(m=>m.t==="box").length;
+  const stp=(k,lab)=>`<div class="al-br"><span>${lab}</span><span class="al-stp"><button type="button" data-sn="${k}" data-v="-1" ${lB||!nb(k)?"disabled":""} aria-label="Färre boxar, ${lab}">−</button><b>${nb(k)}</b><button type="button" data-sn="${k}" data-v="1" ${lB?"disabled":""} aria-label="Fler boxar, ${lab}">+</button></span></div>`;
+  const g2=`<div class="al-g${lB?" lk":""}"><div class="al-gt"><b>Boxar</b>${lock(lB)}</div>${stp("N","Långsida A")}${stp("S","Långsida B")}</div>`;
+  const nw=wins(dr).length;
+  const g3=`<div class="al-g${lW?" lk":""}"><div class="al-gt"><b>Fönster</b>${lock(lW)}</div><div class="al-row">${it('data-winadd="1"',"+ Ett fönster",false,"Fönster tillagt. Dra det dit det sitter.","",lW)}${it('data-winbox="1"',"Ett i varje box",!!dr.winBox,"Ett fönster i varje box.","",lW)}</div>${!lW&&nw?`<p class="al-n">${nw} fönster i ritningen</p>`:""}</div>`;
+  const RM=EXTRAS.filter(e=>e[1]==="room").map(e=>e[0]);
+  const g4=`<div class="al-g${lR?" lk":""}"><div class="al-gt"><b>Rum</b>${lock(lR)}</div><div class="al-row">${RM.map(r=>it(`data-sx="${esc(r)}"`,r,!!extraFind(dr,r),`${r} tillagd. Dra den dit den ska vara.`,"",lR)).join("")}</div></div>`;
+  const leg=`<div class="al-leg"><b>Så drar du i ritningen</b><div><span><i style="background:#23412a"></i>Yttervägg</span><span><i style="background:#b8862f"></i>Boxens bredd</span><span><i style="background:#3f6f8f"></i>Boxens djup</span></div></div>`;
+  return `<span class="vm vm-add">${btn}<div class="vm-pop al-pop" role="dialog" aria-label="Lägg till i ritningen"><div class="al-h"><b>Lägg till i ritningen</b><span>Det du väljer pulserar</span></div>${g1}${g2}${g3}${g4}${leg}</div></span>`}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".al-pop [data-alclose]");if(!b||b.disabled)return;const msg=b.dataset.almsg;S.vmenu=null;if(msg)setTimeout(()=>{try{toast(msg)}catch(_){}},30)},true);
 function canvasInner(dr,lvl,opts){const v=viewMode();if(v==="iso")return iso3d(dr,lvl);if(v==="walk")return walk3d(dr,D.ui.walk||0,lvl);return planPretty(dr,opts)}
 
 /* --- hästnamn --- */
@@ -3535,7 +3595,7 @@ function cfgPanel(lvl){const dr=D.drawing,stall=D.ui.kind==="stall";
     ${prodTop()}
     ${hangTip(lvl)}
     ${lvl>=2&&ovfInfo(dr).length?"":warns.slice(0,2).map(w=>`<div class="warn">${esc(w)}</div>`).join("")}
-    ${(cfgPgKey()==="kund"||cfgPgKey()==="sum")&&viewMode()==="plan"?finalSheet(lvl):`${viewMode()==="plan"?(paintOn()?paintBar():wallPaintOn()?wallPaintBar():""):(paintOn()||wallPaintOn())?`<p class="hintline">Gå tillbaka till <b>Ritning</b> för att fördela i ritningen.</p>`:""}${cfgPgKey()==="rum"&&viewMode()==="plan"?blockBar():cfgPgKey()==="win"&&viewMode()==="plan"?winBar():""}<div class="drw-svg cad live lv${lvl} v-${viewMode()} ${paintOn()||wallPaintOn()?"painting":""}" id="cfgcanvas" data-lvl="${lvl}">${canvasInner(dr,lvl,{interactive:lvl>=5||["matt","boxA","boxB","ing","win"].includes(cfgPgKey()),lvl,hl:cfgHL(),paint:paintOn()?"front":wallPaintOn()?"wall":(cfgPgKey()==="front"&&(D.spec||{}).front&&!fmixOn()?"show":false),doors:cfgPgKey()==="front"&&!!(D.spec||{}).front})}${viewMode()==="walk"?`<label class="wslide"><span class="ws-t">Gå i stallgången</span><span class="ws-l">Ingången</span><input type="range" class="vrange" id="walkpos" min="0" max="100" value="${D.ui.walk||0}" style="--p:${D.ui.walk||0}%" aria-label="Gå framåt i stallgången"><span class="ws-l">Längst in</span></label>`:""}${paintOn()&&viewMode()==="plan"&&fmixList().length>1?`<div class="psides"><span class="pside" data-fside="N">Hela långsida A</span><span class="pside" data-fside="S">Hela långsida B</span></div>`:""}${wallPaintOn()&&viewMode()==="plan"&&wmixList().length>1?`<div class="psides"><span class="pside" data-wside="N">Hela långsida A</span><span class="pside" data-wside="S">Hela långsida B</span></div>`:""}</div>${lvl>=4&&viewMode()==="plan"?cfgLegend():""}
+    ${(cfgPgKey()==="kund"||cfgPgKey()==="sum")&&viewMode()==="plan"?finalSheet(lvl):`${viewMode()==="plan"?(paintOn()?paintBar():wallPaintOn()?wallPaintBar():""):(paintOn()||wallPaintOn())?`<p class="hintline">Gå tillbaka till <b>Ritning</b> för att fördela i ritningen.</p>`:""}${cfgPgKey()==="rum"&&viewMode()==="plan"?blockBar():cfgPgKey()==="win"&&viewMode()==="plan"?winBar():""}${lvl>=1&&viewMode()==="plan"&&D.drawing&&!paintOn()&&!wallPaintOn()?`<div class="al-mob">${addLib()}</div>`:""}<div class="drw-svg cad live lv${lvl} v-${viewMode()} ${paintOn()||wallPaintOn()?"painting":""}" id="cfgcanvas" data-lvl="${lvl}">${canvasInner(dr,lvl,{interactive:lvl>=5||["matt","boxA","boxB","ing","win"].includes(cfgPgKey()),lvl,hl:cfgHL(),paint:paintOn()?"front":wallPaintOn()?"wall":(cfgPgKey()==="front"&&(D.spec||{}).front&&!fmixOn()?"show":false),doors:cfgPgKey()==="front"&&!!(D.spec||{}).front})}${viewMode()==="walk"?`<label class="wslide"><span class="ws-t">Gå i stallgången</span><span class="ws-l">Ingången</span><input type="range" class="vrange" id="walkpos" min="0" max="100" value="${D.ui.walk||0}" style="--p:${D.ui.walk||0}%" aria-label="Gå framåt i stallgången"><span class="ws-l">Längst in</span></label>`:""}${paintOn()&&viewMode()==="plan"&&fmixList().length>1?`<div class="psides"><span class="pside" data-fside="N">Hela långsida A</span><span class="pside" data-fside="S">Hela långsida B</span></div>`:""}${wallPaintOn()&&viewMode()==="plan"&&wmixList().length>1?`<div class="psides"><span class="pside" data-wside="N">Hela långsida A</span><span class="pside" data-wside="S">Hela långsida B</span></div>`:""}</div>${lvl>=4&&viewMode()==="plan"?cfgLegend():""}
     ${lvl>=5&&viewMode()==="plan"&&["N","S","W","E"].some(k=>(dr.walls[k]||[]).some(m=>m.t!=="box"))?`<p class="draghint ${cfgPgKey()==="rum"?"big":""}">✥ Dra rum och dörrar i ritningen för att flytta dem.</p>`:""}`}
     <div class="cchips">${cfgChips(lvl)}</div>
     ${priceCard(lvl)}
