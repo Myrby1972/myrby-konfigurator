@@ -3950,10 +3950,10 @@ function cornerInfo(dr){const out=[];if(!dr||!dr.walls)return out;const ro=rowOf
   for(const [key,row,g,end] of [["NW","N","W",0],["SW","S","W",1],["NE","N","E",0],["SE","S","E",1]]){
     const cx=g==="W"?ro.a:ro.b;if(!(cx>0))continue;const rm=dr.walls[row]||[];if(!rm.length)continue;
     const rIdx=g==="W"?0:rm.length-1,rb=rm[rIdx];if(!rb||rb.t!=="box")continue;
-    if(g==="E"&&used(dr,row)<dr.L-ro.a-ro.b-5)continue;
+    let cxE=cx;if(g==="E"){const rest=dr.L-ro.a-ro.b-used(dr,row);if(rest<-5)continue;cxE=cx+Math.max(0,Math.round(rest))} /* v166: höger sida som vänster, även när raden inte når ända fram */
     const gm=dr.walls[g]||[];if(!gm.length)continue;const gIdx=end===0?0:gm.length-1,gb=gm[gIdx];if(!gb||gb.t!=="box")continue;
     if(end===1&&used(dr,g)<gableSpan(dr,g).len-5)continue;
-    const cv=(dr.corner||{})[key];out.push({key,row,g,end,cx,rIdx,gIdx,on:cv===true,gon:cv==="g",ch:end===0?gableSpan(dr,g).y0:dr.W-gableSpan(dr,g).y1})}
+    const cv=(dr.corner||{})[key];out.push({key,row,g,end,cx:g==="E"?cxE:cx,rIdx,gIdx,on:cv===true,gon:cv==="g",ch:end===0?gableSpan(dr,g).y0:dr.W-gableSpan(dr,g).y1})}
   return out}
 const _el130=edgeList;edgeList=function(dr){const L=_el130(dr),cs=cornerInfo(dr).filter(c=>c.on);if(!cs.length)return L;
   return L.filter(e=>!cs.some(c=>e.o.k===c.row&&e.o.i===c.rIdx&&(c.g==="W"?e.x===0:e.x===+e.o.m.w)))
@@ -4055,7 +4055,8 @@ function rsHintPg(pg){S.hintT=S.hintT||{};if(S.hintPg!==pg){S.hintPg=pg;(RS_PG[p
 function rsHint(t){D.ui.hint=D.ui.hint||{};S.hintT=S.hintT||{};if(!D.ui.hint[t]){D.ui.hint[t]=1;if(!S.hintT[t]||Date.now()-S.hintT[t]>4600)S.hintT[t]=Date.now()}return !!S.hintT[t]&&Date.now()-S.hintT[t]<4600}
 function rsHandles(dr,lay,F,pg,lvl){lvl=lvl==null?9:lvl;rsHintPg(pg);const out=[],WT=230,T=(o,x,y)=>o.tf(x,y),ring=(a,b,c)=>{const cx=(a[0]+b[0])/2,cy=(a[1]+b[1])/2;c=c||"#b8862f";return `<circle class="wpulse" cx="${cx}" cy="${cy}" r="${650*F}" fill="none" stroke="${c}" stroke-width="${70*F}"/><circle class="wpulse wp2" cx="${cx}" cy="${cy}" r="${650*F}" fill="${c}" fill-opacity=".22"/>`};
   const pill=(a,b,dir)=>{const cx=(a[0]+b[0])/2,cy=(a[1]+b[1])/2,v=dir==="v",w=v?130*F:520*F,h=v?520*F:130*F;return `<rect class="rs-pill" x="${cx-w/2}" y="${cy-h/2}" width="${w}" height="${h}" rx="${Math.min(w,h)/2}"/><path class="rs-grip" d="${v?`M${cx-24*F} ${cy-110*F}v${220*F}M${cx+24*F} ${cy-110*F}v${220*F}`:`M${cx-110*F} ${cy-24*F}h${220*F}M${cx-110*F} ${cy+24*F}h${220*F}`}"/>`};
-  const eds=rsEdges(dr).filter(ed=>{const ms=dr.walls[ed.k]||[],a=ms[ed.i],b=ed.kind==="pair"?ms[ed.i+1]:null,room=a.t==="room"||(b&&b.t==="room");return room?lvl>=5:lvl>=2}),pB=false/* v156: inga pulser på boxhandtagen, det blev stressigt */,pR=lvl>=5&&eds.some(ed=>(dr.walls[ed.k]||[])[ed.i].t==="room")&&rsHint("room");
+  const CIh=cornerInfo(dr),cornerEnd=ed=>CIh.some(c=>(ed.k===c.row&&ed.i===c.rIdx&&(c.g==="W"?ed.kind==="lgap":ed.kind!=="lgap"&&ed.kind!=="pair"))||(ed.k===c.g&&ed.i===c.gIdx&&(c.end===0?ed.kind==="lgap":ed.kind!=="lgap"&&ed.kind!=="pair")));
+  const eds=rsEdges(dr).filter(ed=>{if(cornerEnd(ed))return false;/* v166: hörnets mörka handtag ligger där, det gula fick inte ta draget */const ms=dr.walls[ed.k]||[],a=ms[ed.i],b=ed.kind==="pair"?ms[ed.i+1]:null,room=a.t==="room"||(b&&b.t==="room");return room?lvl>=5:lvl>=2}),pB=false/* v156: inga pulser på boxhandtagen, det blev stressigt */,pR=lvl>=5&&eds.some(ed=>(dr.walls[ed.k]||[])[ed.i].t==="room")&&rsHint("room");
   {eds.forEach(ed=>{const o=lay.find(o=>!o.door&&o.k===ed.k&&o.i===ed.i);if(!o)return;const w=+o.m.w,d=+o.m.d||0,xe=ed.kind==="lgap"?0:w,a=T(o,xe,0),b=T(o,xe,d),lng=ed.k==="N"||ed.k==="S",hw=150*F;
       const x0=Math.min(a[0],b[0])-(lng?hw:0),y0=Math.min(a[1],b[1])-(lng?0:hw),ww=Math.abs(b[0]-a[0])+(lng?2*hw:0),hh=Math.abs(b[1]-a[1])+(lng?0:2*hw);
       out.push(`<g class="rs-h rs-w" data-rsedge="${ed.k}|${ed.i}${ed.kind==="lgap"?"|L":""}" style="cursor:${lng?"ew-resize":"ns-resize"}"><rect x="${x0}" y="${y0}" width="${ww}" height="${hh}" fill="transparent"/>${(o.m.t==="room"?pR:pB)?ring(a,b):""}${pill(a,b,lng?"v":"h")}</g>`)})}
