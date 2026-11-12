@@ -3669,6 +3669,35 @@ const _ed130=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed130(host
   const end=e=>{if(!cs)return pu&&pu.call(host,e);const c0=cs;cs=null;try{host.releasePointerCapture(c0.pid)}catch(_){}host.classList.remove("dragging");const dr=getDr();
     if(!c0.moved&&e.type==="pointerup")cornerSet(dr,c0.key,!c0.start);const now=!!(dr.corner||{})[c0.key];if(now!==c0.start&&typeof toast==="function")toast(now?"Hörnet hör nu till boxen, med mellanvägg mot gavelboxen":"Hörnet är tomt igen");onEnd()};
   host.onpointerup=end;host.onpointercancel=end};
+/* v131: alla boxar går att dra längs sin vägg (Carl 12/11). Luckan före boxen blir en ledig yta (gap, gapBox),
+   boxarna efter står kvar. Bredderna låses först så att "Fyll jämnt" inte gör boxarna smalare. */
+function wallBase(dr,k){return k==="N"||k==="S"?rowOff(dr).a:gableSpan(dr,k).y0}
+function wallLen2(dr,k){const ro=rowOff(dr);return k==="N"||k==="S"?dr.L-ro.a-ro.b:gableSpan(dr,k).len}
+function boxLock(dr,k){const c=dr.cfg?.[k],ms=dr.walls[k]||[];ms.forEach(m=>{if(m.autoRest){delete m.autoRest;m.gapBox=true}});if(c){c.align="start";
+  if(c.mode!=="per"){const ws=ms.filter(m=>m.t==="box").map(m=>+m.w);if(ws.length&&ws.every(w=>w===ws[0])){c.mode="fast";c.std=ws[0]}else{c.mode="per";c.ws=ws}}}}
+function boxMoveTo(dr,k,id,u){const ms=dr.walls[k]||[],bi=ms.findIndex(m=>m.id===id);if(bi<0)return false;const b=ms[bi],w=+b.w;
+  const gb=bi>0&&ms[bi-1].t==="gap"&&ms[bi-1].gapBox?ms[bi-1]:null,ga=ms[bi+1]&&ms[bi+1].t==="gap"&&ms[bi+1].gapBox?ms[bi+1]:null;
+  const prevEnd=ms.slice(0,bi).filter(m=>m!==gb).reduce((a,m)=>a+(+m.w||0),0),after=ms.slice(bi+1).filter(m=>m!==ga),hasNext=after.length>0;
+  const limitEnd=hasNext?prevEnd+(gb?+gb.w:0)+w+(ga?+ga.w:0):wallLen2(dr,k)-after.reduce((a,m)=>a+(+m.w||0),0);
+  const room=Math.max(0,limitEnd-prevEnd-w);let g=Math.round((u-prevEnd)/100)*100;g=Math.max(0,Math.min(room,g));if(g<150)g=0;if(room-g<150)g=room;
+  if(gb&&+gb.w===g)return false;if(!gb&&g===0)return false;
+  if(ga)ms.splice(ms.indexOf(ga),1);if(gb)ms.splice(ms.indexOf(gb),1);let at=ms.indexOf(b);
+  if(g>0)ms.splice(at,0,{id:uid2(),t:"gap",w:g,gapBox:true});at=ms.indexOf(b);
+  if(hasNext&&room-g>0)ms.splice(at+1,0,{id:uid2(),t:"gap",w:room-g,gapBox:true});
+  if(dr.cfg?.[k]?.auto)autoFill(dr,k);if(abGable(dr).some(x=>x)){const t0=toast;toast=()=>{};try{autoAll(dr)}finally{toast=t0}}return true}
+const _af131=autoFill;autoFill=function(dr,k){_af131(dr,k);const ms=dr.walls?.[k];if(!ms)return;
+  while(ms.length&&ms[ms.length-1].t==="gap"&&ms[ms.length-1].gapBox)ms.pop();
+  for(let i=ms.length-1;i>0;i--)if(ms[i].t==="gap"&&ms[i].gapBox&&ms[i-1].t==="gap"&&ms[i-1].gapBox){ms[i-1].w=(+ms[i-1].w||0)+(+ms[i].w||0);ms.splice(i,1)}};
+const _ed131=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed131(host,getDr,onLive,onEnd);if(!host)return;
+  const pd=host.onpointerdown,pm=host.onpointermove,pu=host.onpointerup;let bs=null;
+  const toPlan=e=>{const svg=host.querySelector("svg");if(!svg)return null;const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=svg.getScreenCTM();return m?pt.matrixTransform(m.inverse()):null};
+  const uOf=(dr,k,p)=>(k==="N"||k==="S"?p.x:p.y)-wallBase(dr,k);
+  host.onpointerdown=e=>{const el=e.target.closest&&e.target.closest("[data-bmove]");if(el&&e.button<=0&&!e.target.closest("[data-corner]")){const [k,id]=el.dataset.bmove.split("|"),dr=getDr(),p=toPlan(e),o=layout(dr).find(o=>!o.door&&o.k===k&&o.m.id===id);if(!o||!p)return pd&&pd.call(host,e);
+      bs={k,id,grab:uOf(dr,k,p)-(o.start-wallBase(dr,k)),x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId};e.preventDefault();e.stopPropagation();return}return pd&&pd.call(host,e)};
+  host.onpointermove=e=>{if(!bs)return pm&&pm.call(host,e);const dr=getDr();if(!bs.moved){if(Math.hypot(e.clientX-bs.x0,e.clientY-bs.y0)<6)return;bs.moved=true;try{host.setPointerCapture(bs.pid)}catch(_){}host.classList.add("dragging");boxLock(dr,bs.k)}
+    const p=toPlan(e);if(!p)return;if(boxMoveTo(dr,bs.k,bs.id,uOf(dr,bs.k,p)-bs.grab))onLive()};
+  const end=e=>{if(!bs)return pu&&pu.call(host,e);const b0=bs;bs=null;try{host.releasePointerCapture(b0.pid)}catch(_){}host.classList.remove("dragging");if(b0.moved){onEnd();toast("Boxen flyttad")}};
+  host.onpointerup=end;host.onpointercancel=end};
 /* Mellanväggar och stolpar enligt Nikkis regel: en mellanvägg (och en stolpe) vid varje boxkant
   , mellan två boxar, mot ett rum och i slutet av en boxrad. Mot yttervägg behövs varken vägg eller stolpe (Rotbrunna: stolpe även där). */
 function edgeList(dr){const lay=layout(dr),out=[],seen=new Set();
@@ -3835,7 +3864,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
     const hit=interactive&&m.t!=="box"?(o.door?`data-door="${m.id}" data-drag="1" style="cursor:grab"`:`data-mod="${k}:${o.i}" data-drag="1" style="cursor:grab"`):"";
     const cx0=o.cx0||0,cx1=o.cx1||0,c=tf(w/2+(cx1-cx0)/2,d/2);
     if(m.t==="box"){
-      {const pc=(paint==="front"||paint==="show")&&typeof fmixColor==="function"?fmixColor(o.f):null;g.push(poly([[-cx0,0],[w+cx1,0],[w+cx1,d],[-cx0,d]],pc?`fill="${pc}" fill-opacity=".13" stroke="${pc}" stroke-width="22" ${paint==="front"?`class="pbox" data-fbox="${o.nr}" style="cursor:pointer"`:`class="pbox-in" style="animation-delay:${(o.nr-1)*70}ms"`}`:`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12"`))}
+      {const pc=(paint==="front"||paint==="show")&&typeof fmixColor==="function"?fmixColor(o.f):null;g.push(poly([[-cx0,0],[w+cx1,0],[w+cx1,d],[-cx0,d]],!pc&&interactive?`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12" data-bmove="${k}|${m.id}" style="cursor:grab"`:pc?`fill="${pc}" fill-opacity=".13" stroke="${pc}" stroke-width="22" ${paint==="front"?`class="pbox" data-fbox="${o.nr}" style="cursor:pointer"`:`class="pbox-in" style="animation-delay:${(o.nr-1)*70}ms"`}`:`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12"`))}
       if(false&&!paint&&bedOn(lvl)){ /* v104: ingen halm i ritningen (Carl) */g.push(poly([[0,0],[w,0],[w,d],[0,d]],`fill="#f4e8c4" stroke="${C.boxLine}" stroke-width="12" pointer-events="none"`)+`<g transform="${(()=>{const o0=tf(0,0),ox=tf(1,0),oy=tf(0,1);return `matrix(${ox[0]-o0[0]} ${ox[1]-o0[1]} ${oy[0]-o0[0]} ${oy[1]-o0[1]} ${o0[0]} ${o0[1]})`})()}">${bedSVG(w,d,o.nr+(k==="S"?50:0),(x,y)=>[x,y],[30,27,25,23,21],.72)}<rect x="${w*.04}" y="${d*.05}" width="${w*.92}" height="${d*.8}" rx="${Math.min(w,d)*.4}" fill="url(#pp-bedglow)" pointer-events="none"/></g>`)}
       const BS=Math.min(680*F,w*.42,d*.34),b1=Math.min(200*F,w*.11),b2=Math.min(250*F,w*.13);
       g.push(T(c[0],c[1]-BS*.75,"HÄSTBOX",`text-anchor="middle" ${sans} font-size="${b1}" font-weight="700" letter-spacing="${b1*.25}" fill="${C.mute}" pointer-events="none"`));
@@ -4440,7 +4469,7 @@ document.addEventListener("click",async e=>{
   if(d.gclose!==undefined){const dr=D.drawing;["W","E"].forEach(g=>{const c=dr.cfg?.[g];if(c){c.n=0;c.auto=true;autoFill(dr,g)}});autoAll(dr);fitBoxes(dr);D.ui.bopen="N";saveD();wizRefresh();return}
   if(d.sn&&(d.sn==="W"||d.sn==="E")&&+d.v>0)D.ui.bsame=0;
   if(d.sn==="S"||d.smode==="S"||d.sd==="S"||d.salign==="S")D.ui.bsame=0;
-  if(d.sn){D.ui.measured=true;const dr=D.drawing;dr.cfg=dr.cfg||{};dr.cfg[d.sn]=dr.cfg[d.sn]||{n:0,mode:"lika",std:3500,d:(dr.cfg.N||{}).d||3500,auto:true};const c=dr.cfg[d.sn],cur=(dr.walls[d.sn]||[]).filter(m=>m.t==="box").length;c.n=Math.max(0,Math.min(20,cur+ +d.v));c.auto=true;D.ui.touchedN=true;autoFill(dr,d.sn);if(d.sn==="W"||d.sn==="E"){autoAll(dr);autoFill(dr,d.sn);autoAll(dr);fitBoxes(dr)}saveD();wizRefresh();return}
+  if(d.sn){D.ui.measured=true;const dr=D.drawing;dr.cfg=dr.cfg||{};dr.cfg[d.sn]=dr.cfg[d.sn]||{n:0,mode:"lika",std:3500,d:(dr.cfg.N||{}).d||3500,auto:true};const c=dr.cfg[d.sn],cur=(dr.walls[d.sn]||[]).filter(m=>m.t==="box").length;c.n=Math.max(0,Math.min(20,cur+ +d.v));c.auto=true;D.ui.touchedN=true;autoFill(dr,d.sn);if(d.sn==="W"||d.sn==="E"||abGable(dr).some(x=>x)){autoAll(dr);autoFill(dr,d.sn);autoAll(dr);fitBoxes(dr)}saveD();wizRefresh();return}
   if(d.salign){const c=D.drawing.cfg[d.salign];c.align=d.v;autoAll(D.drawing);saveD();wizRefresh();return}
   if(d.smode){const c=D.drawing.cfg[d.smode];if(d.v==="per"&&c.mode!=="per")c.ws=(D.drawing.walls[d.smode]||[]).filter(m=>m.t==="box").map(m=>m.w);if(d.v==="fast"&&c.mode!=="fast"&&c.mode!=="sista"){const b0=(D.drawing.walls[d.smode]||[]).find(m=>m.t==="box");c.std=nearestSize(Math.min(b0?.w||3500,4000),D.drawing.front)}c.mode=d.v;c.auto=true;autoFill(D.drawing,d.smode);saveD();wizRefresh(true);return}
   if(d.d3size&&d.d3size.startsWith("w-std:")&&!t.closest("#drw2")){const k=d.d3size.slice(6);D.drawing.cfg[k].std=+d.v;D.drawing.cfg[k].auto=true;autoFill(D.drawing,k);saveD();wizRefresh(true);return}
