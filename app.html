@@ -2786,7 +2786,7 @@ function syncSpec(init){const sp=D.spec||{},dr=D.drawing;if(!dr)return;
   const postChanged=(sp.post||"")!==(dr.post||"");["wall","post","decor","fill","finish","ral"].forEach(k=>dr[k]=sp[k]||"");if(postChanged){for(const k of ["N","S","W","E"]){const c=dr.cfg?.[k];if(c&&c.auto){if(c.std&&sizeRule(dr.front).type==="fixed")c.std=nearestSize(c.std,dr.front);continue}(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"&&!sizeOK(m.w,dr.front))m.w=nearestSize(m.w,dr.front)})}}dr.cornerPost=dr.post;dr.egenMat=sp.egenMat||"";dr.egenTh=sp.egenTh||"";dr.wallNote=sp.wallNote||"";if(sp.front&&sp.fill&&!fillsFor(sp.front).includes(sp.fill)){sp.fill="";dr.fill=""}autoAll(dr)}
 function specFromDrawing(){const dr=D.drawing;if(!dr)return;D.spec=D.spec||{};SPEC_KEYS.forEach(k=>{D.spec[k]=dr[k]||""});D.spec.wallNote=dr.wallNote||""}
 function specRows(sp,dr){sp=sp||{};const v=k=>sp[k]||dr?.[k]||"";const pl=k=>POST_SHORT[v(k)]?(v(k)==="tra"||v(k)==="ingen"?POST_SHORT[v(k)]:POST_SHORT[v(k)]+" mm"):"";
-  return [["Mellanvägg",dr&&dr.wmix&&Object.keys(dr.wmix).length?"Blandade, se materiallistan":wallLabelId(dr||{},v("wall"))],["Stolpar",pl("post")],["Dekorbräda",v("decor")==="med"?"Med":v("decor")==="utan"?"Utan":""],["Fyllning",v("fill")],["Ytbehandling",v("finish")+(v("ral")&&/ulverlack/.test(v("finish"))?" · "+v("ral")+" "+(RALC[v("ral")]||[""])[0].toLowerCase():"")],["Antal fronter",D.ui?.mchoice==="nej"&&D.ui.nej?`${D.ui.nej.n} st, ${D.ui.nej.len?mm(D.ui.nej.len)+" mm":"längd okänd"} (utan ritning)`:""],["Ingångar",dr?doors(dr).map(d=>`${WALL_NAME[d.k]} ${mm(d.w)} mm`).join(", "):""],["Fönster idag",dr&&allWins(dr).length?`${allWins(dr).length} st (${["N","S","W","E"].map(k=>[k,allWins(dr).filter(x=>x.k===k).length]).filter(x=>x[1]).map(([k,n])=>`${n} på ${WALL_NAME[k].toLowerCase()}`).join(", ")})`:""],["Ventilation, kundens svar",dr?.ventInfo||""],["Hästnamn",dr&&dr.names?Object.keys(dr.names).sort((a,b)=>a-b).map(n=>`Box ${n}: ${dr.names[n]}`).join(", "):""]].filter(r=>r[1])}
+  return [["Mellanvägg",dr&&dr.wmix&&Object.keys(dr.wmix).length?"Blandade, se materiallistan":wallLabelId(dr||{},v("wall"))],["Stolpar",pl("post")],["Dekorbräda",v("decor")==="med"?"Med":v("decor")==="utan"?"Utan":""],["Fyllning",v("fill")],["Ytbehandling",v("finish")+(v("ral")&&/ulverlack/.test(v("finish"))?" · "+v("ral")+" "+(RALC[v("ral")]||[""])[0].toLowerCase():"")],["Antal fronter",D.ui?.mchoice==="nej"&&D.ui.nej?`${D.ui.nej.n} st, ${D.ui.nej.len?mm(D.ui.nej.len)+" mm":"längd okänd"} (utan ritning)`:""],["Ingångar",dr?doors(dr).map(d=>`${WALL_NAME[d.k]} ${mm(d.w)} mm`).join(", "):""],["Fönster idag",dr&&allWins(dr).length?`${allWins(dr).length} st (${["N","S","W","E"].map(k=>[k,allWins(dr).filter(x=>x.k===k).length]).filter(x=>x[1]).map(([k,n])=>`${n} på ${WALL_NAME[k].charAt(0).toLowerCase()+WALL_NAME[k].slice(1)}`).join(", ")})`:""],["Ventilation, kundens svar",dr?.ventInfo||""],["Hästnamn",dr&&dr.names?Object.keys(dr.names).sort((a,b)=>a-b).map(n=>`Box ${n}: ${dr.names[n]}`).join(", "):""]].filter(r=>r[1])}
 const YD_IDS=["bd-rak","bd-valvd"];
 const MORE_CATS=["dorrbox","tillbeh","ute","dorrfon","skritt","garden"];
 const EGEN_SVG='<svg width="40" height="40" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 40V14l16-8 16 8v26"/><path d="M14 40V22h20v18M14 28h20M14 34h20"/><path d="M34 10l6-4 2 3-6 4z"/></svg>';
@@ -3295,12 +3295,13 @@ function sumHTML(){const dr=D.drawing,sp=D.spec||{},pr=D.project||{},stall=D.ui.
   const row=(lbl,val,j)=>`<button type="button" class="sm-row" data-sumgo="${j}"><span class="sm-k">${esc(lbl)}</span><span class="sm-v">${val?esc(val):none}</span><span class="sm-ed">Ändra ${svg("chev",14)}</span></button>`;
   const card=(t,rows)=>`<div class="sm-card"><p class="sm-t">${esc(t)}</p>${rows.join("")}</div>`;
   const C=[];
-  if(stall&&dr){const lay=layout(dr),bx=k=>lay.filter(o=>o.k===k&&o.m.t==="box"),ws=k=>{const b=bx(k);if(!b.length)return "Inga boxar";const u=[...new Set(b.map(o=>mm(+o.m.w)))];return `${b.length} boxar · ${u.join(" / ")} mm breda`};
+  if(stall&&dr){const lay=layout(dr),bx=k=>lay.filter(o=>o.k===k&&o.m.t==="box"),ws=k=>{const b=bx(k);if(!b.length)return "Inga boxar";const u=[...new Set(b.map(o=>mm(+o.m.w)))];return `${b.length} ${b.length===1?"box":"boxar"} · ${u.join(" / ")} mm ${b.length===1?"bred":"breda"}`};
     const rooms=lay.filter(o=>o.m.t==="room").map(o=>o.m.name).filter(Boolean),fr=typeof fmixOn==="function"&&fmixOn()&&fmixList().length>1?fmixList().map(id=>prod(id)?.name).join(" + "):prod(sp.front)?.name;
     const vent=D.ui.more?.vent||D.ui.vg?.done?[dr.intag?`Friskluftsintag i ${bx("N").length+bx("S").length} boxar`:"",+dr.fans?`${dr.fans} fläkt${+dr.fans>1?"ar":""} ${dr.fanType==="vagg"?"på väggen":"i taket"}`:""].filter(Boolean).join(" · "):"";
     const names=dr.names?Object.keys(dr.names).length:0,extra=[names?`${names} namnskylt${names>1?"ar":""}`:"",dr.note?"kommentar":"",(D.attachments?.length||window.__pubFiles?.length)?`${(D.attachments?.length||0)+(window.__pubFiles?.length||0)} bild${(D.attachments?.length||0)+(window.__pubFiles?.length||0)>1?"er":""}`:""].filter(Boolean).join(" · ");
     C.push(card("Stallet",[row("Mått",D.ui.measured||D.ui.mchoice==="ja"?`${mm(dr.L)} × ${mm(dr.W)} mm, takhöjd ${mm(dr.ceil)} mm`:"Vi tar måtten tillsammans","s-matt"),row("Ingångar",SR["Ingångar"]||"","s-ing")]));
-    C.push(card("Boxar",[row("Långsida A",ws("N"),"s-boxA"),row("Långsida B",ws("S"),"s-boxA"),row("Fönster idag",SR["Fönster idag"]||"","s-win")]));
+    {const tot=lay.filter(o=>o.m.t==="box").length,CI=cornerInfo(dr).filter(c=>c.on||c.gon),cn=CI.map(c=>{const o=lay.find(o=>!o.door&&(c.on?(o.k===c.row&&o.i===c.rIdx):(o.k===c.g&&o.i===c.gIdx)));return o?`Box ${o.nr} tar hörnet ${CORNER_TXT[c.key]}`:""}).filter(Boolean);
+      C.push(card("Boxar",[row("Totalt",`${tot} ${tot===1?"box":"boxar"}`,"s-boxA"),row("Långsida A",ws("N"),"s-boxA"),row("Långsida B",ws("S"),"s-boxA"),...(bx("W").length?[row("Gavel vänster",ws("W"),"s-boxA")]:[]),...(bx("E").length?[row("Gavel höger",ws("E"),"s-boxA")]:[]),...(cn.length?[row("Hörnboxar",cn.join(", "),"s-boxA")]:[]),row("Fönster idag",SR["Fönster idag"]||"","s-win")]))}
     C.push(card("Front",[row("Front",fr||"","s-front")]));
     C.push(card("Utförande",[row("Mellanvägg",SR["Mellanvägg"]||"","p-vagg"),row("Fyllning",SR["Fyllning"]||"","p-fyll"),row("Yta",SR["Ytbehandling"]||"","p-yta"),row("Stolpar",SR["Stolpar"]||"","p-stolpe"),row("Dekorbräda",SR["Dekorbräda"]||"","p-dekor")]));
     C.push(card("Rum",[row("Rum",rooms.join(", "),"s-extra"),row("Ventilation",vent,"s-vent"),row("Bilder och hästnamn",extra,"d-mer")]))}
@@ -3402,7 +3403,7 @@ function estimate(lvl){const rows=[],dr=D.drawing,sp=D.spec||{};let open=[],todo
       if(/lack/i.test(sp.finish||"")){const t=lackSum();R("Pulverlackering","Fronter, mellanväggar och stolpar i valfri RAL-kulör",t,"p-yta")}
       else if(sp.finish)rows.push({t:"Ytbehandling · varmförzinkat",s:"Ingår i priset",v:0,j:"p-yta",zero:true});
       else todo.push("ytbehandling")}
-    if(lvl>=5){lay.filter(o=>o.m.t==="door").forEach(o=>{const d=MP.door(+o.m.w);R(d.t,`${mm(o.m.w)} mm på gaveln · från-pris`,d.p,"s-extra")});
+    if(lvl>=5){lay.filter(o=>o.m.t==="door").forEach(o=>{const d=MP.door(+o.m.w),gav=o.k==="W"||o.k==="E";R(gav?d.t:d.t.replace("Gavelskjutport","Skjutport"),`${WALL_NAME[o.k]} · ${mm(o.m.w)} mm · från-pris`,d.p,"s-extra")});
       lay.filter(o=>o.m.t==="room").forEach(o=>rows.push({t:o.m.name,s:`${mm(o.m.w)} × ${mm(o.m.d)} mm · pris i offerten`,v:0,j:"s-extra",zero:true,ofr:true}));
       if(dr.intag&&bx.length)rows.push({t:"Friskluftsintag",s:`${bx.length} st, ett per box · pris i offerten`,v:0,j:"s-extra",zero:true,ofr:true});
       if(+dr.fans)rows.push({t:"Frånluftsfläktar",s:`${dr.fans} st i taket · pris i offerten`,v:0,j:"s-extra",zero:true,ofr:true})}}
@@ -5334,7 +5335,7 @@ const _af163=autoFill;autoFill=function(dr,k){const ms=dr.walls[k]=dr.walls[k]||
   for(let g=0;g<30;g++){const ph={id:uid2(),t:"gap",w:tot,doorGap:true};ms.push(ph);_af163(dr,k);const pi=ms.indexOf(ph);if(pi>=0)ms.splice(pi,1);clean();
     if(!ms.some(m=>m.t==="box"||m.t==="room")){after();return}
     if(doorPlace(dr,k,ms,sp,len,c,"lika")||doorPlace(dr,k,ms,sp,len,c,"flow")||doorPlace(dr,k,ms,sp,len,c,"fit"))break;
-    if(c.n<=0){doorPlace(dr,k,ms,sp,len,c,"force");break}c.n--;S.doorDrop++}
+    if(c.n<=0||ms.some(m=>m.t==="room")){doorPlace(dr,k,ms,sp,len,c,"force");break}/* v169: med rum på väggen tas ingen box bort, då visas den röda rutan med förslag */c.n--;S.doorDrop++}
   if(c.n<n0&&typeof toast==="function"&&!S.noDoorToast){clearTimeout(S.ddT);const nm=(typeof WALL_NAMES!=="undefined"&&WALL_NAMES[k])||k;S.ddT=setTimeout(()=>{try{toast(c.n?`${nm}: ${c.n} ${c.n===1?"box":"boxar"} får plats vid sidan av ingången`:`Det får inte plats någon box på ${String(nm).toLowerCase()} vid sidan av ingången`)}catch(_){}},90)}
   after()};
 
@@ -5368,6 +5369,21 @@ function winSync(dr,say){if(!dr||!dr.walls)return;const W=wins(dr);let moved=0,d
   return _aw(dr)}}
 {const _fp=fanPos;fanPos=function(dr){const L0=_fp(dr);return L0.map(fp=>{const ds=(dr.doors||[]).filter(d=>d.k===fp.k);if(!ds.length)return fp;const len=fp.k==="N"||fp.k==="S"?dr.L:dr.W,bad=p=>ds.some(d=>p>(+d.p)-300&&p<(+d.p)+(+d.w)+300);if(!bad(fp.p))return fp;
   const c=[];ds.forEach(d=>c.push((+d.p)-500,(+d.p)+(+d.w)+500));const ok=c.filter(p=>p>=300&&p<=len-300&&!bad(p)).sort((a,b)=>Math.abs(a-fp.p)-Math.abs(b-fp.p));return ok.length?{...fp,p:ok[0]}:fp})}}
+
+/* v169: lucka 9 – ett nytt rum hamnar där det får plats (bredvid ingångar och boxar), helst vid stallgångens ände. */
+{const nBox=dr=>["N","S","W","E"].reduce((a,k)=>a+(dr.walls[k]||[]).filter(m=>m.t==="box").length,0);const _te169=toggleExtra;toggleExtra=function(dr,key){const had=!!extraFind(dr,key),n0=nBox(dr),pre=JSON.stringify({w:dr.walls,c:dr.cfg});const r=_te169(dr,key);if(had||String(key).startsWith("door-"))return r;
+  const f=extraFind(dr,key);if(!f||!f.m||f.m.t!=="room")return r;if(!ovfInfo(dr).length&&nBox(dr)>=n0)return r;const okNow=()=>!ovfInfo(dr).length&&nBox(dr)>=n0;
+  const snap=JSON.stringify({w:dr.walls,c:dr.cfg}),room=f.m,from=f.k;
+  for(const k of ["W","E","S","N"]){if(k===from)continue;const S0=JSON.parse(snap);dr.walls=S0.w;dr.cfg=S0.c;const ms=dr.walls[from]||[],i=ms.findIndex(m=>m.id===room.id);if(i<0)continue;const [m]=ms.splice(i,1);for(let j=ms.length-1;j>=0;j--)if(ms[j].gapRoom===room.id)ms.splice(j,1);
+    dr.walls[k]=dr.walls[k]||[];dr.walls[k].push(m);autoAll(dr);if(okNow()){if(typeof toast==="function")setTimeout(()=>toast(`${room.name||"Rummet"} fick plats på ${(WALL_ON[k]||k)}`),40);return r}}
+  const S1=JSON.parse(snap);dr.walls=S1.w;dr.cfg=S1.c;autoAll(dr);return r}}
+/* v169: lucka 10 – hästnamn och front per box sitter i boxen (id), inte i numret. Läsarna använder fortfarande nummer;
+   numreras boxarna om flyttas namnen med sin box. Tas boxen bort försvinner namnet. */
+{const _lay169=layout;layout=function(dr){const out=_lay169(dr);if(!dr||!dr.walls)return out;try{
+  const cur={};out.forEach(o=>{if(!o.door&&o.m&&o.m.t==="box"&&o.nr)cur[o.nr]=o.m.id});const prev=dr._nrMap||cur,same=JSON.stringify(prev)===JSON.stringify(cur);
+  const sync=key=>{const byNr=dr[key];if(!byNr&&!dr[key+"Id"])return;const sh={};Object.entries(byNr||{}).forEach(([nr,v])=>{const id=prev[nr];if(id)sh[id]=v});dr[key+"Id"]=sh;
+    if(!same){const nb={};Object.entries(cur).forEach(([nr,id])=>{if(sh[id]!=null)nb[nr]=sh[id]});dr[key]=nb}};
+  sync("names");sync("fmix");if(!same){dr._nrMap=cur;out.forEach(o=>{if(o.m&&o.m.t==="box"&&o.nr)o.f=(dr.fmix||{})[o.nr]||dr.front})}else if(!dr._nrMap)dr._nrMap=cur}catch(_){}return out}}
 </script>
 
 </html>
