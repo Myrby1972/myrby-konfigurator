@@ -2050,6 +2050,17 @@ html body #wiz .fgal .dpop .fx-sum span{color:#e3c78f}
 .rs-h .rs-pill{opacity:.55}
 .rs-h:hover .rs-pill{opacity:1}
 .rs-outer .rs-pill{opacity:1}
+/* v144: introts tre steg ska inte se klickbara ut (Carl 12/11) – platt tidslinje utan rutor */
+#wiz .pintro-steps{gap:0!important;position:relative}
+#wiz .pintro-steps div{background:none!important;box-shadow:none!important;border-radius:0!important;padding:0 10px 0 0!important;position:relative;cursor:default}
+#wiz .pintro-steps div::after{content:"";position:absolute;top:11px;left:34px;right:12px;height:1px;background:rgba(201,169,106,.45)}
+#wiz .pintro-steps div:last-child::after{display:none}
+#wiz .pintro-steps b{min-height:0!important;line-height:1.2!important;align-items:center!important;gap:7px!important}
+#wiz .pintro-steps b{flex-direction:column;align-items:flex-start!important}
+#wiz .pintro-steps i{background:transparent!important;color:#e3c78f!important;box-shadow:inset 0 0 0 1.5px #c9a86a;margin:0!important;position:relative;z-index:1}
+#wiz .pintro-steps div.on i{background:#c9a86a!important;color:#22301f!important;box-shadow:none}
+#wiz .pintro-steps b{font-size:.84rem!important;color:#fff}
+#wiz .pintro-steps small{font-size:.74rem!important;color:rgba(239,231,214,.7)!important;margin-top:2px!important}
 </style>
 
 <div class="app">
