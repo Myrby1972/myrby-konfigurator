@@ -3406,7 +3406,7 @@ function estimate(lvl){const rows=[],dr=D.drawing,sp=D.spec||{};let open=[],todo
       lay.filter(o=>o.m.t==="room").forEach(o=>rows.push({t:o.m.name,s:`${mm(o.m.w)} × ${mm(o.m.d)} mm · pris i offerten`,v:0,j:"s-extra",zero:true,ofr:true}));
       if(dr.intag&&bx.length)rows.push({t:"Friskluftsintag",s:`${bx.length} st, ett per box · pris i offerten`,v:0,j:"s-extra",zero:true,ofr:true});
       if(+dr.fans)rows.push({t:"Frånluftsfläktar",s:`${dr.fans} st i taket · pris i offerten`,v:0,j:"s-extra",zero:true,ofr:true})}}
-  D.items.filter(i=>MORE_CATS.includes(prod(i.product)?.cat)).forEach(i=>{const pr=priceOf(i.product);if(pr)rows.push({t:prodName(i.product),s:"1 st · från-pris",v:pv(pr),j:"m-mer"});else rows.push({t:prodName(i.product),s:"Pris i offerten",v:0,j:"m-mer",zero:true,ofr:true})});
+  D.items.filter(i=>MORE_CATS.includes(prod(i.product)?.cat)).forEach(i=>{const pr=priceOf(i.product);if(WIN_PRODS.includes(i.product)&&D.drawing){const n=wins(D.drawing).length;rows.push(n?{t:prodName(i.product),s:`${n} st, som i ritningen${pr?" · från-pris":""}`,v:pr?pv(pr)*n:0,j:"m-mer",zero:!pr,ofr:!pr}:{t:prodName(i.product),s:"Lägg ut fönstren i ritningen",v:0,j:"m-mer",zero:true,ofr:true});return}if(pr)rows.push({t:prodName(i.product),s:"1 st · från-pris",v:pv(pr),j:"m-mer"});else rows.push({t:prodName(i.product),s:"Pris i offerten",v:0,j:"m-mer",zero:true,ofr:true})});
   return {rows,total:rows.reduce((a,r)=>a+r.v,0),open,todo:[...new Set(todo)]}}
 const BENEFIT={front:{optimal:"Myrbys mest sålda, tyst skjutdörr, vändbar front",baryard:"Exklusiv front med dekorbåge",fagelbro:"Klassisk elegans i varje detalj",janslund:"Robust och tidlös",faro:"Mjuka former och luftig känsla",stromsholm:"Herrgårdskänsla med dekorbräda",emmaboda:"Stilren och stark",dala:"Låg och öppen, god överblick",rotbrunna:"Utseende som håller i generationer"},
   finish:{"Varmförzinkad":"Varmförzinkat, tål stallmiljön i årtionden","Pulverlack (RAL)":"Pulverlackerat i valfri RAL-kulör","Förzinkad + pulverlack":"Förzinkat och lackat, det tåligaste som finns"}};
@@ -5337,6 +5337,37 @@ const _af163=autoFill;autoFill=function(dr,k){const ms=dr.walls[k]=dr.walls[k]||
     if(c.n<=0){doorPlace(dr,k,ms,sp,len,c,"force");break}c.n--;S.doorDrop++}
   if(c.n<n0&&typeof toast==="function"&&!S.noDoorToast){clearTimeout(S.ddT);const nm=(typeof WALL_NAMES!=="undefined"&&WALL_NAMES[k])||k;S.ddT=setTimeout(()=>{try{toast(c.n?`${nm}: ${c.n} ${c.n===1?"box":"boxar"} får plats vid sidan av ingången`:`Det får inte plats någon box på ${String(nm).toLowerCase()} vid sidan av ingången`)}catch(_){}},90)}
   after()};
+
+/* v168: fönster och fläktar följer stallet (Carls val 12/11, lucka 1–5).
+   - Ett fönster i varje box: följer boxarna (läggs till, tas bort, centreras). Kundens egna fönster ligger kvar.
+   - Fönster utanför väggen flyttas in; krockar de tas överskottet bort (meddelande).
+   - Fönster i en dörröppning flyttas till närmaste lediga plats, helst i en box (meddelande).
+   - Nytt fönster hamnar i en box utan fönster, annars på en ledig del av väggen.
+   - Fläkt i en dörröppning flyttas åt sidan. */
+const WIN_PRODS=["stalfonster","trafonster"];
+function winSync(dr,say){if(!dr||!dr.walls)return;const W=wins(dr);let moved=0,dropped=0;const lenOf=k=>k==="N"||k==="S"?dr.L:dr.W,lay=layout(dr),bx=lay.filter(o=>o.m.t==="box");
+  if(dr.winBox){const keep=W.filter(x=>!x.box),used=new Set();bx.forEach(o=>{const a=o.start,b=o.start+(+o.m.w);if(keep.some(x=>x.k===o.k&&x.p>=a&&x.p<=b))return;
+      const bw=W.find(x=>x.box&&!used.has(x)&&x.k===o.k&&x.p>=a-1&&x.p<=b+1);if(bw){used.add(bw);bw.p=Math.round((a+b)/2);keep.push(bw)}else keep.push({id:uid2(),k:o.k,p:Math.round((a+b)/2),w:WIN_W,box:true})});
+    W.splice(0,W.length,...keep)}
+  const doorsOn=k=>(dr.doors||[]).filter(d=>d.k===k),inDoor=(k,p,w)=>doorsOn(k).some(d=>p+w/2>(+d.p)+20&&p-w/2<(+d.p)+(+d.w)-20),out=[],hit=(k,p,w)=>out.some(y=>y.k===k&&Math.abs(y.p-p)<(y.w+w)/2-10);
+  for(const x of W){const len=lenOf(x.k),w=+x.w||WIN_W;let p=Math.max(w/2,Math.min(len-w/2,+x.p||0)),mv=Math.abs(p-(+x.p||0))>1;
+    if(inDoor(x.k,p,w)){const c=[];doorsOn(x.k).forEach(d=>c.push((+d.p)-w/2-150,(+d.p)+(+d.w)+w/2+150));bx.filter(o=>o.k===x.k).forEach(o=>c.push(o.start+(+o.m.w)/2));
+      const ok=c.filter(q=>q>=w/2&&q<=len-w/2&&!inDoor(x.k,q,w)&&!hit(x.k,q,w)).sort((a,b)=>{const ia=bx.some(o=>o.k===x.k&&a>=o.start&&a<=o.start+(+o.m.w)),ib=bx.some(o=>o.k===x.k&&b>=o.start&&b<=o.start+(+o.m.w));return (ia===ib?0:ia?-1:1)||Math.abs(a-p)-Math.abs(b-p)});
+      if(ok.length){p=ok[0];mv=true;moved++}else{dropped++;continue}}
+    if(mv&&hit(x.k,p,w)){dropped++;continue}x.p=Math.round(p);out.push(x)}
+  W.splice(0,W.length,...out);
+  if(say&&(moved||dropped)&&typeof toast==="function"){clearTimeout(S.wsT);S.wsT=setTimeout(()=>{try{toast(dropped?`${dropped} ${dropped===1?"fönster fick":"fönster fick"} inte plats och togs bort`:`${moved===1?"Ett fönster":moved+" fönster"} flyttades åt sidan för ingången`)}catch(_){}},120)}}
+{const _af168=autoFill;autoFill=function(dr,k){_af168(dr,k);try{if(dr&&dr.winBox)winSync(dr,false)}catch(_){}}}
+{const _aa168=autoAll;autoAll=function(dr){_aa168(dr);try{winSync(dr,true)}catch(_){}}}
+{const _dr168=doorRefill;doorRefill=function(dr,ks,say){_dr168(dr,ks,say);try{winSync(dr,true)}catch(_){}}}
+{const _aw=autoWindow;autoWindow=function(dr){const W=wins(dr),bx=layout(dr).filter(o=>o.m.t==="box").sort((a,b)=>a.nr-b.nr),free=bx.find(o=>!W.some(x=>x.k===o.k&&x.p>=o.start&&x.p<=o.start+(+o.m.w)));
+  if(free)return addWindow(dr,free.k,free.start+(+free.m.w)/2);
+  const ok=(k,p)=>{const len=k==="N"||k==="S"?dr.L:dr.W;return p>=WIN_W/2+100&&p<=len-WIN_W/2-100&&!(dr.doors||[]).some(d=>d.k===k&&p+WIN_W/2>(+d.p)-100&&p-WIN_W/2<(+d.p)+(+d.w)+100)&&!W.some(x=>x.k===k&&Math.abs(x.p-p)<(x.w+WIN_W)/2+200)};
+  const inBox=(k,p)=>bx.some(o=>o.k===k&&p+WIN_W/2>o.start&&p-WIN_W/2<o.start+(+o.m.w));
+  for(const pass of [0,1])for(const k of ["N","S","W","E"]){const len=k==="N"||k==="S"?dr.L:dr.W;for(let i=0;i<60;i++){const p=Math.round(len/2+(i%2?1:-1)*Math.ceil(i/2)*500);if(ok(k,p)&&(pass||!inBox(k,p)))return addWindow(dr,k,p)}}
+  return _aw(dr)}}
+{const _fp=fanPos;fanPos=function(dr){const L0=_fp(dr);return L0.map(fp=>{const ds=(dr.doors||[]).filter(d=>d.k===fp.k);if(!ds.length)return fp;const len=fp.k==="N"||fp.k==="S"?dr.L:dr.W,bad=p=>ds.some(d=>p>(+d.p)-300&&p<(+d.p)+(+d.w)+300);if(!bad(fp.p))return fp;
+  const c=[];ds.forEach(d=>c.push((+d.p)-500,(+d.p)+(+d.w)+500));const ok=c.filter(p=>p>=300&&p<=len-300&&!bad(p)).sort((a,b)=>Math.abs(a-fp.p)-Math.abs(b-fp.p));return ok.length?{...fp,p:ok[0]}:fp})}}
 </script>
 
 </html>
