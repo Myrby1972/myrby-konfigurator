@@ -3090,7 +3090,7 @@ function histPush(){if(HIST.busy||!D.ui?.kind)return;clearTimeout(HIST.t);HIST.t
 function histGo(dir){const j=HIST.i+dir;if(j<0||j>=HIST.stack.length)return;HIST.i=j;const s=JSON.parse(HIST.stack[j]);HIST.busy=true;D.spec=s.spec;D.drawing=s.drawing;D.ui.fmixOn=s.ui.fmixOn;D.ui.wmixOn=s.ui.wmixOn;saveD();wizRefresh();HIST.busy=false;toast(dir<0?"Ångrat":"Gjort om")}
 function viewMode(){return D.ui.view||"plan"}
 function viewBar(lvl){if(lvl<1)return "";if(lvl<2&&D.ui.view&&D.ui.view!=="plan")D.ui.view="plan";const v=viewMode(),nu=lvl===2&&!D.ui.viewSeen;
-  return `<div class="vbar"><div class="vseg ${nu?"vnew":""}" role="group" aria-label="Visa stallet">${(lvl>=2?[["plan","Ritning"],["iso","3D"],["walk","Stallgången"]]:[["plan","Ritning"]]).map(([k,t])=>`<button type="button" data-view="${k}" aria-pressed="${v===k}">${t}</button>`).join("")}</div>${nu?`<span class="vhint">Nytt: 3D och stallgången</span>`:""}
+  return `<div class="vbar"><div class="vseg ${nu?"vnew":""}" role="group" aria-label="Visa stallet">${(lvl>=2?[["plan","Ritning"],["iso","3D"],["walk","Stallgången"]]:[["plan","Ritning"]]).map(([k,t])=>`<button type="button" data-view="${k}" aria-pressed="${v===k}">${t}</button>`).join("")}</div>
    ${v==="iso"?`<button type="button" class="vbtn" data-vrot="-1" aria-label="Vrid åt vänster">↺</button><button type="button" class="vbtn" data-vrot="1" aria-label="Vrid åt höger">↻</button>`:""}
    ${(v==="iso"||v==="walk")&&lvl>=3&&D.drawing?viewPick():""}${v==="plan"&&D.drawing&&!paintOn()&&!wallPaintOn()?dragLegend():""}
    
