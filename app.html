@@ -1947,6 +1947,25 @@ html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[d
 .sm-dtx span{font-size:.84rem;color:var(--ink-2);line-height:1.4}
 .sm-dact{display:flex;gap:8px;flex-wrap:wrap}
 .sm-dact .btn{white-space:nowrap}
+/* v133 */
+.ovf{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:14px;padding:12px 14px;margin:0 0 14px;box-shadow:inset 0 0 0 1.5px #e7b9b3,0 6px 18px rgba(178,58,48,.08)}
+.ovf-i{width:30px;height:30px;border-radius:50%;background:#fbecea;color:#b23a30;display:grid;place-items:center;font-weight:900;flex:none}
+.ovf-t{flex:1;display:grid;gap:3px}
+.ovf-t b{font-size:.95rem;color:var(--ink)}
+.ovf-t>span{font-size:.84rem;color:var(--ink-2)}
+.ovf-a{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.fgal{grid-auto-flow:dense}
+html body #wiz .fgal .dpop{grid-column:1/-1;position:relative;background:linear-gradient(160deg,#284a31,#1b3022)!important;color:#efe7d6;box-shadow:none!important;border:0!important;gap:8px;padding:14px 16px;margin-top:2px;animation:dpopIn .25s ease-out}
+html body #wiz .fgal .dpop::before{content:"";position:absolute;top:-7px;left:calc(25% - 7px);width:14px;height:14px;background:#284a31;transform:rotate(45deg)}
+html body #wiz .fgal .dpop.dr::before{left:calc(75% - 7px)}
+html body #wiz .fgal .dpop .mbox-h{color:#fff!important;margin:0;font-size:1rem}
+html body #wiz .fgal .dpop .fx-help{color:rgba(239,231,214,.88)!important;margin:0}
+html body #wiz .fgal .dpop .fx-help b{color:#fff}
+html body #wiz .fgal .dpop .seg .opt{background:rgba(255,255,255,.08)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)!important;border-color:transparent!important}
+html body #wiz .fgal .dpop .seg .opt:hover{background:#c9a86a!important;color:#22301f!important}
+html body #wiz .fgal .dpop .fx-sum{color:rgba(239,231,214,.8);border-color:rgba(255,255,255,.15);margin:0}
+html body #wiz .fgal .dpop .fx-sum span{color:#e3c78f}
+@keyframes dpopIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2520,7 +2539,8 @@ function boxesScreen(){const dr=D.drawing,same=abSame(),g=abGable(dr),gOn=g[0]+g
     :`<button type="button" class="abadd" data-bopen="G"><span class="abplus">+</span><span><b>Boxar längs gaveln</b><small>För ett L- eller U-format stall</small></span></button>`;
   return `<h2>Hur många boxar längs väggarna?</h2><p class="lead">Tryck på en sida för att ändra den. Du kan också dra boxarna i ritningen.</p>
    ${side("N","Långsida A")}${side("S","Långsida B")}${gab}`}
-const _rw128=renderWiz;renderWiz=function(){try{const pg=wizPages()[S.wizStep||0];if(pg&&pg.key==="boxA"&&D.drawing){if(D.ui.bsame===undefined)D.ui.bsame=abSame()?1:0;if(abSame()&&abMirror())saveD()}}catch(e){}return _rw128.apply(this,arguments)};
+const _rw133=()=>{try{const dr=D.drawing,sc=document.getElementById("wizscroll");if(!dr||!sc||!ovfInfo(dr).length||drawLvl(wizPages())<2)return;const q=sc.querySelector(".cfg-q")||sc;const t=document.createElement("div");t.innerHTML=ovfBanner(dr);q.insertBefore(t.firstElementChild,q.firstElementChild)}catch(e){}};
+const _rw128=renderWiz;renderWiz=function(){try{const pg=wizPages()[S.wizStep||0];if(pg&&pg.key==="boxA"&&D.drawing){if(D.ui.bsame===undefined)D.ui.bsame=abSame()?1:0;if(abSame()&&abMirror())saveD()}}catch(e){}const r=_rw128.apply(this,arguments);_rw133();return r};
 /* Standarddjup = Monitors mellanväggsartiklar: intervall om 100 mm i steg om 85 mm (545 till 645 … 4285 till 4385). Nominellt mått = mitten. */
 const MV_STD=Array.from({length:23},(_,i)=>2465+85*i); // 2465 … 4335 (2415 till 2515 … 4285 till 4385)
 const MV_POP=[3000,3500,4000]; /* snabbval för kunden (Nikki 11/11), övriga mått skrivs in */
@@ -3190,7 +3210,7 @@ function wizScreens(){
    {id:"s-front",pg:"front",sec:"Front",sub:"Front",html:()=>`<h2>Vilken front gillar du?</h2><p class="lead">Fronten är boxens ansikte mot stallgången. Välj den du gillar. Du kan alltid byta senare.</p>
      ${D.drawing?`<div class="seg fx-mode"><button type="button" class="opt" data-fmode="1" aria-pressed="${!fmixOn()}">Samma front överallt</button><button type="button" class="opt" data-fmode="2" aria-pressed="${fmixOn()}">Blanda olika fronter</button></div>`:""}
      ${fmixOn()?`<p class="hintline">${fmixList().length<2?`Du har <b>${esc(prod(fmixList()[0])?.name||"")}</b>. Välj nu fronten du vill blanda med.`:"Fler fronter? Tryck på dem. Tryck igen för att ta bort."}</p>`:""}
-     <div class="fgal">${FRONTS().filter(p=>true||D.ui.moreF||fmixOn()||["optimal","baryard","janslund","faro"].includes(p.id)||p.id===f).map(p=>{const r=sizeRule(p.id),mx=fmixOn(),on=mx?fmixList().includes(p.id):f===p.id;return `<button type="button" class="fgi" ${mx?`data-fmixpick="${p.id}"`:`data-pick1="spec.front" data-v="${p.id}"`} aria-pressed="${on}" ${mx&&on?`style="--fc:${fmixColor(p.id)}"`:""}>${mx&&on?`<span class="fx-cnt" style="background:${fmixColor(p.id)}">${(fmixCounts()[p.id]||0)===1?"1 box":(fmixCounts()[p.id]||0)+" boxar"}</span>`:""}<span class="fgimg" ${ph(img(p.id))}></span>${ib(p.id)}${badge(p.id)}<span class="fgt"><b>${esc(p.name)}</b><small>${esc(frontFrom(p.id)||BENEFIT.front[p.id]||"")}</small></span><span class="fgtag">${r.type==="fixed"?"Fasta storlekar":"Valfri längd"}</span><span class="bo-ck">${svg("check",16)}</span></button>`}).join("")}</div>${doorBox()}${fmixOn()?`<div class="fx-hint">${svg("check",16)}<span><b>Fördela direkt i ritningen</b><br>Markera en front och tryck på boxarna i ritningen. Du ser resultatet direkt.</span></div><div class="mob-fx">${fmixPanel()}</div>`:""}`},
+     <div class="fgal">${FRONTS().filter(p=>true||D.ui.moreF||fmixOn()||["optimal","baryard","janslund","faro"].includes(p.id)||p.id===f).map(p=>{const r=sizeRule(p.id),mx=fmixOn(),on=mx?fmixList().includes(p.id):f===p.id;return `<button type="button" class="fgi" ${mx?`data-fmixpick="${p.id}"`:`data-pick1="spec.front" data-v="${p.id}"`} aria-pressed="${on}" ${mx&&on?`style="--fc:${fmixColor(p.id)}"`:""}>${mx&&on?`<span class="fx-cnt" style="background:${fmixColor(p.id)}">${(fmixCounts()[p.id]||0)===1?"1 box":(fmixCounts()[p.id]||0)+" boxar"}</span>`:""}<span class="fgimg" ${ph(img(p.id))}></span>${ib(p.id)}${badge(p.id)}<span class="fgt"><b>${esc(p.name)}</b><small>${esc(frontFrom(p.id)||BENEFIT.front[p.id]||"")}</small></span><span class="fgtag">${r.type==="fixed"?"Fasta storlekar":"Valfri längd"}</span><span class="bo-ck">${svg("check",16)}</span></button>${!mx&&on?doorPop(FRONTS().filter(p=>true).findIndex(x=>x.id===p.id)):""}`}).join("")}</div>${fmixOn()?doorBox():""}${fmixOn()?`<div class="fx-hint">${svg("check",16)}<span><b>Fördela direkt i ritningen</b><br>Markera en front och tryck på boxarna i ritningen. Du ser resultatet direkt.</span></div><div class="mob-fx">${fmixPanel()}</div>`:""}`},
    {id:"p-vagg",pg:"vagg",sec:"Utförande",sub:"Mellanvägg",auto:true,done:()=>!!sp.wall&&!wmixOn()&&sp.wall!=="egen",html:()=>{const mx=wmixOn(),WL=wmixList(),wc=wmixCounts(),card=(id,inner)=>{const on=mx?WL.includes(id):sp.wall===id;return `<button type="button" class="fgi" ${mx?`data-wmixpick="${id}"`:`data-pick1="spec.wall" data-v="${id}"`} aria-pressed="${on}" ${mx&&on?`style="--fc:${wmixColor(id)}"`:""}>${mx&&on?`<span class="fx-cnt" style="background:${wmixColor(id)}">${wc[id]||0} st</span>`:""}${inner}<span class="bo-ck">${svg("check",16)}</span></button>`};
      return `<h2>Hur ska mellanväggarna vara?</h2><p class="lead">Mellan boxarna. Galler låter hästarna se varandra, tät vägg ger lugn.</p>
      ${D.drawing?`<div class="seg fx-mode"><button type="button" class="opt" data-wmode="1" aria-pressed="${!mx}">Samma vägg överallt</button><button type="button" class="opt" data-wmode="2" aria-pressed="${mx}">Blanda olika väggar</button></div>`:""}
@@ -3285,6 +3305,7 @@ function doorBox(){const dr=D.drawing,f=(D.spec||{}).front;if(!dr||!f)return "";
   return `<div class="dbox"><p class="mbox-h">${svg("check",16)} Dörrarna</p><p class="fx-help">${opt?"Optimal har skjutdörr, välj åt vilket håll den glider.":"Dörren sitter mitt på fronten"+(bx.some(o=>["optimal","rotbrunna"].includes(o.f||dr.front))?" (Optimal och Rotbrunna har dörren i ena kanten)":"")+". Välj hängning för alla, eller <b>tryck på en dörr i ritningen</b> för att vända just den."}</p>
    <div class="seg"><button type="button" class="opt" data-dirall="L">${opt?"Alla glider åt vänster":"Alla vänsterhängda"}</button><button type="button" class="opt" data-dirall="R">${opt?"Alla glider åt höger":"Alla högerhängda"}</button></div>
    <p class="fx-sum">${Object.entries(c).map(([t,n])=>`<span>${n} ${esc(t)}</span>`).join("")}</p></div>`}
+function doorPop(i){const h=doorBox();if(!h)return "";const nm=prod((D.spec||{}).front)?.name||"";return h.replace('<div class="dbox">',`<div class="dbox dpop ${i%2?"dr":"dl"}">`).replace(`${svg("check",16)} Dörrarna</p>`,`Dörrarna på ${esc(nm)}</p>`)}
 const cfgPgKey=()=>wizPages()[S.wizStep||0]?.key;
 function paintOn(){const pg=wizPages()[S.wizStep||0];return fmixOn()&&!!pg&&pg.key==="front"&&fmixList().length>0}
 function paintBar(){const L=fmixList(),b=L.includes(D.ui.fbrush)?D.ui.fbrush:L[L.length-1],c=fmixCounts(),one=L.length<2;
@@ -3335,7 +3356,7 @@ function cfgPanel(lvl){const dr=D.drawing,stall=D.ui.kind==="stall";
   return `<div class="cfg-head slim"><div><b>${lvl>=3&&specFront()?esc(prod(specFront()).name)+"-stall":"Ditt stall"}</b>${lvl>=2?`<span class="faint small">${drwMaterials2(dr).boxes} boxar · stallgång ${mm(aisle(dr))} mm</span>`:""}</div>${viewBar(lvl)}</div>
     ${prodTop()}
     ${hangTip(lvl)}
-    ${warns.slice(0,2).map(w=>`<div class="warn">${esc(w)}</div>`).join("")}
+    ${lvl>=2&&ovfInfo(dr).length?"":warns.slice(0,2).map(w=>`<div class="warn">${esc(w)}</div>`).join("")}
     ${(cfgPgKey()==="kund"||cfgPgKey()==="sum")&&viewMode()==="plan"?finalSheet(lvl):`${viewMode()==="plan"?(paintOn()?paintBar():wallPaintOn()?wallPaintBar():""):(paintOn()||wallPaintOn())?`<p class="hintline">Gå tillbaka till <b>Ritning</b> för att fördela i ritningen.</p>`:""}${cfgPgKey()==="rum"&&viewMode()==="plan"?blockBar():cfgPgKey()==="win"&&viewMode()==="plan"?winBar():""}<div class="drw-svg cad live lv${lvl} v-${viewMode()} ${paintOn()||wallPaintOn()?"painting":""}" id="cfgcanvas" data-lvl="${lvl}">${canvasInner(dr,lvl,{interactive:lvl>=5||["matt","boxA","boxB","ing","win"].includes(cfgPgKey()),lvl,hl:cfgHL(),paint:paintOn()?"front":wallPaintOn()?"wall":(cfgPgKey()==="front"&&(D.spec||{}).front&&!fmixOn()?"show":false),doors:cfgPgKey()==="front"&&!!(D.spec||{}).front})}${viewMode()==="walk"?`<label class="wslide"><span class="ws-t">Gå i stallgången</span><span class="ws-l">Ingången</span><input type="range" class="vrange" id="walkpos" min="0" max="100" value="${D.ui.walk||0}" style="--p:${D.ui.walk||0}%" aria-label="Gå framåt i stallgången"><span class="ws-l">Längst in</span></label>`:""}${paintOn()&&viewMode()==="plan"&&fmixList().length>1?`<div class="psides"><span class="pside" data-fside="N">Hela långsida A</span><span class="pside" data-fside="S">Hela långsida B</span></div>`:""}${wallPaintOn()&&viewMode()==="plan"&&wmixList().length>1?`<div class="psides"><span class="pside" data-wside="N">Hela långsida A</span><span class="pside" data-wside="S">Hela långsida B</span></div>`:""}</div>${lvl>=4&&viewMode()==="plan"?cfgLegend():""}
     ${lvl>=5&&viewMode()==="plan"&&["N","S","W","E"].some(k=>(dr.walls[k]||[]).some(m=>m.t!=="box"))?`<p class="draghint ${cfgPgKey()==="rum"?"big":""}">✥ Dra rum och dörrar i ritningen för att flytta dem.</p>`:""}`}
     <div class="cchips">${cfgChips(lvl)}</div>
@@ -3694,6 +3715,21 @@ const _el130=edgeList;edgeList=function(dr){const L=_el130(dr),cs=cornerInfo(dr)
     .map(e=>cs.some(c=>e.o.k===c.g&&e.o.i===c.gIdx&&(c.end===0?e.x===0:e.x===+e.o.m.w))?{...e,outer:false,corner:true}:e)};
 /* v132: en gavelbox som slutar ute på golvet (inte mot en långsidesbox) behöver mellanvägg på den sidan */
 const _el132=edgeList;edgeList=function(dr){return _el132(dr).map(e=>{if(!e.outer||(e.o.k!=="W"&&e.o.k!=="E"))return e;const sp=gableSpan(dr,e.o.k),abs=e.o.start+e.x;return (abs>sp.y0+60&&abs<sp.y1-60)?{...e,outer:false}:e})};
+/* v133: när det inte får plats (Carl 12/11): rött i ritningen och en ruta med lösningar, inget tas bort automatiskt */
+const WALL_ON={N:"långsida A",S:"långsida B",W:"vänstra gaveln",E:"högra gaveln"};
+function ovfInfo(dr){const out=[];if(!dr||!dr.walls)return out;for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[];if(!ms.length)continue;const len=wallLen2(dr,k),u=used(dr,k),over=u-len;if(over<=1)continue;
+    let acc=0,mod=null;for(const m of ms){if(acc+(+m.w||0)>len+1&&m.t!=="gap"){mod=m;break}acc+=+m.w||0}if(!mod)mod=[...ms].reverse().find(m=>m.t!=="gap");
+    const rooms=ms.filter(m=>m.t==="room"),mv=[...rooms].reverse()[0]||null;let to=null;if(mv){for(const q of ["S","N","W","E"]){if(q===k)continue;const fq=wallLen2(dr,q)-used(dr,q)+((dr.walls[q]||[]).filter(m=>m.t==="gap"&&m.gapBox).reduce((a,m)=>a+(+m.w||0),0)),gq=(dr.walls[q]||[]).some(m=>m.t==="gap"&&m.gapBox&&+m.w>=+mv.w);if(gq||wallLen2(dr,q)-used(dr,q)>=+mv.w){to=q;break}}}
+    out.push({k,over,add:Math.ceil(over/100)*100,len,mod,mv,to})}return out}
+function ovfBanner(dr){const o=ovfInfo(dr)[0];if(!o)return "";const nm=o.mod?.t==="room"?(o.mod.name||"Rummet"):"Sista boxen",lng=o.k==="N"||o.k==="S";
+  return `<div class="ovf" role="alert"><span class="ovf-i">!</span><div class="ovf-t"><b>Nästan! Det saknas ${mm(o.over)} mm på ${WALL_ON[o.k]}</b><span>${esc(nm)} får inte plats. Välj det som passar ditt stall, eller dra rummen och boxarna i ritningen.</span>
+    <div class="ovf-a"><button type="button" class="btn sm" data-ovf="len">Gör stallet ${mm(o.add)} mm ${lng?"längre":"bredare"}</button>${o.mv&&o.to?`<button type="button" class="btn sm ghost" data-ovf="move">Flytta ${esc(o.mv.name||"rummet")} till ${WALL_ON[o.to]}</button>`:""}${o.mod?`<button type="button" class="btn sm ghost" data-ovf="del">${o.mod.t==="room"?`Ta bort ${esc(o.mod.name||"rummet")}`:"Ta bort en box"}</button>`:""}</div></div></div>`}
+function ovfFix(dr,act){const o=ovfInfo(dr)[0];if(!o)return;
+  if(act==="len"){if(o.k==="N"||o.k==="S")dr.L=+dr.L+o.add;else dr.W=+dr.W+o.add}
+  else if(act==="move"&&o.mv&&o.to){const ms=dr.walls[o.k];ms.splice(ms.indexOf(o.mv),1);const q=o.to,mq=dr.walls[q]=dr.walls[q]||[],gi=mq.findIndex(m=>m.t==="gap"&&m.gapBox&&+m.w>=+o.mv.w);
+    if(gi>=0){mq[gi].w=+mq[gi].w-(+o.mv.w);mq.splice(gi+1,0,o.mv);if(mq[gi].w<300)mq.splice(gi,1)}else mq.push(o.mv);o.mv.d=dr.cfg?.[q]?.d||o.mv.d}
+  else if(act==="del"&&o.mod){if(o.mod.t==="room"){const ms=dr.walls[o.k];ms.splice(ms.indexOf(o.mod),1)}else{const c=dr.cfg?.[o.k];if(c&&c.n>0){c.n--;if(c.mode==="per"&&c.ws)c.ws.pop()}else{const ms=dr.walls[o.k];ms.splice(ms.lastIndexOf(o.mod),1)}}}
+  autoAll(dr)}
 function walkCamZ(dr,zA,zB){const g=dr.walls?.W||[];if(!g.some(m=>m.t==="box"||m.t==="room"))return (zA+zB)/2;let pos=gableSpan(dr,"W").y0;const occ=[];for(const m of g){if(m.t==="box"||m.t==="room")occ.push([pos,pos+(+m.w||0)]);pos+=+m.w||0}
   let cur=zA;const fr=[];occ.sort((a,b)=>a[0]-b[0]).forEach(([a,b])=>{if(a>cur)fr.push([cur,Math.min(a,zB)]);cur=Math.max(cur,b)});if(cur<zB)fr.push([cur,zB]);const ok=fr.filter(([a,b])=>b-a>800).sort((p,q)=>(q[1]-q[0])-(p[1]-p[0]));return ok.length?(ok[0][0]+ok[0][1])/2:(zA+zB)/2}
 function cornerSet(dr,key,on){dr.corner=dr.corner||{};if(on)dr.corner[key]=true;else delete dr.corner[key]}
@@ -3955,6 +3991,10 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
       g.push(t==="stal"?`<circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="${fillc}" stroke="${C.box}" stroke-width="${sw}"/>`:`<rect x="${p[0]-r}" y="${p[1]-r}" width="${2*r}" height="${2*r}" fill="${fillc}" stroke="${C.box}" stroke-width="${sw}"/>`)})}
   g.push(...tags);
   const late=[];
+  if(lvl>=2)ovfInfo(dr).forEach(ov=>{const base=wallBase(dr,ov.k);lay.filter(o=>!o.door&&o.k===ov.k&&o.m.t!=="gap").forEach(o=>{const w=+o.m.w,d=+o.m.d||0,rel=o.start-base;if(rel+w<=ov.len+1)return;const x0=Math.max(0,ov.len-rel),P=pts=>pts.map(p=>o.tf(...p).join(",")).join(" ");
+      late.push(`<polygon points="${P([[0,0],[w,0],[w,d],[0,d]])}" fill="none" stroke="#b23a30" stroke-width="${26*F}" stroke-dasharray="${90*F} ${60*F}" pointer-events="none"/><polygon points="${P([[x0,0],[w,0],[w,d],[x0,d]])}" fill="#b23a30" fill-opacity=".16" stroke="none" pointer-events="none"/>`)});
+    const last=lay.filter(o=>!o.door&&o.k===ov.k).sort((a,b)=>b.start-a.start)[0];if(!last)return;const ex=ov.len+base,rel=ex-last.start,w2=+last.m.w,xm=(rel+w2)/2,a=last.tf(rel,-WT*2.2),b=last.tf(w2,-WT*2.2),pc=last.tf(xm,-WT*3.6),pw=1500*F,ph=380*F;
+    late.push(`<g pointer-events="none"><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#b23a30" stroke-width="${16*F}"/><rect x="${pc[0]-pw/2}" y="${pc[1]-ph/2}" width="${pw}" height="${ph}" rx="${ph/2}" fill="#b23a30"/><text x="${pc[0]}" y="${pc[1]+ph*.22}" text-anchor="middle" ${sans} font-size="${ph*.55}" font-weight="700" fill="#fff">+${mm(ov.over)} mm</text></g>`)});
   // befintliga fönster på ytterväggen
   allWins(dr).forEach(x=>{const [cx,cy]=fanXY(dr,x,WT),h=x.k==="N"||x.k==="S",a=h?[cx-x.w/2,cy]:[cx,cy-x.w/2],b=h?[cx+x.w/2,cy]:[cx,cy+x.w/2],i=wins(dr).indexOf(x);
     const pulse=S.winPulse&&S.winPulse.id===x.id&&Date.now()-S.winPulse.t<3200?`<circle class="wpulse" cx="${(a[0]+b[0])/2}" cy="${(a[1]+b[1])/2}" r="${Math.max(700,x.w*.75)}" fill="none" stroke="#c9a24e" stroke-width="${70*F}"/><circle class="wpulse wp2" cx="${(a[0]+b[0])/2}" cy="${(a[1]+b[1])/2}" r="${Math.max(700,x.w*.75)}" fill="#c9a24e" fill-opacity=".18" stroke="none"/>`:"";
@@ -4515,6 +4555,7 @@ document.addEventListener("click",async e=>{
   if(d.dopen){D.ui.dopen=D.ui.dopen||{};D.ui.dopen[d.dopen]=!D.ui.dopen[d.dopen];wizRefresh();return}
   if(d.balls!==undefined&&t.closest("[data-balls]")){D.drawing.balls=d.balls;saveD();wizRefresh();return}
   if(d.ydbox){const o=layout(D.drawing).find(x=>x.m.t==="box"&&x.nr===+d.ydbox);if(o){o.m.yd=!o.m.yd;saveD();wizRefresh()}return}
+  if(d.ovf){ovfFix(D.drawing,d.ovf);saveD();wizRefresh();toast(d.ovf==="len"?"Stallet är större nu":d.ovf==="move"?"Flyttat":"Borttaget");return}
   if(d.vcol){D.spec=D.spec||{};if(d.vcol==="zink")D.spec.finish="Varmförzinkad";else{if(!/ulverlack/.test(D.spec.finish||""))D.spec.finish="Pulverlack (RAL)";D.spec.ral=d.vcol}D.ui.chosen=D.ui.chosen||{};D.ui.chosen.finish=true;syncSpec();saveD();wizRefresh();return}
   if(d.wallc){D.drawing.wallC=d.wallc;saveD();cfgPanelRefresh();return}
   if(d.tiphang!==undefined){D.ui.tipHang=true;saveD();cfgPanelRefresh();return}
