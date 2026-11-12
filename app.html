@@ -2132,6 +2132,9 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 @media (max-height:799px){#wiz .msum{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:6px;margin-top:0}#wiz .msum .hintline{margin:0;white-space:nowrap}#wiz .msum .ceilrow{flex:1;margin:0;padding:0;border:0;gap:10px;justify-content:flex-end}#wiz .msum .ceilrow label{flex:none;text-align:right}#wiz .msum .ceilrow label small{font-size:.8rem}#wiz .ceilin{height:42px;width:128px}#wiz .ceilin input{font-size:1.2rem}}
 /* v151: deltabbarna (Mått · Ingångar …) borttagna, mer yta åt valen */
 #wiz .cfg-q .wiz-step > .mini{display:none!important}
+/* v152: pulsen får aldrig skrivas över av rit-animationen */
+#cfgcanvas .wpulse.inkf{animation:wpulse 1s ease-out 3!important;opacity:0}
+#cfgcanvas .wpulse.wp2.inkf{animation-name:wpulse2!important}
 </style>
 
 <div class="app">
@@ -2826,7 +2829,7 @@ function openNotes(refresh){const ctx=noteCtx(),me=ROLES[S.role]?.name||"";const
 async function saveNote(){const t=$("#notetext"),txt=(t?.value||"").trim();if(!txt){toast("Skriv något först");t?.focus();return}const name=($("#notename")?.value||"").trim();ls.set("myrby.notename",name);if(!S.db){toast("Ingen anslutning");return}
   const ctx=noteCtx();try{await S.db.collection("notes").add({text:txt,type:S.ntype||"Förslag",name,ctx,createdAt:Date.now(),done:false,by:S.uid||"",draft:D.ui?.kind?JSON.stringify({spec:D.spec,ui:{kind:D.ui.kind},fmix:D.drawing?.fmix||null}).slice(0,4000):""});S.ndraft="";if(t)t.value="";S.nperm=false;toast("Anteckning sparad, tack!");openNotes(true)}catch(e){if(e&&e.code==="invalid_argument"){S.nperm=true;S.ndraft=txt;openNotes(true);toast("Du har bara läsbehörighet, se rutan")}else toast("Kunde inte spara, försök igen")}}
 const INK_SEL="line,path,polyline,polygon,rect,circle,text";
-function inkIn(cv,prev){const svg=cv.querySelector("svg.pretty");if(!svg||!prev.size)return false;let n=0;svg.querySelectorAll(INK_SEL).forEach(e=>{if(e.closest("defs")||prev.has(e.outerHTML)||n>700)return;n++;const tg=e.tagName;
+function inkIn(cv,prev){const svg=cv.querySelector("svg.pretty");if(!svg||!prev.size)return false;let n=0;svg.querySelectorAll(INK_SEL).forEach(e=>{if(e.closest("defs")||e.classList.contains("wpulse")||prev.has(e.outerHTML)||n>700)return;n++;const tg=e.tagName;
   if((tg==="line"||tg==="path"||tg==="polyline")&&!e.getAttribute("stroke-dasharray")){e.setAttribute("pathLength","1000");e.classList.add("ink")}else e.classList.add("inkf")});return n>0}
 /* ===== Stallbyggaren: material, hästnamn, 3D, stallgång, ångra, byggklossar, avslutning ===== */
 const FILLC={"Gran":["#dcb67e","#b88f55","#ecd2a2"],"Toffee":["#6e4a2c","#4f331d","#8a6040"],"Ek":["#b88a55","#93693a","#cfa575"],"Plast Ash Grey":["#6c7173","#5a5e60","#808587"],"Plast Mineral Grey":["#8b8f91","#73777a","#a3a7a9"],"Plast Canyon Brown":["#6d4a3a","#56392c","#86604f"],"Plast Sand Beige":["#cdb68f","#b39b72","#ddc9a6"],"Plast svart":["#2c2c2c","#1b1b1b","#444"]};
