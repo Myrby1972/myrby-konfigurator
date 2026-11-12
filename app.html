@@ -1924,6 +1924,15 @@ html body #wiz .cfg-q:not(:has(.cfgstep:is([data-pg="front"],[data-pg="vagg"],[d
 #wiz .pintro-steps small{margin-top:-2px}
 @media (max-height:799px){#wiz .pintro{gap:6px;padding-top:11px;padding-bottom:10px}}
 @media (min-height:800px){#wiz .pintro-steps b{line-height:20px;min-height:40px}#wiz .pintro-steps i{height:24px;margin-top:-2px}#wiz .pintro-steps small{margin-top:0}}
+/* v130: hörnbox */
+#wiz .abcorner{display:grid;gap:6px;margin-top:4px;padding-top:10px;border-top:1px solid var(--line)}
+#wiz .abcorner .bwl{font-size:.68rem}
+#wiz .abct{display:flex;align-items:center;gap:9px;border:0;background:none;padding:2px 0;font:inherit;font-size:.86rem;font-weight:700;color:var(--ink);cursor:pointer;text-align:left}
+#wiz .abcb{width:18px;height:18px;border-radius:5px;border:1.5px solid #c9c0ab;flex:none;display:grid;place-items:center;background:#fff}
+#wiz .abct[aria-pressed="true"] .abcb{background:var(--green);border-color:var(--green)}
+#wiz .abct[aria-pressed="true"] .abcb::after{content:"";width:8px;height:4px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.pcorner rect+rect{transition:transform .15s}
+.pcorner:hover rect+rect{fill:#2f5d3a}
 </style>
 <script>window.MYRBY_PUBLIC={"to": "info@myrby.com", "endpoint": "", "product": "Stallinredning", "fields": {"name": "cf_273", "phone": "cf_275", "email": "cf_274", "product": "cf_2441", "message": "cf_276", "file": "cf_file_278", "consent": "cf_consent"}, "extra": {"cf_submit": "1"}, "policy": "https://myrby.com/", "formPage": "/sv/fa-kostnadsfri-offert/", "closeUrl": "/sv/", "takeover": true};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2485,7 +2494,7 @@ function boxesScreen(){const dr=D.drawing,same=abSame(),g=abGable(dr),gOn=g[0]+g
   const side=(k,lab)=>open===k?`<div class="abside on">${head(k,lab,"",0)}<div class="abbody">${boxCountScreen(k,"",1)}</div></div>`
     :`<div class="abside">${head(k,lab,`<span class="abs">${k==="S"&&same?"Speglar A · ":""}${sum(k)}</span>`,1)}</div>`;
   const gsum=`${g[0]?`${g[0]} vänster`:""}${g[0]&&g[1]?" · ":""}${g[1]?`${g[1]} höger`:""}`;
-  const gab=open==="G"?`<div class="abside on">${`<div class="abh"><span class="abb g">G</span><b>Gavlarna</b><button type="button" class="abx" data-gclose aria-label="Ta bort boxarna längs gavlarna">×</button></div>`}<div class="abbody"><div class="gsteps abg">${[["W","Vänster"],["E","Höger"]].map(([k,lab],i)=>`<div class="gstep"><span>${lab}</span><button type="button" data-sn="${k}" data-v="-1" aria-label="Färre boxar, ${lab.toLowerCase()} gavel">−</button><b class="num">${g[i]}</b><button type="button" data-sn="${k}" data-v="1" aria-label="Fler boxar, ${lab.toLowerCase()} gavel">+</button></div>`).join("")}</div><p class="hint3">Djup och bredd följer långsidan. Med 0 boxar på långsida B går stallgången längs långsidan.</p></div></div>`
+  const gab=open==="G"?`<div class="abside on">${`<div class="abh"><span class="abb g">G</span><b>Gavlarna</b><button type="button" class="abx" data-gclose aria-label="Ta bort boxarna längs gavlarna">×</button></div>`}<div class="abbody"><div class="gsteps abg">${[["W","Vänster"],["E","Höger"]].map(([k,lab],i)=>`<div class="gstep"><span>${lab}</span><button type="button" data-sn="${k}" data-v="-1" aria-label="Färre boxar, ${lab.toLowerCase()} gavel">−</button><b class="num">${g[i]}</b><button type="button" data-sn="${k}" data-v="1" aria-label="Fler boxar, ${lab.toLowerCase()} gavel">+</button></div>`).join("")}</div><p class="hint3">Djup och bredd följer långsidan. Med 0 boxar på långsida B går stallgången längs långsidan.</p>${(()=>{const CI=cornerInfo(dr);if(!CI.length)return "";const lay=layout(dr);return `<div class="abcorner"><span class="bwl">Hörnen</span>${CI.map(c=>{const nr=lay.find(o=>!o.door&&o.k===c.row&&o.i===c.rIdx)?.nr;return `<button type="button" class="abct" data-cornert="${c.key}" aria-pressed="${c.on}"><span class="abcb"></span>Box ${nr} tar hörnet ${CORNER_TXT[c.key]}</button>`}).join("")}<p class="hint3">Eller dra boxens vägg ut till kanten i ritningen.</p></div>`})()}</div></div>`
     :gOn?`<div class="abside">${head("G","Gavlarna",`<span class="abs">${gsum}</span>`,1)}</div>`
     :`<button type="button" class="abadd" data-bopen="G"><span class="abplus">+</span><span><b>Boxar längs gaveln</b><small>För ett L- eller U-format stall</small></span></button>`;
   return `<h2>Hur många boxar längs väggarna?</h2><p class="lead">Ställ in varje långsida, eller gör båda likadana.</p>
@@ -2722,7 +2731,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
     return s}
   F.push({d:-1e12,s:poly([[0,0,0],[L,0,0],[L,0,W],[0,0,W]],`fill="#e6dfd0" stroke="${ink}" stroke-width="2"`)});
   const lay=layout(dr);
-  lay.forEach(o=>{const {m,tf}=o,w=+m.w,d=+m.d||0;if(m.t!=="box"&&m.t!=="room")return;if(lvl<2)return;if(m.t==="room"&&lvl<5)return;const q=[tf(0,0),tf(w,0),tf(w,d),tf(0,d)];
+  lay.forEach(o=>{const {m,tf}=o,w=+m.w,d=+m.d||0;if(m.t!=="box"&&m.t!=="room")return;if(lvl<2)return;if(m.t==="room"&&lvl<5)return;const q=[tf(-(o.cx0||0),0),tf(w+(o.cx1||0),0),tf(w+(o.cx1||0),d),tf(-(o.cx0||0),d)];
     F.push({d:-1e11,s:poly(q.map(p=>[p[0],0,p[1]]),`fill="${m.t==="room"?"#dfe6da":m.t==="box"&&bedOn(lvl)?"#ead7a1":"#e7ebe1"}" stroke="${m.t==="box"&&bedOn(lvl)?"#c8ac6c":"#b9c4b1"}" stroke-width="1.2"`)+(m.t==="box"&&bedOn(lvl)?bedSVG(w,d,o.nr+(o.k==="S"?50:0),(x,y,h)=>{const q=tf(x,y);return pr(q[0],h,q[1])},[1.5,1.35,1.25,1.15,1.05]):"")+(()=>{const c=tf(w/2,d/2),p=pr(c[0],0,c[1]);return m.t==="box"?`<text x="${fx(p[0])}" y="${fx(p[1]+6)}" text-anchor="middle" font-family="EB Garamond,serif" font-size="40" font-weight="600" fill="${ink}" opacity=".9" ${bedOn(lvl)?`stroke="#fbf3dc" stroke-width="6" paint-order="stroke"`:""}>${o.nr}</text>`:`<text x="${fx(p[0])}" y="${fx(p[1]+5)}" text-anchor="middle" font-family="EB Garamond,serif" font-style="italic" font-size="14" fill="${ink}">${esc(m.name||"Rum")}</text>`})()});
     if(lvl>=3){const p0=tf(0,d),p1=tf(w,d),c=tf(w/2,d+10);if(m.t==="box"){const f=o.f||dr.front,S=frontProfile(f,w,m.dir),P=(x,y)=>{const q=tf(x,d);return pr(q[0],y,q[1])};F.push({d:dep(c[0],c[1]),s:frontSVG(S,P,()=>K*.95,{balls:dr.balls,fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:m.dir,pre:"i3",post:dr.post,noHw:true,decor:hasDecor(dr,f)})})}
       else{const nm=(m.name||"").toLowerCase(),spol=openBay(m),ms=dr.walls[o.k]||[],len0=o.k==="N"||o.k==="S"?dr.L:null;
@@ -3632,8 +3641,34 @@ function layout(dr){migrateDoors(dr);
   let n=0;const order=[...out.filter(o=>o.k==="N"),...out.filter(o=>o.k==="S"),...out.filter(o=>o.k==="W"),...out.filter(o=>o.k==="E")];
   order.forEach(o=>{if(o.m.t==="box"){o.nr=++n;o.f=(dr.fmix||{})[o.nr]||dr.front}});
   (dr.doors||[]).forEach((d,j)=>{if(!T[d.k])return;const p=+d.p||0;out.push({k:d.k,i:-1,j,m:d,start:p,tf:T[d.k](p),flip:d.k==="S"||d.k==="W",door:true})});
+  const CI0=cornerInfo(dr).filter(c=>c.on);CI0.forEach(c=>{const o=out.find(o=>!o.door&&o.k===c.row&&o.i===c.rIdx);if(o){if(c.g==="W")o.cx0=c.cx;else o.cx1=c.cx}});
   return out;
 }
+/* v130: hörnbox. Boxen längst ut på långsidan kan ta hela hörnet ut till gaveln (Majas stall, Carl 12/11).
+   Hörnet följer boxens bredd och gavelboxens djup. Mot gavelboxen blir det en mellanvägg, fronten ligger kvar mot stallgången. */
+const CORNER_TXT={NW:"uppe till vänster",SW:"nere till vänster",NE:"uppe till höger",SE:"nere till höger"};
+function cornerInfo(dr){const out=[];if(!dr||!dr.walls)return out;const ro=rowOff(dr);
+  for(const [key,row,g,end] of [["NW","N","W",0],["SW","S","W",1],["NE","N","E",0],["SE","S","E",1]]){
+    const cx=g==="W"?ro.a:ro.b;if(!(cx>0))continue;const rm=dr.walls[row]||[];if(!rm.length)continue;
+    const rIdx=g==="W"?0:rm.length-1,rb=rm[rIdx];if(!rb||rb.t!=="box")continue;
+    if(g==="E"&&used(dr,row)<dr.L-ro.a-ro.b-5)continue;
+    const gm=dr.walls[g]||[];if(!gm.length)continue;const gIdx=end===0?0:gm.length-1,gb=gm[gIdx];if(!gb||gb.t!=="box")continue;
+    if(end===1&&used(dr,g)<gableSpan(dr,g).len-5)continue;
+    out.push({key,row,g,end,cx,rIdx,gIdx,on:!!(dr.corner||{})[key]})}
+  return out}
+const _el130=edgeList;edgeList=function(dr){const L=_el130(dr),cs=cornerInfo(dr).filter(c=>c.on);if(!cs.length)return L;
+  return L.filter(e=>!cs.some(c=>e.o.k===c.row&&e.o.i===c.rIdx&&(c.g==="W"?e.x===0:e.x===+e.o.m.w)))
+    .map(e=>cs.some(c=>e.o.k===c.g&&e.o.i===c.gIdx&&(c.end===0?e.x===0:e.x===+e.o.m.w))?{...e,outer:false,corner:true}:e)};
+function cornerSet(dr,key,on){dr.corner=dr.corner||{};if(on)dr.corner[key]=true;else delete dr.corner[key]}
+const _ed130=enableDrag;enableDrag=function(host,getDr,onLive,onEnd){_ed130(host,getDr,onLive,onEnd);if(!host)return;
+  const pd=host.onpointerdown,pm=host.onpointermove,pu=host.onpointerup;let cs=null;
+  const toPlan=e=>{const svg=host.querySelector("svg");if(!svg)return null;const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=svg.getScreenCTM();return m?pt.matrixTransform(m.inverse()):null};
+  host.onpointerdown=e=>{const el=e.target.closest&&e.target.closest("[data-corner]");if(el&&e.button<=0){const dr=getDr();cs={key:el.dataset.corner,x0:e.clientX,y0:e.clientY,moved:false,pid:e.pointerId,start:!!(dr.corner||{})[el.dataset.corner]};e.preventDefault();e.stopPropagation();return}return pd&&pd.call(host,e)};
+  host.onpointermove=e=>{if(!cs)return pm&&pm.call(host,e);if(!cs.moved){if(Math.hypot(e.clientX-cs.x0,e.clientY-cs.y0)<6)return;cs.moved=true;try{host.setPointerCapture(cs.pid)}catch(_){}host.classList.add("dragging")}
+    const p=toPlan(e),dr=getDr();if(!p)return;const c=cornerInfo(dr).find(c=>c.key===cs.key);if(!c)return;const want=c.g==="W"?p.x<c.cx*.55:p.x>dr.L-c.cx*.55;if(c.on!==want){cornerSet(dr,c.key,want);onLive()}};
+  const end=e=>{if(!cs)return pu&&pu.call(host,e);const c0=cs;cs=null;try{host.releasePointerCapture(c0.pid)}catch(_){}host.classList.remove("dragging");const dr=getDr();
+    if(!c0.moved&&e.type==="pointerup")cornerSet(dr,c0.key,!c0.start);const now=!!(dr.corner||{})[c0.key];if(now!==c0.start&&typeof toast==="function")toast(now?"Hörnet hör nu till boxen, med mellanvägg mot gavelboxen":"Hörnet är tomt igen");onEnd()};
+  host.onpointerup=end;host.onpointercancel=end};
 /* Mellanväggar och stolpar enligt Nikkis regel: en mellanvägg (och en stolpe) vid varje boxkant
   , mellan två boxar, mot ett rum och i slutet av en boxrad. Mot yttervägg behövs varken vägg eller stolpe (Rotbrunna: stolpe även där). */
 function edgeList(dr){const lay=layout(dr),out=[],seen=new Set();
@@ -3792,18 +3827,20 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
   g.push(`<rect x="${-WT}" y="${-WT}" width="${L+2*WT}" height="${W+2*WT}" fill="url(#pp-hatch)" stroke="${C.line}" stroke-width="16"/><rect x="0" y="0" width="${L}" height="${W}" fill="${lvl>=2?C.aisle:C.box}" stroke="${C.line}" stroke-width="12"/>`);
   if(lvl>=2)g.push(`<rect x="0" y="0" width="${L}" height="${W}" fill="url(#pp-grain)"/>`);
   const lay=layout(dr),posts=[],over=[],tags=[];
+  if(interactive&&lvl>=2&&typeof cfgPgKey==="function"&&cfgPgKey()==="boxA")cornerInfo(dr).forEach(c=>{const o=lay.find(o=>!o.door&&o.k===c.row&&o.i===c.rIdx);if(!o)return;const d=+o.m.d||0,w=+o.m.w,x=c.g==="W"?(c.on?-c.cx+260:0):(c.on?w+c.cx-260:w),p=o.tf(x,d/2),hw=95*F,hh=330*F;
+    over.push(`<g data-corner="${c.key}" class="pcorner" style="cursor:ew-resize" role="button" aria-label="${c.on?"Gör hörnet tomt igen":"Dra boxen ut i hörnet"}"><title>${c.on?"Dra tillbaka för att göra hörnet tomt":"Dra väggen ut till kanten"}</title><rect x="${p[0]-hw*2.4}" y="${p[1]-hh*1.4}" width="${hw*4.8}" height="${hh*2.8}" fill="transparent"/><rect x="${p[0]-hw}" y="${p[1]-hh}" width="${hw*2}" height="${hh*2}" rx="${hw}" fill="#23412a" stroke="#fff" stroke-width="${10*F}"/><path d="M${p[0]-hw*.45} ${p[1]-hh*.28}v${hh*.56}M${p[0]+hw*.45} ${p[1]-hh*.28}v${hh*.56}" stroke="#fff" stroke-width="${12*F}" stroke-linecap="round"/></g>`)});
   for(const o of lay){if(lvl<2&&m_(o)!=="door")continue;const {m,tf,k}=o;if(m.t!=="box"&&m.t!=="door"&&lvl<5)continue;const w=+m.w,d=+m.d||0;
     const poly=(pts,attr)=>`<polygon points="${pts.map(p=>tf(...p).join(",")).join(" ")}" ${attr}/>`;
     const line=(x1,y1,x2,y2,attr)=>{const a=tf(x1,y1),b=tf(x2,y2);return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ${attr}/>`};
     const hit=interactive&&m.t!=="box"?(o.door?`data-door="${m.id}" data-drag="1" style="cursor:grab"`:`data-mod="${k}:${o.i}" data-drag="1" style="cursor:grab"`):"";
-    const c=tf(w/2,d/2);
+    const cx0=o.cx0||0,cx1=o.cx1||0,c=tf(w/2+(cx1-cx0)/2,d/2);
     if(m.t==="box"){
-      {const pc=(paint==="front"||paint==="show")&&typeof fmixColor==="function"?fmixColor(o.f):null;g.push(poly([[0,0],[w,0],[w,d],[0,d]],pc?`fill="${pc}" fill-opacity=".13" stroke="${pc}" stroke-width="22" ${paint==="front"?`class="pbox" data-fbox="${o.nr}" style="cursor:pointer"`:`class="pbox-in" style="animation-delay:${(o.nr-1)*70}ms"`}`:`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12"`))}
+      {const pc=(paint==="front"||paint==="show")&&typeof fmixColor==="function"?fmixColor(o.f):null;g.push(poly([[-cx0,0],[w+cx1,0],[w+cx1,d],[-cx0,d]],pc?`fill="${pc}" fill-opacity=".13" stroke="${pc}" stroke-width="22" ${paint==="front"?`class="pbox" data-fbox="${o.nr}" style="cursor:pointer"`:`class="pbox-in" style="animation-delay:${(o.nr-1)*70}ms"`}`:`fill="${C.box}" stroke="${C.boxLine}" stroke-width="12"`))}
       if(false&&!paint&&bedOn(lvl)){ /* v104: ingen halm i ritningen (Carl) */g.push(poly([[0,0],[w,0],[w,d],[0,d]],`fill="#f4e8c4" stroke="${C.boxLine}" stroke-width="12" pointer-events="none"`)+`<g transform="${(()=>{const o0=tf(0,0),ox=tf(1,0),oy=tf(0,1);return `matrix(${ox[0]-o0[0]} ${ox[1]-o0[1]} ${oy[0]-o0[0]} ${oy[1]-o0[1]} ${o0[0]} ${o0[1]})`})()}">${bedSVG(w,d,o.nr+(k==="S"?50:0),(x,y)=>[x,y],[30,27,25,23,21],.72)}<rect x="${w*.04}" y="${d*.05}" width="${w*.92}" height="${d*.8}" rx="${Math.min(w,d)*.4}" fill="url(#pp-bedglow)" pointer-events="none"/></g>`)}
       const BS=Math.min(680*F,w*.42,d*.34),b1=Math.min(200*F,w*.11),b2=Math.min(250*F,w*.13);
       g.push(T(c[0],c[1]-BS*.75,"HÄSTBOX",`text-anchor="middle" ${sans} font-size="${b1}" font-weight="700" letter-spacing="${b1*.25}" fill="${C.mute}" pointer-events="none"`));
       g.push(T(c[0],c[1]+BS*.32,o.nr,`text-anchor="middle" ${serif} font-size="${BS}" font-weight="500" fill="${C.ink}" pointer-events="none"`));
-      if(!(lvl>=3&&(dr.names||{})[o.nr]))g.push(T(c[0],c[1]+BS*.32+b2*1.3,`${m2(w,d)} m²`,`text-anchor="middle" ${sans} font-size="${b2}" font-weight="700" fill="${C.ink}" opacity=".75" letter-spacing="${4*F}" pointer-events="none"`));
+      if(!(lvl>=3&&(dr.names||{})[o.nr]))g.push(T(c[0],c[1]+BS*.32+b2*1.3,`${m2(w+cx0+cx1,d)} m²`,`text-anchor="middle" ${sans} font-size="${b2}" font-weight="700" fill="${C.ink}" opacity=".75" letter-spacing="${4*F}" pointer-events="none"`));
       const mixd=(dr.fmix&&Object.keys(dr.fmix).length)||paint==="front"||paint==="show",fcol=mixd&&typeof fmixColor==="function"?fmixColor(o.f):C.front;if(lvl>=3){if(lvl>=4&&fillC(dr.fill))g.push(poly([[0,d-190],[w,d-190],[w,d],[0,d]],`fill="url(#ppplank)" stroke="${C.ink}" stroke-width="6" pointer-events="none"`));
         if(lvl>=4&&hasDecor(dr,o.f||dr.front))g.push(line(60,d-250,w-60,d-250,`stroke="#c9a24e" stroke-width="34" pointer-events="none"`)+line(60,d-250,w-60,d-250,`stroke="#7a5a1e" stroke-width="8" stroke-dasharray="120 60" pointer-events="none"`));
         {const nm=(dr.names||{})[o.nr]||"";if(nm){const pc=[c[0],c[1]+BS*.32+b2*1.25],pw=Math.min(w*.88,(nm.length*98+230)*F),ph=Math.max(290*F,b2*1.7);over.push(`<g class="np" pointer-events="none"><rect x="${pc[0]-pw/2}" y="${pc[1]-ph/2}" width="${pw}" height="${ph}" rx="${ph*.22}" fill="url(#ppbrass)" stroke="#8a6a2c" stroke-width="${7*F}"/><circle cx="${pc[0]-pw/2+ph*.28}" cy="${pc[1]}" r="${13*F}" fill="#8a6a2c"/><circle cx="${pc[0]+pw/2-ph*.28}" cy="${pc[1]}" r="${13*F}" fill="#8a6a2c"/>`+T(pc[0],pc[1]+42*F,esc(nm),`text-anchor="middle" ${serif} font-style="italic" font-size="${Math.min(190*F,(pw-ph*.9)/(nm.length*.45))}" fill="#3d2c0c"`)+`</g>`)}}if(mixd)g.push(T(c[0],c[1]+BS*.32+b2*1.3+b2*1.35,esc((prod(o.f)?.name||"").toUpperCase()),`text-anchor="middle" font-family="Carlito,Calibri,Arial,sans-serif" font-size="${b2*(paint==="front"||paint==="show"?1.15:1)}" font-weight="700" letter-spacing="${b2*.12}" fill="${fcol}" pointer-events="none"`));g.push(line(0,d,w,d,`stroke="${fcol}" stroke-width="${mixd?70:40}"`)+line(0,d+60,w,d+60,`stroke="${C.line}" stroke-width="7"`));
@@ -3863,8 +3900,8 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
   const dimH=(x1,x2,y,label,up=true,big=false,free=false)=>`<line x1="${x1-TK*1.2}" y1="${y}" x2="${x2+TK*1.2}" y2="${y}" stroke="${DC}" stroke-width="${big?SW*1.3:SW}" ${free?'stroke-dasharray="60 40"':""}/>${tick(x1,y)}${tick(x2,y)}`+T((x1+x2)/2,y+(up?-FS*.32:FS*1.05),label,`text-anchor="middle" ${sans} font-size="${big?FS*1.15:FS}" fill="${free?C.mute:DT}" font-weight="700" ${free?'font-style="italic"':""}`);
   const dimV=(y1,y2,x,label,left=true,big=false)=>{const tx=x+(left?-FS*.32:FS*1.05),ty=(y1+y2)/2;return `<line x1="${x}" y1="${y1-TK*1.2}" x2="${x}" y2="${y2+TK*1.2}" stroke="${DC}" stroke-width="${big?SW*1.3:SW}"/><line x1="${x-TK}" y1="${y1-TK}" x2="${x+TK}" y2="${y1+TK}" stroke="${DC}" stroke-width="${SW*2}"/><line x1="${x-TK}" y1="${y2-TK}" x2="${x+TK}" y2="${y2+TK}" stroke="${DC}" stroke-width="${SW*2}"/><text x="${tx}" y="${ty}" ${sans} font-size="${big?FS*1.15:FS}" fill="${DT}" font-weight="700" text-anchor="middle" transform="rotate(-90 ${tx} ${ty})">${label}</text>`};
   const o1=WT+FS*2.1,o2=o1+FS*2.3;
-  const chain=(k,y,up)=>{const ro=rowOff(dr);let cum=ro.a;const ms=dr.walls[k]||[],ys=up?-WT-60:W+WT+60;if(ro.a>5){g.push(dimH(0,ro.a,y,mm(ro.a),up,false,true));g.push(ext(0,ys,0,y+(up?-TK*1.6:TK*1.6)))}ms.forEach(m=>{const w=+m.w;g.push(dimH(cum,cum+w,y,mm(w),up,false,m.t==="gap"));g.push(ext(cum,ys,cum,y+(up?-TK*1.6:TK*1.6)));cum+=w});
-    const LE=L-ro.b;if(cum<LE-5){g.push(dimH(cum,LE,y,`ledigt ${mm(LE-cum)}`,up,false,true))}if(ro.b>5)g.push(dimH(LE,L,y,mm(ro.b),up,false,true));g.push(ext(cum<LE-5?LE:cum,ys,cum<LE-5?LE:cum,y+(up?-TK*1.6:TK*1.6)));if(cum<LE-5)g.push(ext(cum,ys,cum,y+(up?-TK*1.6:TK*1.6)));if(ro.b>5)g.push(ext(L,ys,L,y+(up?-TK*1.6:TK*1.6)))};
+  const chain=(k,y,up)=>{const ro=rowOff(dr),CS=cornerInfo(dr).filter(c=>c.on&&c.row===k),cA=CS.some(c=>c.g==="W"),cB=CS.some(c=>c.g==="E");let cum=ro.a;const ms=dr.walls[k]||[],ys=up?-WT-60:W+WT+60;if(ro.a>5&&!cA){g.push(dimH(0,ro.a,y,mm(ro.a),up,false,true));g.push(ext(0,ys,0,y+(up?-TK*1.6:TK*1.6)))}ms.forEach((m,i)=>{const w=+m.w,x0=i===0&&cA?0:cum,x1=i===ms.length-1&&cB?L:cum+w;g.push(dimH(x0,x1,y,mm(x1-x0),up,false,m.t==="gap"));g.push(ext(x0,ys,x0,y+(up?-TK*1.6:TK*1.6)));cum+=w});
+    const LE=L-ro.b;if(cum<LE-5){g.push(dimH(cum,LE,y,`ledigt ${mm(LE-cum)}`,up,false,true))}if(ro.b>5&&!cB)g.push(dimH(LE,L,y,mm(ro.b),up,false,true));g.push(ext(cum<LE-5?LE:cum,ys,cum<LE-5?LE:cum,y+(up?-TK*1.6:TK*1.6)));if(cum<LE-5)g.push(ext(cum,ys,cum,y+(up?-TK*1.6:TK*1.6)));if(ro.b>5)g.push(ext(L,ys,L,y+(up?-TK*1.6:TK*1.6)))};
   if(lvl>=2){chain("N",-o1,true);chain("S",W+o1,false);
     if(lvl>=5)["W","E"].forEach(k=>{let y=gableSpan(dr,k).y0;(dr.walls[k]||[]).forEach(m=>{g.push(dimV(y,y+ +m.w,k==="W"?-o1:L+o1,mm(m.w),k==="W"));y+=+m.w})});
     if(aN)g.push(dimV(0,aN,-o2,mm(aN)));if(A>0&&aN&&aS)g.push(dimV(aN,W-aS,-o2,mm(A)));if(aS)g.push(dimV(W-aS,W,-o2,mm(aS)))}
@@ -4398,6 +4435,7 @@ document.addEventListener("click",async e=>{
   if(d.fside){const dr=D.drawing,L=fmixList(),b=L.includes(D.ui.fbrush)?D.ui.fbrush:L[L.length-1];dr.fmix=dr.fmix||{};layout(dr).filter(o=>o.m.t==="box"&&o.k===d.fside).forEach(o=>{if(b===dr.front)delete dr.fmix[o.nr];else dr.fmix[o.nr]=b});saveD();wizRefresh();return}
   if(d.sfront){D.drawing.front=d.sfront;onFrontChange(D.drawing);suggestCounts(D.drawing);saveD();wizRefresh();return}
   if(d.bsame!==undefined){const on=!abSame();D.ui.bsame=on?1:0;if(on){D.ui.bsig=null;if(D.ui.bopen==="S")D.ui.bopen="N"}saveD();wizRefresh();return}
+  if(d.cornert){const dr=D.drawing,c=cornerInfo(dr).find(c=>c.key===d.cornert);if(c){cornerSet(dr,c.key,!c.on)}saveD();wizRefresh();return}
   if(d.bopen){if(d.bopen==="S"&&abSame())D.ui.bsame=0;D.ui.bopen=d.bopen;saveD();wizRefresh();return}
   if(d.gclose!==undefined){const dr=D.drawing;["W","E"].forEach(g=>{const c=dr.cfg?.[g];if(c){c.n=0;c.auto=true;autoFill(dr,g)}});autoAll(dr);fitBoxes(dr);D.ui.bopen="N";saveD();wizRefresh();return}
   if(d.sn&&(d.sn==="W"||d.sn==="E")&&+d.v>0)D.ui.bsame=0;
