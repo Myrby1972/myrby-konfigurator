@@ -3091,10 +3091,10 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   for(let x=Math.ceil(near/600)*600;x<L;x+=600){if(Math.round(x/600)%2)G.push(ln([x,0,zA],[x,0,zB],`stroke="#d6cdb8" stroke-width="1"`))}
   /* v106: halm på golvet inne i boxarna (syns i de närmaste boxarna vid sidan av fronterna), inget i stallgången (Carl) */
   if(bedOn(lvl)){layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="box"&&o.start+(+o.m.w)>near+60).forEach(o=>{const w=+o.m.w+(o.cx0||0)+(o.cx1||0),d=+o.m.d,x0=o.start-(o.cx0||0),X=x=>x0+x,Z=y=>o.k==="N"?y:W-y,xa=Math.max(near+40,x0);
-      G.push(poly([[xa,0,Z(0)],[x0+w,0,Z(0)],[x0+w,0,Z(d)],[xa,0,Z(d)]],`fill="#e9d398"`));
-      const S2=bedStrands(w,d,o.nr+(o.k==="S"?50:0)).filter(t=>X(Math.min(t.x1,t.x2,t.cx))>near+60),f=v=>v.toFixed(1),P=BED_C.map(()=>[]);
+      G.push(poly([[xa,0,Z(0)],[x0+w,0,Z(0)],[x0+w,0,Z(d)],[xa,0,Z(d)]],`fill="#d9bd7c"`));
+      const S2=bedStrands190(w,d,o.nr+(o.k==="S"?50:0),15000).filter(t=>X(Math.min(t.x1,t.x2,t.cx))>near+60),f=v=>v.toFixed(1),P=BED190.map(()=>[]);
       S2.forEach(t=>{const a=pr(X(t.x1),t.h*.3,Z(t.y1)),b=pr(X(t.x2),t.h*.3,Z(t.y2)),c=pr(X(t.cx),t.h*.3+10,Z(t.cy)),k=Math.min(.26,FOC/Math.max(300,X(t.cx)-camX));P[t.c].push([`M${f(a[0])} ${f(a[1])}Q${f(c[0])} ${f(c[1])} ${f(b[0])} ${f(b[1])}`,k])});
-      G.push(`<g fill="none" stroke-linecap="round" pointer-events="none">${[4,3,2,1,0].map(i=>P[i].map(([dd,k])=>`<path d="${dd}" stroke="${BED_C[i]}" stroke-width="${f(Math.max(.6,14*k))}"/>`).join("")).join("")}</g>`)})}
+      G.push(`<g fill="none" stroke-linecap="round" pointer-events="none">${[4,3,2,1,0].map(i=>{const B={};P[i].forEach(([dd,k])=>{const q=Math.max(.5,Math.round(9*k*4)/4);(B[q]=B[q]||[]).push(dd)});return Object.entries(B).map(([q,a])=>`<path d="${a.join("")}" stroke="${BED190[i]}" stroke-width="${q}"/>`).join("")}).join("")}</g>`)})}
   const g1=pr(L,0,zA-200),g2=pr(L,CEIL,zB+200);G.push(`<rect x="${fx(g1[0])}" y="${fx(g2[1])}" width="${fx(g2[0]-g1[0])}" height="${fx(g1[1]-g2[1])}" fill="#e7dfcc" stroke="${ink}" stroke-width="1.4"/>`);
   const hasE=doors(dr).some(d=>d.k==="E"),d1=pr(L,0,camZ-Math.min(1200,(zB-zA)/2-200)),d2=pr(L,hasE?2600:1800,camZ+Math.min(1200,(zB-zA)/2-200));
   G.push(`<defs><radialGradient id="wklt" cx=".5" cy=".7" r=".8"><stop offset="0" stop-color="#fff8e4"/><stop offset="1" stop-color="#f1dfae"/></radialGradient><linearGradient id="wkbeam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff4d6" stop-opacity="0"/><stop offset=".5" stop-color="#fff4d6" stop-opacity=".6"/><stop offset="1" stop-color="#fff4d6" stop-opacity="0"/></linearGradient>${BRASS("wk")}</defs>`);
@@ -5757,6 +5757,23 @@ function galSpan188(w,d){d=+d||3500;if(w==="mv-tat"||w==="egen")return [0,0];if(
 function plate188(x0,x1,y0,y1){const L=x1-x0,mx=Math.min(90,L*.06),my=(y1-y0)*.2,h=(y1-y0)-2*my,r=Math.min(h/2,(L-2*mx)/2),yc=(y0+y1)/2,a=x0+mx+r,b=x1-mx-r,P=[];
   for(let i=0;i<=8;i++){const t=Math.PI/2+Math.PI*i/8;P.push([a+Math.cos(t)*r,yc+Math.sin(t)*h/2])}
   for(let i=0;i<=8;i++){const t=-Math.PI/2+Math.PI*i/8;P.push([b+Math.cos(t)*r,yc+Math.sin(t)*h/2])}return P}
+
+/* v190 (Carl 13/11, mockup B): fyllig halmbädd i 3D och Stallgången. Tät halm i varma toner, vallad upp mot väggarna, svag skugga längs fronten.
+   Ritningen (planvyn) behåller den gamla, lätta halmen. */
+var BED190=["#fbf1d2","#f2e0a8","#e5cb88","#d4b06a","#b99150"];
+function rng190(seed){let s=Math.abs(Math.round(seed*7919))%233280+11;return ()=>(s=(s*9301+49297)%233280)/233280}
+function bedStrands190(w,d,seed,dens){const r=rng190(seed),FR=150,D=d-FR,n=Math.max(50,Math.round(w*d/(dens||9000))),out=[];
+  for(let i=0;i<n;i++){const x=40+r()*(w-80),y=40+r()*(D-80),edge=Math.min(x,w-x,y),h=(edge<600?(1-edge/600)*320:0)+r()*40,len=110+r()*230,a=r()*Math.PI*2,dx=Math.cos(a)*len/2,dy=Math.sin(a)*len/2,bend=(r()-.5)*len*.4;
+    out.push({x1:x-dx,y1:y-dy,x2:x+dx,y2:y+dy,cx:x-dy/len*bend,cy:y+dx/len*bend,h,c:Math.min(4,Math.floor(Math.pow(r(),1.1)*5))})}return out}
+{const _bed190=bedSVG;bedSVG=function(w,d,seed,map,sw,op){if(!sw||sw[0]>5)return _bed190.apply(this,arguments);
+  const f=v=>v.toFixed(1),FR=150,D=d-FR,P=(x,y,h)=>map(x,y,h||0).map(f).join(","),poly=(pts,att)=>`<polygon points="${pts.map(p=>P(...p)).join(" ")}" ${att}/>`;
+  let o=poly([[0,0],[w,0],[w,D],[0,D]],`fill="#d9bd7c"`);
+  [[600,60,"#e1c784"],[400,190,"#ead394"],[200,330,"#f4e3b0"]].forEach(([ins,h,c])=>{
+    o+=poly([[0,0,h],[w,0,h],[w-ins,ins],[ins,ins]],`fill="${c}" opacity=".9"`)+poly([[0,0,h],[ins,ins],[ins,D],[0,D,h]],`fill="${c}" opacity=".9"`)+poly([[w,0,h],[w,D,h],[w-ins,D],[w-ins,ins]],`fill="${c}" opacity=".9"`)});
+  o+=poly([[0,D-260],[w,D-260],[w,D],[0,D]],`fill="#6b5122" opacity=".14"`);
+  const S=BED190.map(()=>[]),Sh=[],r=rng190(seed+7);bedStrands190(w,d,seed).forEach(t=>{const A=map(t.x1,t.y1,t.h+20),B=map(t.x2,t.y2,t.h+20),C=map(t.cx,t.cy,t.h+40),dd=`M${f(A[0])} ${f(A[1])}Q${f(C[0])} ${f(C[1])} ${f(B[0])} ${f(B[1])}`;S[t.c].push(dd);if(r()<.3)Sh.push(`M${f(A[0]+.6)} ${f(A[1]+1.2)}Q${f(C[0]+.6)} ${f(C[1]+1.2)} ${f(B[0]+.6)} ${f(B[1]+1.2)}`)});
+  const k=sw[0]*.85;o+=`<g fill="none" stroke-linecap="round"><path d="${Sh.join("")}" stroke="#7a5a26" stroke-width="${f(k)}" opacity=".28"/>${[4,3,2,1,0].map(i=>S[i].length?`<path d="${S[i].join("")}" stroke="${BED190[i]}" stroke-width="${f(k*(1+.12*(4-i)))}"/>`:"").join("")}</g>`;
+  return `<g pointer-events="none" opacity="${op==null?1:op}">${o}</g>`}}
 </script>
 
 </html>
