@@ -2108,7 +2108,6 @@ html body #wiz .fgal .dpop .fx-sum span{color:#e3c78f}
 #wiz .pintro-tr{font-size:1.02rem!important}
 #wiz [data-wnext]{font-size:1.2rem!important}
 #wiz .cfg-q>.cfgstep .seg:first-child button,#wiz .cfgstep [data-gview],#wiz .wtabs button{font-size:.95rem!important}
-#wiz .movetip span{color:#efe7d6!important}#wiz .movetip span b{color:#fff!important}
 #wiz .fgal{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 #wiz .cfgstep>.mini span,#wiz .cfgstep>.mini b,#wiz .cfgstep>.mini{font-size:.95rem!important}
 #wiz .cfgstep>.mini span{padding:7px 14px!important}
@@ -2220,18 +2219,12 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .vbar.has-picks .vpicks{flex-wrap:nowrap;margin-left:0;gap:8px}
 @media (max-width:1400px){#wiz .vbar.has-picks .vm-btn small{display:none}}
 /* v183 (Carl 13/11): luftigt och enkelt för Ann-Britt */
-#wiz .movetip,html body #wiz .movetip{display:flex!important;gap:10px!important;align-items:flex-start;background:none!important;color:var(--ink-2)!important;padding:0!important;margin:0 0 6px!important;border-radius:0!important;box-shadow:none!important}
-#wiz .movetip svg,html body #wiz .movetip svg{color:var(--green-2)!important;margin-top:1px}
-#wiz .movetip b,html body #wiz .movetip b{display:inline!important;color:var(--ink)!important;font-size:1rem!important;margin:0 4px 0 0!important}
-#wiz .movetip span,html body #wiz .movetip span{font-size:1rem!important;line-height:1.45}
 #wiz .sub183{margin:26px 0 6px;font-family:var(--f-display);font-size:1.45rem;font-weight:500;color:var(--green)}
 #wiz .cfg-head.slim>div:has(.vlock183){flex-direction:column;align-items:flex-start;gap:0}
 #wiz .vlock183{font-size:.82rem;color:var(--ink-2);white-space:nowrap}
 #wiz .cchips.fit183{flex-wrap:nowrap;overflow:hidden}
 #wiz .cchips .cchip[hidden]{display:none!important}
 #wiz .cchip.cmore{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line);font-weight:700;color:var(--green);justify-content:center;padding:6px 14px}
-#wiz .movetip span,html body #wiz .movetip span,html body #wiz .movetip span *{color:var(--ink-2)!important}
-#wiz .movetip b,html body #wiz .movetip span b{color:var(--ink)!important}
 #wiz .cchips.fit183>.cchip{flex:none}
 
 /* v184 (Carl 13/11): Lägg till – rubrik med ikon och förklaring (mockup A) */
@@ -2252,6 +2245,18 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 /* v187 (Carl 13/11): etiketten Fasta storlekar/Valfri längd sträcks inte ut på höga kort */
 #wiz .fgi{align-content:start}
 #wiz .fgi .fgtag{align-self:start;height:auto;line-height:1.25;padding:4px 10px}
+
+/* v188 (Carl 13/11): instruktionerna i Myrby-grönt direkt under rubriken. "Ändra boxarna/Flytta rummen" oförändrade, bara gröna. */
+#wiz .movetip,html body #wiz .movetip{background:#2a402c!important;color:#edd8bc!important;padding:14px 16px!important;border-radius:16px!important;margin:4px 0 10px!important;gap:12px!important}
+#wiz .movetip svg,html body #wiz .movetip svg{color:#d8bd7a!important}
+#wiz .movetip b,html body #wiz .movetip b{display:block!important;color:#fff!important;font-size:1.05rem!important;margin:0 0 2px!important}
+#wiz .movetip span,html body #wiz .movetip span{color:#edd8bc!important;font-size:1rem!important;line-height:1.45}
+#wiz .rsg-d{background:#2a402c;box-shadow:none}
+#wiz .rsg-d summary b{color:#fff}
+#wiz .rsg-d summary span{color:#edd8bc}
+#wiz .rsg-d[open]>:not(summary){background:#f6f3ea;border-radius:12px;margin:0 8px 8px;padding:12px}
+#wiz .rsg-d[open] .rsg-p{color:var(--ink)}
+#wiz .rsg-d .vm-dots i{box-shadow:0 0 0 1.5px #edd8bc}
 </style>
 
 <div class="app">
@@ -3065,7 +3070,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
         sides.forEach(x=>F.push(x));
         const s=spol?panel(p0,p1,{fr:frameCol(dr,dr.front),door:"c"}):panel(p0,p1,{solid:2600,solidC:"#e6ece2"})+(()=>{const q0=tf(w/2-500,d),q1=tf(w/2+500,d);return poly([[q0[0],0,q0[1]],[q1[0],0,q1[1]],[q1[0],2100,q1[1]],[q0[0],2100,q0[1]]],`fill="#8a5a33" stroke="${ink}" stroke-width="1"`)})();F.push({d:dep(c[0],c[1]),s})}}});
   if(lvl>=4)partList(dr).forEach(p=>{const a0=p.o.tf(p.x,0),a1=p.o.tf(p.x,p.d),mid=p.o.tf(p.x,p.d/2),w=p.w;let o;
-    if(w==="mv-tat")o={solid:2320,mid:1160,frame:true};else if(w==="egen")o={solid:2400,solidC:"#d9d2c2"};else if(w==="mv-dala")o={h:1560,ph:1300,bar:75};else if(w==="mv-kg2")o={gal:[Math.max(0,1-2000/p.d),1]};else if(w==="mv-kg1")o={gal:[Math.max(0,1-1000/p.d),1]};else if(w==="mv-faro")o={fh:(t,len,ph,H)=>faroH((1-t)*len,len,ph,H)};else o={};
+    if(w==="mv-tat")o={solid:2320,mid:1160,frame:true};else if(w==="egen")o={solid:2400,solidC:"#d9d2c2"};else if(w==="mv-dala")o={h:1560,ph:1300,bar:75};else if(w==="mv-kg2")o={gal:[Math.max(0,1-2000/p.d),1]};else if(w==="mv-kg1")o={gal:[Math.max(0,1-1000/p.d),1]};else if(w==="mv-faro")o={fh:(t,len,ph,H)=>faroH(t*len,len,ph,H)};else o={};
     o.fr=frameCol(dr,dr.front);F.push({d:dep(mid[0],mid[1]),s:panel([a0[0],a0[1]],[a1[0],a1[1]],o)})});
   const walls=[[[0,0],[L,0],"N"],[[L,0],[L,W],"E"],[[L,W],[0,W],"S"],[[0,W],[0,0],"W"]];
   walls.forEach(([p,q,wk])=>{const mx=(p[0]+q[0])/2,mz=(p[1]+q[1])/2,far=dep(mx,mz)<dep(cx,cz)-1,h=far?2900:450;const dd=far?-1e10:dep(mx,mz)+1e6;allWins(dr).filter(x=>x.k===wk).forEach(x=>{const T=wk==="N"?(a,b)=>[a,b]:wk==="S"?(a,b)=>[a,W-b]:wk==="W"?(a,b)=>[b,a]:(a,b)=>[L-b,a];const a=T(x.p-x.w/2,0),b=T(x.p+x.w/2,0),y0=far?1500:0,y1=far?2300:h;F.push({d:dd+1,s:poly([[a[0],y0,a[1]],[b[0],y0,b[1]],[b[0],y1,b[1]],[a[0],y1,a[1]]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.2"`)+(far?ln([(a[0]+b[0])/2,1500,(a[1]+b[1])/2],[(a[0]+b[0])/2,2300,(a[1]+b[1])/2],`stroke="${ink}" stroke-width=".8"`):"")})});
@@ -3102,7 +3107,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   const fr0=frameCol(dr,dr.front),wallName=w=>w||dr.wall;
   (lvl>=4?partList(dr):[]).filter(pt=>(pt.o.k==="N"||pt.o.k==="S")).map(pt=>({x:pt.o.start+pt.x,k:pt.o.k,d:pt.d,w:wallName(pt.w)})).filter(q=>q.x>near+120).sort((a,b)=>b.x-a.x).forEach(q=>{const zF=q.k==="N"?q.d:W-q.d,zB=q.k==="N"?0:W,x=q.x,gal=q.w==="mv-tat"||q.w==="egen"?0:q.w==="mv-kg1"?1000:q.w==="mv-kg2"?2000:q.d,top=q.w==="mv-dala"?1560:2320,k=Math.min(.26,FOC/Math.max(300,x-camX));
     const zg=q.k==="N"?Math.max(zB,zF-gal):Math.min(zB,zF+gal);let s="";
-    const faro=q.w==="mv-faro",fhz=t=>faro?faroH(t*q.d,q.d,1300,top):1300;
+    const faro=q.w==="mv-faro",fhz=t=>faro?faroH((1-t)*q.d,q.d,1300,top):1300;
     if(faro){const Q=[[x,0,zF],[x,0,zB]];for(let i=16;i>=0;i--){const t=i/16;Q.push([x,fhz(t),zF+(zB-zF)*t])}s+=poly(Q,`fill="${fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`)}
     else s+=poly([[x,0,zF],[x,0,zB],[x,1300,zB],[x,1300,zF]],`fill="${q.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
     const nP=Math.max(1,Math.round(q.d/140));for(let i=1;i<nP;i++){const t=i/nP,z=zF+(zB-zF)*t;s+=ln([x,0,z],[x,fhz(t),z],`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`)}
@@ -3529,8 +3534,8 @@ function wizScreens(){
      <div class="xlist entr">${[["door-W","Gaveln till vänster","Ytterdörr"],["door-N","Långsida A","Ytterdörr"],["door-S","Långsida B","Ytterdörr"],["door-E","Gaveln till höger","Ytterdörr"]].map(([k,t,sub])=>{const f=extraFind(dr,k),on=!!f;return `<div class="xrow ${on?"on":""}"><button type="button" class="xtog" data-ingang="${k}" aria-pressed="${on}"><span class="tick">${svg("check",14)}</span><b>${t}</b></button>${ib("room:"+k,1)}${on?xFields(k,f.m,t,true):`<span class="xdef">${sub}</span>`}</div>`}).join("")}</div>`},
    {id:"s-boxA",pg:"boxA",sec:"Boxar",sub:"Boxar",html:()=>boxesScreen()},
    {id:"s-win",pg:"win",sec:"Boxar",sub:"Fönster",html:()=>`<h2>Var sitter fönstren idag?</h2><p class="lead">Fönstren sitter oftast mitt i boxens yttervägg. Markera var de finns, så syns ljuset i ritningen och du får förslag på nya fönster senare. Helt frivilligt.</p>
-     <div class="xlist"><div class="xrow ${dr.winBox?"on":""}"><button type="button" class="xtog" data-winbox="1" aria-pressed="${!!dr.winBox}"><span class="tick">${svg("check",14)}</span><b>Ett fönster i varje box</b></button><span class="xdef">mitt på boxens yttervägg</span></div></div>
-     <div class="movetip">${svg("move",22)}<span><b>Dra fönstret dit det sitter.</b> Fler fönster? Tryck på knappen här under.</span></div>${winList()}
+     <div class="movetip">${svg("move",22)}<span><b>Dra fönstret dit det sitter</b>Fler fönster? Tryck på knappen Lägg till ett fönster.</span></div>
+     <div class="xlist"><div class="xrow ${dr.winBox?"on":""}"><button type="button" class="xtog" data-winbox="1" aria-pressed="${!!dr.winBox}"><span class="tick">${svg("check",14)}</span><b>Ett fönster i varje box</b></button><span class="xdef">mitt på boxens yttervägg</span></div></div>${winList()}
      <button type="button" class="skipcard" data-wskip="1"><span><b>Hoppa över fönstren</b><small>Du kan lägga till dem senare.</small></span>${svg("chev",18)}</button>`},
    {id:"s-front",pg:"front",sec:"Front",sub:"Front",html:()=>`<h2>Vilken front gillar du?</h2><p class="lead">Fronten är boxens ansikte mot stallgången. Välj den du gillar. Du kan alltid byta senare.</p>
      ${D.drawing?`<div class="seg fx-mode"><button type="button" class="opt" data-fmode="1" aria-pressed="${!fmixOn()}">Samma front överallt</button><button type="button" class="opt" data-fmode="2" aria-pressed="${fmixOn()}">Blanda olika fronter</button></div>`:""}
@@ -4220,7 +4225,7 @@ function edgeList(dr){const lay=layout(dr),out=[],seen=new Set();
     [[0,ms[o.i-1]],[+o.m.w,ms[o.i+1]]].forEach(([x,nb])=>{const abs=o.start+x,key=o.k+":"+Math.round(abs);if(seen.has(key))return;
       const outer=(nb&&nb.t==="room"&&!openBay(nb))||(!nb&&(len?(abs<=60||abs>=len-60):true));seen.add(key);
       out.push({key,o,x,nb,outer,d:nb&&nb.t==="box"?Math.min(+o.m.d,+nb.d||+o.m.d):+o.m.d,f:o.f||dr.front})})});return out}
-/* Fårö mellanvägg: s = mm från fronten. Längst fram trä i full höjd, sedan en rundad övergång ner till profilen; gallrets övre mått är 2 500 mm. */
+/* Fårö mellanvägg: s = mm från ytterväggen. Vid ytterväggen trä i full höjd, sedan en rundad S-övergång ner till profilen mot fronten; gallrets övre mått är 2 500 mm (v188, Carl 13/11: som på bilden). */
 function faroH(s,d,ph,top){const a=d-2500;if(s<=a)return top;const u=Math.min(1,(s-a)/700);return ph+(top-ph)*(1+Math.cos(Math.PI*u))/2}
 function openBay(m){return /spol|uppst/i.test((m&&m.name)||"")}
 function partList(dr){return edgeList(dr).filter(e=>!e.outer).map(e=>({...e,w:(dr.wmix||{})[e.key]||dr.wall}))}
