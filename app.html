@@ -2210,6 +2210,15 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .tplc.on{box-shadow:inset 0 0 0 2.5px var(--green)}#wiz .tplc.on .tplgo{color:#8a6a2c}
 #cfg .vlock181,.vlock181{align-self:center;font-size:13px;color:#7a7365;margin-left:12px;white-space:nowrap}
 @media (max-width:1100px){.vlock181{white-space:normal;max-width:220px;line-height:1.25}}
+/* v182: med Front- och Färg-väljaren i 3D blir huvudet två rader: rubrik + Ångra/Gör om överst, vyer och verktyg under */
+#wiz .cfg-head.slim:has(.vbar.has-picks){flex-wrap:wrap;row-gap:10px;justify-content:flex-start}
+#wiz .cfg-head.slim .vbar.has-picks{display:contents}
+#wiz .vbar.has-picks>*{order:3}
+#wiz .vbar.has-picks>[data-hundo]{order:1;margin-left:auto}
+#wiz .vbar.has-picks>[data-hredo]{order:1}
+#wiz .vbar.has-picks>.vsp{order:2;flex:0 0 100%;height:0}
+#wiz .vbar.has-picks .vpicks{flex-wrap:nowrap;margin-left:0;gap:8px}
+@media (max-width:1400px){#wiz .vbar.has-picks .vm-btn small{display:none}}
 </style>
 
 <div class="app">
@@ -3115,7 +3124,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
         const p1=pr(x-dx,y,zz-dzz*sg),p2=pr(x+dx,y,zz+dzz*sg),pc=pr(x,y+bend*.15,zz+bend*.3*sg),k=Math.min(.26,FOC/Math.max(300,x-camX)),c=BED_C[1+Math.floor(Math.pow(r(),.7)*4)];
         out+=`<path d="M${fx(p1[0])} ${fx(p1[1])}Q${fx(pc[0])} ${fx(pc[1])} ${fx(p2[0])} ${fx(p2[1])}" stroke="${c}" stroke-width="${fx(Math.max(.7,13*k))}" opacity="${loose?.8:.95}"/>`}});
     G.push(`<g fill="none" stroke-linecap="round" pointer-events="none">${out}</g>`)}
-  G.push(`<text x="20" y="34" font-family="Carlito,sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="#857c6c">STALLGÅNGEN${lvl>=3?" · "+esc((prod(dr.front)?.name||"").toUpperCase()):""}${lvl>=4&&dr.wall?" · MELLANVÄGG "+esc((prod(dr.wall)?.name||dr.wall).replace(" mellanvägg","").toUpperCase()):""}${lvl>=4&&dr.fill?" · "+esc(dr.fill.replace("Plast ","").toUpperCase()):""}</text>`);
+  G.push(`<text x="20" y="34" font-family="Carlito,sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="#857c6c">STALLGÅNGEN${lvl>=3?" · "+esc((prod(dr.front)?.name||"").toUpperCase()):""}${lvl>=4&&dr.wall&&shown182("wall")?" · MELLANVÄGG "+esc((prod(dr.wall)?.name||dr.wall).replace(" mellanvägg","").toUpperCase()):""}${lvl>=4&&dr.fill&&shown182("fill")?" · "+esc(dr.fill.replace("Plast ","").toUpperCase()):""}</text>`);
   return `<svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stallgången" class="vwalk">${G.join("")}</svg>`}
 
 /* --- vyväljare, ångra --- */
@@ -4426,7 +4435,7 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
   // skalstock + norrpil
   {const sx=-WT,sy=W+o2+FS*.9,u=1000,h=FS*.32;let s="";for(let i=0;i<5;i++)s+=`<rect x="${sx+i*u}" y="${sy}" width="${u}" height="${h}" fill="${i%2?C.box:C.ink}" stroke="${C.ink}" stroke-width="8"/>`;
    s+=T(sx,sy+h+FS*1.05,"0",`${sans} font-size="${FS*.8}" fill="${C.mute}"`)+T(sx+5*u,sy+h+FS*1.05,"5 m",`text-anchor="end" ${sans} font-size="${FS*.8}" fill="${C.mute}"`)+T(sx+5*u+FS*.8,sy+h,"PLAN",`${sans} font-size="${FS*.8}" font-weight="700" letter-spacing="${FS*.2}" fill="${C.mute}"`);
-   {const parts=[],CH=(D.ui&&D.ui.chosen)||{},allStd=lvl>=4&&!CH.wall&&!CH.fill&&!CH.finish,st=k=>CH[k]||allStd?"":" (STANDARD)";if(lvl>=4&&dr.wall){const wn=(typeof prod==="function"&&prod(dr.wall)?.name)||(dr.wall==="egen"?"Egen vägg":"");if(wn)parts.push("MELLANVÄGG "+wn.replace(" mellanvägg","").toUpperCase()+st("wall"))}if(lvl>=4&&dr.fill)parts.push(dr.fill.replace("Plast ","").toUpperCase()+st("fill"));if(lvl>=4&&dr.finish)parts.push((/ulverlack/.test(dr.finish)?"PULVERLACK "+(dr.ral||""):"VARMFÖRZINKAT").toUpperCase()+st("finish"));if(allStd&&parts.length)parts.push("STANDARDUTFÖRANDE");
+   {const parts=[],CH=(D.ui&&D.ui.chosen)||{},allStd=lvl>=4&&!CH.wall&&!CH.fill&&!CH.finish,st=k=>CH[k]||allStd?"":" (STANDARD)";if(lvl>=4&&dr.wall&&shown182("wall")){const wn=(typeof prod==="function"&&prod(dr.wall)?.name)||(dr.wall==="egen"?"Egen vägg":"");if(wn)parts.push("MELLANVÄGG "+wn.replace(" mellanvägg","").toUpperCase()+st("wall"))}if(lvl>=4&&dr.fill&&shown182("fill"))parts.push(dr.fill.replace("Plast ","").toUpperCase()+st("fill"));if(lvl>=4&&dr.finish&&shown182("finish"))parts.push((/ulverlack/.test(dr.finish)?"PULVERLACK "+(dr.ral||""):"VARMFÖRZINKAT").toUpperCase()+st("finish"));if(allStd&&parts.length)parts.push("STANDARDUTFÖRANDE");
     if(parts.length)s+=T(L+WT-FS*2.4,sy+h,parts.join("  ·  "),`text-anchor="end" ${sans} font-size="${FS*.68}" font-weight="700" letter-spacing="${FS*.1}" fill="${C.mute}"`)}
    if(L>8000){const nx=L+WT-FS*.6,ny=sy+FS*.3,r=FS*.55;s+=`<circle cx="${nx}" cy="${ny}" r="${r}" fill="none" stroke="${C.ink}" stroke-width="8"/><path d="M${nx} ${ny-r*1.05}L${nx+r*.42} ${ny+r*.5}L${nx} ${ny+r*.2}L${nx-r*.42} ${ny+r*.5}Z" fill="${C.ink}"/>`+T(nx,ny-r-FS*.25,"N",`text-anchor="middle" ${serif} font-size="${FS*.85}" fill="${C.ink}"`)}
    g.push(lvl>=2?s:"")}
@@ -5647,6 +5656,28 @@ function views181(lvl){try{if(lvl<3)return false;if(D.ui.views181)return true;if
 {const _vb181=viewBar;viewBar=function(lvl){if(lvl<1)return _vb181(lvl);
   if(!views181(lvl)){let h=_vb181(1);if(lvl>=2){const j=h.indexOf("</div>");if(j>0)h=h.slice(0,j+6)+`<span class="vlock181">3D och Stallgången visas när du valt front</span>`+h.slice(j+6)}return h}
   let h=_vb181(lvl);if(D.ui.viewsNew181&&!D.ui.viewSeen)h=h.replace('class="vseg ','class="vseg vnew ');return h}}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v182 (Carl 13/11, mockup godkänd): det som syns ovanför och under ritningen följer kundens steg.
+   - Raden under ritningen visar bara det hon har valt eller gått igenom. Inga "Välj"-kort, inga "Standard"-etiketter.
+   - Front-väljaren ovanför 3D från Utförande (inte på frontsteget). Färg-väljaren först från Yta-sidan.
+   - Lägg till även i 3D och Stallgången. Läggs något till där byter bilden till Ritning.
+   - Ångra och Gör om syns från steg 2 (gråa tills det finns något att ångra). */
+var _pi182=null;
+function pageIdx182(key){try{const k=(S.wizStep||0)+"|"+((D.ui&&D.ui.reach)||0)+"|"+((D.spec&&D.spec.front)||"")+"|"+(D.ui&&D.ui.kind);if(!_pi182||_pi182.k!==k){const m={};wizPages().forEach((p,i)=>{if(p.key&&m[p.key]===undefined)m[p.key]=i});_pi182={k,m}}const i=_pi182.m[key];return i===undefined?-1:i}catch(_){return -1}}
+function reach182(){return Math.max(S.wizStep||0,(D.ui&&D.ui.reach)||0)}
+function shown182(k){try{const CH=(D.ui&&D.ui.chosen)||{};if(CH[k])return true;const pg={wall:"vagg",fill:"fyll",finish:"yta",post:"stolp",decor:"dekor"}[k];if(!pg)return true;const i=pageIdx182(pg);if(i<0)return true;return reach182()>i}catch(_){return true}}
+{const _cc182=cfgChips;cfgChips=function(lvl){let h=_cc182.apply(this,arguments);try{const t=document.createElement("template");t.innerHTML=h;const map={"p-vagg":"wall","p-fyll":"fill","p-yta":"finish","p-stolpe":"post","p-dekor":"decor"};
+  t.content.querySelectorAll(".cchip[data-wjump]").forEach(c=>{const j=c.getAttribute("data-wjump");if(j==="s-front"&&!frontChosen174())c.remove();else if(map[j]&&!shown182(map[j]))c.remove()});
+  t.content.querySelectorAll(".cchip .stdtag").forEach(e=>e.remove());t.content.querySelectorAll(".cchip.std").forEach(e=>e.classList.remove("std"));h=t.innerHTML}catch(_){}return h}}
+{const _vp182=viewPick;viewPick=function(){let h=_vp182.apply(this,arguments);try{const fi=pageIdx182("front"),yi=pageIdx182("yta"),cur=S.wizStep||0,r=reach182(),here=(wizPages()[cur]||{}).key;
+  const showF=here!=="front"&&r>fi,showC=yi<0||r>=yi;const t=document.createElement("template");t.innerHTML=h;
+  t.content.querySelectorAll(".vm").forEach(v=>{const b=v.querySelector("[data-vm]");if(!b)return;const k=b.getAttribute("data-vm");if((k==="front"&&!showF)||(k==="color"&&!showC)){v.remove();if(S.vmenu===k)S.vmenu=""}});h=t.innerHTML}catch(_){}return h}}
+{const _vb182=viewBar;viewBar=function(lvl){let h=_vb182.apply(this,arguments);try{if(!h)return h;const j=h.indexOf('<span class="vsp"></span>');if(j<0)return h;const v=viewMode();let ins="";
+  if(v!=="plan"&&D.drawing&&!paintOn()&&!wallPaintOn()&&h.indexOf("al-btn")<0)ins+=dragLegend()||"";
+  let tail=h.slice(j);const bi=pageIdx182("boxA");if(h.indexOf("data-hundo")<0&&bi>=0&&(S.wizStep||0)>=bi&&D.drawing)tail=tail.replace('<span class="vsp"></span>','<span class="vsp"></span><button type="button" class="vbtn" data-hundo disabled title="Ångra">↶<span> Ångra</span></button><button type="button" class="vbtn" data-hredo disabled title="Gör om">↷<span> Gör om</span></button>');
+  h=h.slice(0,j)+ins+tail;if(/data-vm="(front|color)"/.test(h))h=h.replace('<div class="vbar">','<div class="vbar has-picks">')}catch(_){}return h}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest(".al-it[data-alclose]");if(!t||t.disabled||viewMode()==="plan")return;setTimeout(()=>{D.ui.view="plan";S.vmenu="";try{saveD()}catch(_){}try{cfgPanelRefresh()}catch(_){try{renderWiz()}catch(__){}}},0)},true);
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
