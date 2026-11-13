@@ -5505,6 +5505,14 @@ function nrRange174(ns){ns=[...new Set(ns.map(Number))].sort((a,b)=>a-b);const o
 function toastAct174(msg,label,fn){const t=document.getElementById("toast");if(!t)return;t.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg><span>${esc(msg)}</span><button type="button" class="toast-act">${esc(label)}</button>`;t.classList.add("on","act");t.querySelector(".toast-act").onclick=ev=>{ev.stopPropagation();t.classList.remove("on","act");fn()};clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on","act"),7000)}
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".al-pop [data-ingang]");if(!b)return;const key=b.dataset.ingang,dr=D.drawing,f=dr&&extraFind(dr,key);if(!f||!f.door)return;const copy=JSON.parse(JSON.stringify(f.m)),ll={N:"långsida A",S:"långsida B",W:"vänster gavel",E:"höger gavel"}[copy.k]||"väggen";
   setTimeout(()=>{if(extraFind(D.drawing,key))return;toastAct174(`Ingången på ${ll} är borttagen`,"Ångra",()=>{if(!extraFind(D.drawing,key)){doors(D.drawing).push(copy);autoAll(D.drawing);saveD();wizRefresh()}})},30)},true);
+
+/* v175 (Carl 13/11): en långsidesrad tar bara gavelns hörn om raden faktiskt står vid gaveln.
+   Ett rum längst bort på långsida B ska inte krympa vänster gavel (boxen där fick annars inte plats). */
+{const _gs175=gableSpan;gableSpan=function(dr,k){if(k!=="W"&&k!=="E")return _gs175.apply(this,arguments);
+  const gd=Math.max(depthMax(dr,k)||0,+(dr.cfg&&dr.cfg[k]&&dr.cfg[k].d)||0,3000),reach=gd+2000,a0=rowOff(dr).a;
+  const dep=row=>{const all=(dr.corner||{})[row+k]?true:false;let x=a0,d=0;for(const m of (dr.walls[row]||[])){const w=+m.w||0;if(m.t==="box"||m.t==="room"){const near=all||(k==="W"?x<reach:x+w>dr.L-reach);if(near)d=Math.max(d,+m.d||0)}x+=w}return d};
+  const a=dep("N"),b=dep("S");return {y0:a,y1:dr.W-b,len:dr.W-a-b}}}
+{const _cs175=cornerSet,_cg175=cornerSetG;cornerSet=function(dr){const r=_cs175.apply(this,arguments);try{autoAll(dr)}catch(_){}return r};cornerSetG=function(dr){const r=_cg175.apply(this,arguments);try{autoAll(dr)}catch(_){}return r}}
 </script>
 
 </html>
