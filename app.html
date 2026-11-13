@@ -2207,6 +2207,7 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .tplsvg svg{width:100%;height:100%;display:block;pointer-events:none}
 #wiz .tplt{display:grid;gap:2px}#wiz .tplt b{font-size:1.02rem}#wiz .tplt small{color:var(--ink-2);font-size:.85rem;line-height:1.3}
 #wiz .tplgo{font-weight:800;font-size:.9rem;color:var(--green)}
+#wiz .tplc.on{box-shadow:inset 0 0 0 2.5px var(--green)}#wiz .tplc.on .tplgo{color:#8a6a2c}
 </style>
 
 <div class="app">
@@ -3475,7 +3476,7 @@ function wizScreens(){
      ${S.db?`<details class="resumecode st-code"><summary>Har du en kod? Fortsätt där du slutade</summary><div class="rc-in"><div class="mf"><label for="wcodein">Kod</label><input id="wcodein" type="text" autocomplete="off" placeholder="T.ex. K7P 2QM" style="text-transform:uppercase"></div><button type="button" class="btn" data-wcode>Fortsätt</button></div></details>`:""}
      ${!isPublic()?`<p class="more st-more">Bara andra produkter, utan stallinredning? <button type="button" class="linkbtn" data-pick1="ui.kind" data-v="ovrigt">Välj produkter ›</button></p>`:""}`}]),
    ...(!stall?[]:[
-   {id:"s-matt",pg:"matt",sec:"Stallet",sub:"Mått",html:()=>`${isPublic()&&!D.ui.introX&&!(D.ui.reach>0)?`<div class="pintro" role="note"><button type="button" class="pintro-x" data-introx aria-label="Stäng introt">×</button><span class="pintro-ov">Myrby · handbyggt i Enköping sedan 1972</span><b class="pintro-t">Rita din stallinredning</b><div class="pintro-steps"><div class="on"><b><i>1</i>Mått</b></div><div><b><i>2</i>Stallinredning</b></div><div><b><i>3</i>Skicka</b></div></div><div class="pintro-tr"><span>Ca 5 minuter</span><span>Inget är bindande</span><span>Måttanpassat</span></div></div>`:""}${startPick178()}<div class="mattbody ${D.ui.startEx?"hid":""}"><h2>Hur stort är stallet inuti?</h2><p class="lead">Mät från vägg till vägg på insidan. Ett ungefär räcker, du kan ändra senare.</p>
+   {id:"s-matt",pg:"matt",sec:"Stallet",sub:"Mått",html:()=>`${isPublic()&&!D.ui.introX&&!(D.ui.reach>0)?`<div class="pintro" role="note"><button type="button" class="pintro-x" data-introx aria-label="Stäng introt">×</button><span class="pintro-ov">Myrby · handbyggt i Enköping sedan 1972</span><b class="pintro-t">Rita din stallinredning</b><div class="pintro-steps"><div class="on"><b><i>1</i>Mått</b></div><div><b><i>2</i>Stallinredning</b></div><div><b><i>3</i>Skicka</b></div></div><div class="pintro-tr"><span>Ca 5 minuter</span><span>Inget är bindande</span><span>Måttanpassat</span></div></div>`:""}${startPick178()}<div class="mattbody ${startEx178()?"hid":""}"><h2>Hur stort är stallet inuti?</h2><p class="lead">Mät från vägg till vägg på insidan. Ett ungefär räcker, du kan ändra senare.</p>
      
      <div class="dimin"><div class="mf"><label for="wm-L">Längd</label><input id="wm-L" type="text" inputmode="numeric" data-wm="L" value="${dr.L}" placeholder="t.ex. 24000"><em>mm</em></div><span class="dimx">×</span><div class="mf"><label for="wm-W">Bredd</label><input id="wm-W" type="text" inputmode="numeric" data-wm="W" value="${dr.W}" placeholder="t.ex. 11500"><em>mm</em></div></div>
      <div class="msum"><p class="hintline">Golvyta <b id="areaout">${(dr.L*dr.W/1e6).toLocaleString("sv-SE",{maximumFractionDigits:1})} m²</b></p>
@@ -5566,7 +5567,7 @@ document.addEventListener("keydown",e=>{const w=document.getElementById("wiz");i
 /* ===== v178 (Carl 13/11): sex exempelstall att börja från. Urval efter Jordbruksverkets statistik (79 % har högst 5 hästar).
    Varje exempel byggs med samma motor som allt annat och kontrolleras (ingen röd ruta, inga varningar) innan det visas. ===== */
 function rooms178(){try{return !!(window.__thumb178||(D&&D.ui&&D.ui.tpl))}catch(_){return false}}
-const TPL178=[
+var TPL178=[
  {id:"t2",title:"Två boxar",sub:"Sadelkammare i raden",L:11000,W:6500,A:{n:2,mode:"lika",rooms:["Sadelkammare"]},B:{n:0},door:"W"},
  {id:"t3",title:"Tre boxar",sub:"Sadelkammare och spolspilta",L:11500,W:10000,A:{n:3,mode:"lika"},B:{n:0,rooms:["Sadelkammare","Spolspilta"]},door:"W"},
  {id:"t4",title:"Fyra boxar",sub:"Två mot två, sadelkammare och spolspilta",L:10500,W:10000,A:{n:2,mode:"lika",rooms:["Spolspilta"]},B:{n:2,mode:"lika",rooms:["Sadelkammare"]},door:"W"},
@@ -5582,7 +5583,7 @@ function tplBuild178(t){const dr=newDrawing3();dr.L=t.L;dr.W=t.W;dr.doors=[];dr.
   if(t.B&&t.B.roomsEnd){const ms=t.B.roomsEnd.map(room),w=ms.reduce((a,m)=>a+m.w,0),ro=rowOff(dr);dr.walls.S=[{id:uid2(),t:"gap",w:Math.max(0,dr.L-ro.a-ro.b-w)},...ms];autoAll(dr)}
   const key="door-"+t.door;toggleExtra(dr,key);if(extraFind(dr,key))centerGableDoor(dr,key);autoAll(dr);return dr}
 function tplCheck178(dr){try{return !ovfInfo(dr).length&&!drwWarnings(dr).length}catch(_){return false}}
-function tplList178(){if(!S.tpl178){S.tpl178=TPL178.map(t=>{let dr=null,ok=false;try{const D0=D.drawing;dr=tplBuild178(t);ok=tplCheck178(dr);D.drawing=D0}catch(_){ok=false}const lay=dr?layout(dr):[];return {...t,dr,ok,boxes:lay.filter(o=>o.m.t==="box").length,rooms:lay.filter(o=>o.m.t==="room").map(o=>o.m.name)}})}return S.tpl178}
+function tplList178(){if(typeof TPL178==="undefined"||!TPL178)return [];if(!S.tpl178){S.tpl178=TPL178.map(t=>{let dr=null,ok=false;try{const D0=D.drawing;dr=tplBuild178(t);ok=tplCheck178(dr);D.drawing=D0}catch(_){ok=false}const lay=dr?layout(dr):[];return {...t,dr,ok,boxes:lay.filter(o=>o.m.t==="box").length,rooms:lay.filter(o=>o.m.t==="room").map(o=>o.m.name)}})}return S.tpl178}
 function tplThumb178(t){if(!t.svg){try{t.svg=thumbStyled178(t.dr,t.id)}catch(_){try{t.svg=thumb178(t.dr)}catch(__){t.svg=""}}}return t.svg}
 /* Miniatyr i Myrbys ritstil: streckade ytterväggar, HÄSTBOX + nummer i Garamond, rum med inredning och kursiv rubrik, stallgång, A/B. Ritas ur samma layout som ritningen. */
 function thumbStyled178(dr,uid){const L=dr.L,W=dr.W,WT=230,pad=380,lay=layout(dr),C={ink:"#26352e",line:"#3a463f",aisle:"#efe8da",box:"#fffdf8",boxLine:"#cbbf9f",part:"#6f6249",room:"#e6ece1",roomLine:"#a9b9a2",green:"#23412a"},F=Math.max(1,Math.max(L,W)/11000),id="th"+uid,g=[],top=[];
@@ -5614,17 +5615,29 @@ function thumb178(dr){const L=dr.L,W=dr.W,WT=220,pad=500,lay=layout(dr),g=[],AB=
     else g.push(`<rect x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="#dfe7da" stroke="#a9b9a2" stroke-width="60"/><text x="${cx}" y="${cy+fs*.22}" text-anchor="middle" font-family="Lato,Arial,sans-serif" font-weight="800" font-size="${fs*.62}" fill="#3d5a44">${AB[o.m.name]||esc((o.m.name||"").slice(0,2).toUpperCase())}</text>`)});
   doors(dr).forEach(d=>{const p=+d.p||0,w=+d.w||0;const r=d.k==="N"?[p,-WT,w,WT]:d.k==="S"?[p,W,w,WT]:d.k==="W"?[-WT,p,WT,w]:[L,p,WT,w];g.push(`<rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}" fill="#efe8da"/>`)});
   return `<svg viewBox="${-WT-pad} ${-WT-pad} ${L+2*WT+2*pad} ${W+2*WT+2*pad}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Planritning">${g.join("")}</svg>`}
-function startPick178(){const ex=!!D.ui.startEx;const big=(on,attr,ic,t,sub)=>`<button type="button" class="bigopt sp-opt" ${attr} aria-pressed="${on}"><span class="bo-ic">${ic}</span><span class="bo-t"><b>${t}</b><small>${sub}</small></span><span class="bo-ck">${svg("check",18)}</span></button>`;
+function startEx178(){return isPublic()?D.ui.startEx!==false:!!D.ui.startEx}
+function startPick178(){const ex=startEx178();const big=(on,attr,ic,t,sub)=>`<button type="button" class="bigopt sp-opt" ${attr} aria-pressed="${on}"><span class="bo-ic">${ic}</span><span class="bo-t"><b>${t}</b><small>${sub}</small></span><span class="bo-ck">${svg("check",18)}</span></button>`;
   const head=`<div class="bigopts two sp178">${big(!ex,'data-startex="0"',svg("move",24),"Rita från början","Fyll i måtten på ditt stall")}${big(ex,'data-startex="1"',svg("home",24),"Börja från ett exempel","Sex vanliga stall att utgå från")}</div>`;
   if(!ex)return head;const L=tplList178().filter(t=>t.ok);
-  return head+`<p class="lead tpl-lead">Välj det som liknar ditt stall mest. Sedan ändrar du mått, boxar och rum precis som du vill.</p><div class="tplgrid">${L.map(t=>`<button type="button" class="tplc" data-tpl="${t.id}"><span class="tplsvg">${tplThumb178(t)}</span><span class="tplt"><b>${esc(t.title)}</b><small>${t.boxes} boxar · ${(t.L/1000).toLocaleString("sv-SE")} × ${(t.W/1000).toLocaleString("sv-SE")} m</small><small>${esc(t.rooms.join(", ")||"Inga rum")}</small></span><span class="tplgo">Använd det här ›</span></button>`).join("")}</div>`}
+  return head+`<p class="lead tpl-lead">Välj det som liknar ditt stall mest. Sedan ändrar du mått, boxar och rum precis som du vill.</p><div class="tplgrid">${L.map(t=>`<button type="button" class="tplc${D.ui.tplAuto&&D.ui.tpl===t.title?" on":""}" data-tpl="${t.id}"><span class="tplsvg">${tplThumb178(t)}</span><span class="tplt"><b>${esc(t.title)}</b><small>${t.boxes} boxar · ${(t.L/1000).toLocaleString("sv-SE")} × ${(t.W/1000).toLocaleString("sv-SE")} m</small><small>${esc(t.rooms.join(", ")||"Inga rum")}</small></span><span class="tplgo">${D.ui.tplAuto&&D.ui.tpl===t.title?"Visas i ritningen · Fortsätt ›":"Använd det här ›"}</span></button>`).join("")}</div>`}
 function tplUse178(id){const t=tplList178().find(x=>x.id===id&&x.ok);if(!t)return;const prev=JSON.stringify({dr:D.drawing,ui:{tpl:D.ui.tpl,startEx:D.ui.startEx,touchedN:D.ui.touchedN,reach:D.ui.reach},step:S.wizStep});
-  D.drawing=tplBuild178(t);D.ui.kind="stall";D.ui.measured=true;D.ui.door0=true;D.ui.touchedN=true;D.ui.tpl=t.title;D.ui.startEx=false;try{syncSpec(true)}catch(_){}autoAll(D.drawing);
+  D.drawing=tplBuild178(t);D.ui.kind="stall";D.ui.measured=true;D.ui.door0=true;D.ui.touchedN=true;D.ui.tpl=t.title;D.ui.tplAuto=false;D.ui.startEx=true;try{syncSpec(true)}catch(_){}autoAll(D.drawing);
   const bi=wizPages().findIndex(p=>p.key==="boxA");D.ui.reach=Math.max(D.ui.reach||0,bi);S.wizStep=bi;saveD();renderWiz.dir=1;renderWiz();const ws=document.getElementById("wizscroll");if(ws)ws.scrollTop=0;
   toastAct174(`Exemplet ”${t.title}” är inlagt. Ändra mått, boxar och rum precis som du vill.`,"Ångra",()=>{const p=JSON.parse(prev);D.drawing=p.dr;Object.assign(D.ui,p.ui);S.wizStep=p.step;saveD();renderWiz()})}
 document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("[data-startex],[data-tpl]");if(!a)return;e.preventDefault();e.stopPropagation();
-  if(a.dataset.tpl){tplUse178(a.dataset.tpl);return}D.ui.startEx=a.dataset.startex==="1";saveD();renderWiz()},true);
+  if(a.dataset.tpl){tplUse178(a.dataset.tpl);return}const ex=a.dataset.startex==="1";D.ui.startEx=ex;
+  if(!ex&&D.ui.tplAuto){const prev=JSON.stringify({dr:D.drawing,tpl:D.ui.tpl});D.drawing=null;D.ui.tpl=null;D.ui.tplAuto=false;D.ui.door0=false;D.ui.touchedN=false;ensureCfg();saveD();renderWiz();
+    toastAct174("Ritningen är tom. Fyll i måtten på ditt stall.","Ångra",()=>{const p=JSON.parse(prev);D.drawing=p.dr;D.ui.tpl=p.tpl;D.ui.tplAuto=true;D.ui.startEx=true;saveD();renderWiz()});return}
+  saveD();renderWiz()},true);
 {const _pl178=publicLines;publicLines=function(d){const L=_pl178.apply(this,arguments);try{if(d.ui&&d.ui.tpl){const i=L.findIndex(x=>x[0]==="Stallets innermått");if(i>=0)L.splice(i,0,["Utgick från exempel",d.ui.tpl])}}catch(_){}return L}}
+
+/* v180 (Carl 13/11): verktyget startar med "Börja från ett exempel" valt och ritningen ifylld med Fyra boxar (vanligast). "Rita från början" tömmer ritningen. */
+function prefill178(){try{if(!isPublic()||!D||!D.ui||D.ui.kind!=="stall"||(S.wizStep||0)>0)return false;const t=tplList178().find(x=>x.id==="t4"&&x.ok);if(!t)return false;
+  D.drawing=tplBuild178(t);D.ui.door0=true;D.ui.touchedN=true;D.ui.tpl=t.title;D.ui.tplAuto=true;D.ui.measured=true;ls.set("myrby.draft2",D);return true}catch(_){return false}}
+{const _dl180=drawLvl;drawLvl=function(PG){const l=_dl180.apply(this,arguments);return (D&&D.ui&&D.ui.tpl&&l<2)?2:l}}
+{const _pr180=pubReset;pubReset=function(){const r=_pr180.apply(this,arguments);if(prefill178())renderWiz();return r}}
+{const _pb180=publicBoot;publicBoot=function(){const r=_pb180.apply(this,arguments);if(D&&D.drawing&&!D.ui.tpl&&!(S.wizStep>0)&&prefill178())renderWiz();return r}}
+try{if(isPublic()&&D&&D.drawing&&!D.ui.tpl&&!(S.wizStep>0)&&!(D.ui.reach>0)&&prefill178())renderWiz()}catch(_){}
 </script>
 
 </html>
