@@ -2194,6 +2194,7 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .fgi-unsure .fgq{display:grid;place-items:center;font:500 64px/1 "EB Garamond",Georgia,serif;color:#8a6a2c;background:#f3ead6!important}
 .toast.act{gap:12px}.toast .toast-act{background:rgba(255,255,255,.16);color:inherit;border:0;border-radius:999px;padding:6px 14px;font:inherit;font-weight:800;cursor:pointer;pointer-events:auto}
 .al-it .al-on{display:block;font-size:.72rem;font-weight:600;opacity:.8;margin-top:2px;line-height:1.2}
+#cfgcanvas .delx circle{transition:transform .15s}#cfgcanvas .delx:hover circle{fill:#fbecea}#cfgcanvas.dragging .delx{display:none}
 </style>
 
 <div class="app">
@@ -5513,6 +5514,42 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
   const dep=row=>{const all=(dr.corner||{})[row+k]?true:false;let x=a0,d=0;for(const m of (dr.walls[row]||[])){const w=+m.w||0;if(m.t==="box"||m.t==="room"){const near=all||(k==="W"?x<reach:x+w>dr.L-reach);if(near)d=Math.max(d,+m.d||0)}x+=w}return d};
   const a=dep("N"),b=dep("S");return {y0:a,y1:dr.W-b,len:dr.W-a-b}}}
 {const _cs175=cornerSet,_cg175=cornerSetG;cornerSet=function(dr){const r=_cs175.apply(this,arguments);try{autoAll(dr)}catch(_){}return r};cornerSetG=function(dr){const r=_cg175.apply(this,arguments);try{autoAll(dr)}catch(_){}return r}}
+
+/* ===== v177 (Carl 13/11): kryss på rum, ingångar och egna fönster i ritningen + kortkommandon ===== */
+function histFlush177(){try{if(HIST.busy||!D.ui?.kind)return;clearTimeout(HIST.t);const s=histSnap();if(HIST.stack[HIST.i]===s)return;HIST.stack=HIST.stack.slice(0,HIST.i+1);HIST.stack.push(s);if(HIST.stack.length>60)HIST.stack.shift();HIST.i=HIST.stack.length-1}catch(_){}}
+function selKey177(){const x=S.sel177;return x?x.t+":"+x.id:""}
+function itemName177(dr,t,id){if(t==="room"){for(const k of ["N","S","W","E"]){const m=(dr.walls[k]||[]).find(m=>m.id===id);if(m)return m.name||"Rummet"}return "Rummet"}return t==="door"?"Ingången":"Fönstret"}
+function delItem177(t,id,quiet){const dr=D.drawing;if(!dr)return false;const snap=JSON.stringify(dr),nm=itemName177(dr,t,id);let ok=false;
+  if(t==="room"){for(const k of ["N","S","W","E"]){const ms=dr.walls[k]||[];const i=ms.findIndex(m=>m.id===id&&m.t==="room");if(i>=0){ms.splice(i,1);for(let j=ms.length-1;j>=0;j--){const g=ms[j];if(g.t==="gap"&&(g.gapRoom===id||g.gapFor===id))ms.splice(j,1)}ok=true;break}}}
+  else if(t==="door"){const ds=doors(dr),i=ds.findIndex(d=>d.id===id);if(i>=0){ds.splice(i,1);ok=true}}
+  else if(t==="win"){const W=wins(dr),i=W.findIndex(x=>x.id===id);if(i>=0){W.splice(i,1);ok=true}}
+  if(!ok)return false;S.sel177=null;autoAll(dr);saveD();wizRefresh();
+  if(!quiet)toastAct174(`${nm} ${t==="win"?"borttaget":"borttagen"}`,"Ångra",()=>{D.drawing=JSON.parse(snap);saveD();wizRefresh()});return true}
+{const _pp177=planPretty;planPretty=function(dr,o){let svg=_pp177.apply(this,arguments);try{o=o||{};if(!o.interactive||o.paint||!dr||!dr.walls)return svg;
+  const F=Math.max(1,Math.max(dr.L,dr.W)/11000),r=150*F,lay=layout(dr),out=[],sel=selKey177();
+  const X=(x,y,key,lbl)=>`<g class="delx" data-delx="${key}" role="button" aria-label="Ta bort ${esc(lbl)}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="#8f2f2c" stroke-width="${16*F}"/><path d="M${x-r*.42} ${y-r*.42}L${x+r*.42} ${y+r*.42}M${x+r*.42} ${y-r*.42}L${x-r*.42} ${y+r*.42}" stroke="#8f2f2c" stroke-width="${22*F}" stroke-linecap="round"/><title>Ta bort ${esc(lbl)}</title></g>`;
+  lay.filter(o=>!o.door&&o.m&&o.m.t==="room").forEach(o=>{const w=+o.m.w,d=+o.m.d||3500,p=o.tf(w-r-120*F,d-r-120*F);
+    if(sel==="room:"+o.m.id){const P=[[0,0],[w,0],[w,d],[0,d]].map(q=>o.tf(...q).join(",")).join(" ");out.push(`<polygon points="${P}" fill="none" stroke="#c9a24e" stroke-width="${34*F}" stroke-dasharray="${120*F} ${70*F}" pointer-events="none"/>`)}
+    out.push(X(p[0],p[1],"room:"+o.m.id,o.m.name||"rummet"))});
+  doors(dr).forEach(d=>{const c=(+d.p||0)+(+d.w||0)/2,ins=420*F,p=d.k==="N"?[c,ins]:d.k==="S"?[c,dr.W-ins]:d.k==="W"?[ins,c]:[dr.L-ins,c];out.push(X(p[0],p[1],"door:"+d.id,"ingången"))});
+  wins(dr).forEach(x=>{if(x.box&&dr.winBox)return;const q=+x.p+(+x.w||1000)/2+r*1.3,p=x.k==="N"?[q,0]:x.k==="S"?[q,dr.W]:x.k==="W"?[0,q]:[dr.L,q];out.push(X(p[0],p[1],"win:"+x.id,"fönstret"))});
+  const j=svg.lastIndexOf("</svg>");if(j>0&&out.length)svg=svg.slice(0,j)+out.join("")+svg.slice(j)}catch(_){}return svg}}
+document.addEventListener("pointerdown",e=>{const t=e.target.closest&&e.target.closest("#cfgcanvas [data-delx]");if(t){e.preventDefault();e.stopPropagation();const [ty,...rest]=t.dataset.delx.split(":");delItem177(ty,rest.join(":"));return}
+  const c=e.target.closest&&e.target.closest("#cfgcanvas");if(!c||!D.drawing)return;const dr=D.drawing;
+  const m=e.target.closest("[data-mod]"),dd=e.target.closest("[data-door]"),ww=e.target.closest("[data-wwin]");let nsel=null;
+  if(m){const [k,i]=m.dataset.mod.split(":"),mod=(dr.walls[k]||[])[+i];if(mod&&mod.t==="room")nsel={t:"room",id:mod.id}}
+  else if(dd)nsel={t:"door",id:dd.dataset.door};else if(ww){const x=wins(dr)[+ww.dataset.wwin];if(x)nsel={t:"win",id:x.id}}
+  const before=selKey177();S.sel177=nsel;if(selKey177()!==before&&!nsel){try{cfgPanelRefresh()}catch(_){}}},true);
+document.addEventListener("pointerup",e=>{if(!S.sel177)return;if(e.target.closest&&e.target.closest("#cfgcanvas"))setTimeout(()=>{try{if(S.sel177&&!document.querySelector("#cfgcanvas.dragging"))cfgPanelRefresh()}catch(_){}},0)},true);
+document.addEventListener("keydown",e=>{const w=document.getElementById("wiz");if(!w||w.hidden||!D||!D.drawing)return;const t=e.target,tag=(t&&t.tagName)||"";if(/INPUT|TEXTAREA|SELECT/.test(tag)||(t&&t.isContentEditable))return;
+  const mod=e.metaKey||e.ctrlKey,k=(e.key||"").toLowerCase();
+  if(mod&&k==="z"&&!e.shiftKey){e.preventDefault();histFlush177();histGo(-1);return}
+  if(mod&&((k==="z"&&e.shiftKey)||k==="y")){e.preventDefault();histGo(1);return}
+  if((e.key==="Delete"||e.key==="Backspace")&&S.sel177&&document.querySelector(`#cfgcanvas [data-delx="${selKey177()}"]`)){e.preventDefault();delItem177(S.sel177.t,S.sel177.id);return}
+  if(e.key==="Escape"&&S.sel177){S.sel177=null;try{cfgPanelRefresh()}catch(_){}return}
+  if(mod&&k==="c"&&S.sel177&&S.sel177.t==="room"){const dr=D.drawing;for(const kk of ["N","S","W","E"]){const m=(dr.walls[kk]||[]).find(m=>m.id===S.sel177.id);if(m){S.clip177={name:roomBase(m.xk||m.name)||m.name,w:+m.w,d:+m.d};toast(`Kopierad: ${m.name}`);break}}e.preventDefault();return}
+  if(mod&&k==="v"&&S.clip177){e.preventDefault();const dr=D.drawing,before=new Set(["N","S","W","E"].flatMap(kk=>(dr.walls[kk]||[]).map(m=>m.id)));try{toggleExtra(dr,nextRoomKey(dr,S.clip177.name))}catch(_){}
+    let nm=null;for(const kk of ["N","S","W","E"])(dr.walls[kk]||[]).forEach(m=>{if(m.t==="room"&&!before.has(m.id))nm=m});if(nm){if(S.clip177.w&&+nm.w!==S.clip177.w){nm.w=S.clip177.w;autoAll(dr)}if(S.clip177.d)nm.d=S.clip177.d;S.sel177={t:"room",id:nm.id};saveD();wizRefresh();toast(`Inklistrad: ${nm.name}`)}else toast("Det fick inte plats fler");return}});
 </script>
 
 </html>
