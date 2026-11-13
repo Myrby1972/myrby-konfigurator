@@ -2257,6 +2257,18 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .rsg-d[open]>:not(summary){background:#f6f3ea;border-radius:12px;margin:0 8px 8px;padding:12px}
 #wiz .rsg-d[open] .rsg-p{color:var(--ink)}
 #wiz .rsg-d .vm-dots i{box-shadow:0 0 0 1.5px #edd8bc}
+/* v194: inredningen ovanför ritningen, stallet och Lägg till under */
+#wiz .ichips194{display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center}
+#wiz .ichips194 .vm{position:relative}
+#wiz .ichips194 .cchip{min-height:44px;padding:5px 12px 5px 6px;gap:8px;cursor:pointer;animation:none}
+#wiz .ichips194 .cchip .vm-car{margin-left:4px;border-color:currentColor;opacity:.7}
+#wiz .ichips194 .cchip[aria-expanded="true"] .vm-car{transform:rotate(225deg) translate(-1px,-1px)}
+#wiz .ichips194 .cchip small{font-size:.66rem}
+#wiz .ichips194 .cchip b{font-size:.92rem;white-space:nowrap}
+#wiz .crow194{display:flex;align-items:center;gap:10px;min-width:0}
+#wiz .crow194>.cchips{flex:1 1 auto;min-width:0}
+#wiz .add194{flex:none;position:relative}
+#wiz .add194 .vm-pop{top:auto;bottom:calc(100% + 8px)}
 </style>
 
 <div class="app">
@@ -5782,6 +5794,27 @@ function bedStrands190(w,d,seed,dens){const r=rng190(seed),FR=150,D=d-FR,n=Math.
   const ci=h.indexOf('<span class="vm"><button type="button" class="vm-btn" data-vm="color"');h=ci>=0?h.slice(0,ci)+fl+h.slice(ci):h.replace(/<\/span>$/,fl+"</span>")}catch(_){}return h}}
 {const _vb193=viewBar;viewBar=function(lvl){let h=_vb193.apply(this,arguments);try{if(!h||h.indexOf("vm-add")<0)return h;const t=document.createElement("template");t.innerHTML=h;const vb=t.content.querySelector(".vbar"),add=vb&&vb.querySelector(":scope>.vm-add"),seg=vb&&vb.querySelector(":scope>.vseg");if(add&&seg&&seg.nextElementSibling!==add){seg.after(add);h=t.innerHTML}}catch(_){}return h}}
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest('.vm-pop [data-pick1="spec.fill"]');if(t)S.vmenu=null},true);
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v194 (Carl 13/11): valen visas på ett ställe.
+   Ovanför ritningen: vyerna + inredningen (Front, Mellanvägg, Fyllning, Yta, Stolpar, Dekorbräda). Front, Fyllning och Yta öppnar en lista att byta i, de andra tar en till sin sida.
+   Under ritningen: Stallet, Boxar, Rum (m.m.) och Lägg till. */
+var TOP194={"s-front":"front","p-vagg":"","p-fyll":"fill","p-yta":"color","p-stolpe":"","p-dekor":""};
+{const _cc194=cfgChips;cfgChips=function(lvl,part){const h=_cc194.apply(this,[lvl]);try{const t=document.createElement("template");t.innerHTML=h;const top=[],bot=[];
+  [...t.content.childNodes].forEach(n=>{const j=n.getAttribute&&n.getAttribute("data-wjump");(j&&j in TOP194?top:bot).push(n)});
+  const out=(part==="top"?top:bot).map(n=>n.outerHTML||n.textContent||"").join("");return out}catch(_){return part==="top"?"":h}}}
+function topChips194(lvl){let h="";try{h=cfgChips(lvl,"top")}catch(_){}if(!h)return "";let picks="";try{picks=viewPick()}catch(_){}
+  const pk=document.createElement("template");pk.innerHTML=picks;const avail={};pk.content.querySelectorAll("[data-vm]").forEach(b=>{avail[b.getAttribute("data-vm")]=b.closest(".vm")});
+  const t=document.createElement("template");t.innerHTML=h;let out="";
+  [...t.content.querySelectorAll(".cchip")].forEach(c=>{const j=c.getAttribute("data-wjump"),vm=TOP194[j];c.classList.add("ichip194");c.insertAdjacentHTML("beforeend",'<i class="vm-car"></i>');
+    if(vm&&avail[vm]){c.removeAttribute("data-wjump");c.setAttribute("data-vm",vm);c.setAttribute("aria-haspopup","listbox");c.setAttribute("aria-expanded",S.vmenu===vm?"true":"false");const pop=avail[vm].querySelector(".vm-pop");out+=`<span class="vm">${c.outerHTML}${pop?pop.outerHTML:""}</span>`}
+    else out+=`<span class="vm">${c.outerHTML}</span>`});
+  return out?`<span class="ichips194">${out}</span>`:""}
+{const _vb194=viewBar;viewBar=function(lvl){let h=_vb194.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;const vb=t.content.querySelector(".vbar");if(!vb)return h;
+  vb.querySelectorAll(":scope>.vm-add,:scope>.vpicks").forEach(e=>e.remove());const tc=topChips194(lvl);const seg=vb.querySelector(":scope>.vseg");
+  if(tc&&seg){seg.insertAdjacentHTML("afterend",tc);vb.classList.add("has-picks")}else vb.classList.remove("has-picks");h=t.innerHTML}catch(_){}return h}}
+{const _cp194=cfgPanel;cfgPanel=function(lvl){let h=_cp194.apply(this,arguments);try{if(h.indexOf('class="cchips"')<0)return h;let add="";try{add=D.drawing&&!paintOn()&&!wallPaintOn()?(addLib()||""):""}catch(_){}
+  if(!add)return h;const t=document.createElement("template");t.innerHTML=h;const cc=t.content.querySelector(".cchips");if(!cc)return h;const row=document.createElement("div");row.className="crow194";cc.replaceWith(row);row.appendChild(cc);row.insertAdjacentHTML("beforeend",`<span class="add194">${add}</span>`);h=t.innerHTML}catch(_){}return h}}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
