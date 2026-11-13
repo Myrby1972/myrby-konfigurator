@@ -5774,6 +5774,15 @@ function bedStrands190(w,d,seed,dens){const r=rng190(seed),FR=150,D=d-FR,n=Math.
   const S=BED190.map(()=>[]),Sh=[],r=rng190(seed+7);bedStrands190(w,d,seed).forEach(t=>{const A=map(t.x1,t.y1,t.h+20),B=map(t.x2,t.y2,t.h+20),C=map(t.cx,t.cy,t.h+40),dd=`M${f(A[0])} ${f(A[1])}Q${f(C[0])} ${f(C[1])} ${f(B[0])} ${f(B[1])}`;S[t.c].push(dd);if(r()<.3)Sh.push(`M${f(A[0]+.6)} ${f(A[1]+1.2)}Q${f(C[0]+.6)} ${f(C[1]+1.2)} ${f(B[0]+.6)} ${f(B[1]+1.2)}`)});
   const k=sw[0]*.85;o+=`<g fill="none" stroke-linecap="round"><path d="${Sh.join("")}" stroke="#7a5a26" stroke-width="${f(k)}" opacity=".28"/>${[4,3,2,1,0].map(i=>S[i].length?`<path d="${S[i].join("")}" stroke="${BED190[i]}" stroke-width="${f(k*(1+.12*(4-i)))}"/>`:"").join("")}</g>`;
   return `<g pointer-events="none" opacity="${op==null?1:op}">${o}</g>`}}
+
+/* v193 (Carl 13/11): Lägg till direkt efter Ritning/3D/Stallgången. Fyllning-väljaren efter Front, från sidan efter Fyllning. */
+{const _vp193=viewPick;viewPick=function(){let h=_vp193.apply(this,arguments);try{const fi=pageIdx182("fyll"),cur=S.wizStep||0;if(fi<0||cur<=fi||wmixOn&&wmixOn()&&wmixList().length>1)return h;
+  const sp=D.spec||{},f=sp.fill||(D.drawing&&D.drawing.fill)||"",ok=(typeof fillsFor==="function"?fillsFor(sp.front||(D.drawing&&D.drawing.front)):FILL)||FILL,op=S.vmenu||"",nm=x=>String(x||"").replace("Plast ","").replace(/^svart$/,"Svart"),mt=x=>/^Plast/.test(x)?"Plast":x==="Toffee"?"Bambu":"Trä";
+  const fl=`<span class="vm"><button type="button" class="vm-btn" data-vm="fill" aria-haspopup="listbox" aria-expanded="${op==="fill"}"><small>Fyllning</small><i class="vm-sw" style="background:${SWATCH[f]||"#ddd"}"></i><b>${esc(nm(f)||"Välj")}</b><i class="vm-car"></i></button>${op==="fill"?`<div class="vm-pop vm-cols" role="listbox"><p class="vm-h">Plankorna i fronter och väggar</p>${ok.map(x=>`<button type="button" class="vm-it" role="option" data-pick1="spec.fill" data-v="${esc(x)}" aria-selected="${x===f}"><i class="vm-sw lg" style="background:${SWATCH[x]||"#ddd"}"></i><span class="vm-tx"><b>${esc(nm(x))}</b><small>${mt(x)}</small></span><span class="vm-ck">${x===f?"✓":""}</span></button>`).join("")}</div>`:""}</span>`;
+  const ci=h.indexOf('<span class="vm"><button type="button" class="vm-btn" data-vm="color"');h=ci>=0?h.slice(0,ci)+fl+h.slice(ci):h.replace(/<\/span>$/,fl+"</span>")}catch(_){}return h}}
+{const _vb193=viewBar;viewBar=function(lvl){let h=_vb193.apply(this,arguments);try{if(!h||h.indexOf("vm-add")<0)return h;const t=document.createElement("template");t.innerHTML=h;const vb=t.content.querySelector(".vbar"),add=vb&&vb.querySelector(":scope>.vm-add"),seg=vb&&vb.querySelector(":scope>.vseg");if(add&&seg&&seg.nextElementSibling!==add){seg.after(add);h=t.innerHTML}}catch(_){}return h}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest('.vm-pop [data-pick1="spec.fill"]');if(t)S.vmenu=null},true);
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
 </html>
