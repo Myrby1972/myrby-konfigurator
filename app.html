@@ -5411,6 +5411,8 @@ function winSync(dr,say){if(!dr||!dr.walls)return;const W=wins(dr);let moved=0,d
 
 /* v171 (Carl 13/11): ett nytt stall har en ingång från start, dubbeldörr på vänster gavel mitt för stallgången. Den går att flytta och ta bort. */
 {const _ec171=ensureCfg;ensureCfg=function(){const had=!!(D&&D.drawing&&D.drawing.v===2);const r=_ec171.apply(this,arguments);try{const dr=D.drawing;if(!had&&dr&&dr.v===2&&D.ui&&D.ui.kind==="stall"&&!doors(dr).length&&!D.ui.door0){D.ui.door0=true;toggleExtra(dr,"door-W");const f0=extraFind(dr,"door-W");if(f0){centerGableDoor(dr,"door-W");f0.m.auto0=true}}}catch(_){}return r}}
+/* v173: sidan startar (publicBoot) innan koden ovan finns, så första ritningen får sin startdörr här. */
+try{if(typeof isPublic==="function"&&isPublic()&&D&&D.drawing&&D.drawing.v===2&&D.ui&&D.ui.kind==="stall"&&!D.ui.door0&&!doors(D.drawing).length&&!(S.wizStep>0)){const dr=D.drawing;D.ui.door0=true;toggleExtra(dr,"door-W");const f0=extraFind(dr,"door-W");if(f0){centerGableDoor(dr,"door-W");f0.m.auto0=true}ls.set("myrby.draft2",D);if(typeof cfgPanelRefresh==="function")cfgPanelRefresh()}}catch(_){}
 
 /* v171 (Carl 13/11): fronter som inte passar kundens boxar säger det redan på kortet. Väljer man den ändå finns "Tillbaka till …" i den röda rutan. */
 function frontFitSim(id){const dr=D.drawing;if(!dr)return null;const key=id+"|"+JSON.stringify([dr.L,dr.W,dr.walls,dr.cfg]);S.ffit=S.ffit||{};if(key in S.ffit)return S.ffit[key];
