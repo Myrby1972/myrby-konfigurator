@@ -5237,7 +5237,7 @@ async function publicSend(){
     if(pdf)put("file",new File([pdf],file,{type:"application/pdf"}));(window.__pubFiles||[]).forEach(x=>put("file",x.file));
     for(const [k,v] of Object.entries(cfg.extra||{}))fd.append(k,v);
     const act=new URL(form.getAttribute("action")||cfg.formPage,new URL(cfg.formPage,location.href)).href;
-    const r=await fetch(act,{method:"POST",body:fd,credentials:"same-origin"});let tx="";try{tx=await r.text()}catch(_){}window.__pubResp=pubResp174(r,tx);sent=r.ok}catch(e){console.warn("send",e)}}
+    const r=await fetch(act,{method:"POST",body:fd,credentials:"same-origin"});let tx="";try{tx=await r.text()}catch(_){}window.__pubResp=pubResp174(r,tx);sent=r.ok&&/Tack f(ö|&#246;|&ouml;)r ditt meddelande/i.test(tx)} /* v176: Webbedit visar tacktexten bara när formuläret tagits emot (kontrollerat med testskick 13/11) */catch(e){console.warn("send",e)}}
   else if(cfg.endpoint){try{
     /* Samma väg som hemsidans "Skicka förfrågan": fältnamnen ställs in i MYRBY_PUBLIC.fields så att de matchar WebbEdit-formuläret */
     const F={name:"namn",phone:"telefon",email:"email",product:"produkt",message:"meddelande",file:"bilaga",consent:"samtycke",subject:"_subject",...(cfg.fields||{})},fd=new FormData(),put=(k,v)=>{if(F[k])fd.append(F[k],v)};
