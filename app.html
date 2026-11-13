@@ -2998,7 +2998,7 @@ function frontSVG(S,P,kAt,o){if(o.balls==="med"||o.balls==="utan")S={...S,posts:
     const np=Math.max(1,Math.round(L/140));for(let i=1;i<np;i++){const x=s.x0+i*L/np;out.push(ln(x,0,x,S.fill,`stroke="${fc[1]}" stroke-width="${fx(9*k)}" opacity=".85"`))}
     if(!o.plast)for(let i=0;i<np;i+=2){const x=s.x0+(i+.5)*L/np;out.push(ln(x,S.fill*.12,x+L/np*.06,S.fill*.82,`stroke="${fc[2]}" stroke-width="${fx(6*k)}" opacity=".4"`))}
     let bb=S.fill;
-    if(S.decor){const [y0,y1]=S.decor;bb=y1;out.push(poly([[s.x0,y0],[s.x1,y0],[s.x1,y1],[s.x0,y1]],`fill="${fc?fc[1]:S.dec}" stroke="${fr.b}" stroke-width="${fx(10*k)}"`));
+    if(S.decor){const [y0,y1]=S.decor;bb=y1;out.push(poly([[s.x0,y0],[s.x1,y0],[s.x1,y1],[s.x0,y1]],`fill="${fr.a}" stroke="${fr.b}" stroke-width="${fx(10*k)}"`));out.push(poly(plate188(s.x0,s.x1,y0,y1),`fill="${fc?fc[1]:S.dec}" stroke="${fr.b}" stroke-width="${fx(8*k)}"`));
       }
     const nb=Math.max(1,Math.round(L/S.pitch));for(let i=1;i<nb;i++){const t=i/nb,x=s.x0+t*L;if(x<xmin)continue;out.push(ln(x,bb,x,s.top(t)-S.frame*.35,`stroke="${fr.a}" stroke-width="${fx(S.bar*k)}" stroke-linecap="round"`))}
     const fw=fx(S.frame*k);
@@ -3070,7 +3070,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
         sides.forEach(x=>F.push(x));
         const s=spol?panel(p0,p1,{fr:frameCol(dr,dr.front),door:"c"}):panel(p0,p1,{solid:2600,solidC:"#e6ece2"})+(()=>{const q0=tf(w/2-500,d),q1=tf(w/2+500,d);return poly([[q0[0],0,q0[1]],[q1[0],0,q1[1]],[q1[0],2100,q1[1]],[q0[0],2100,q0[1]]],`fill="#8a5a33" stroke="${ink}" stroke-width="1"`)})();F.push({d:dep(c[0],c[1]),s})}}});
   if(lvl>=4)partList(dr).forEach(p=>{const a0=p.o.tf(p.x,0),a1=p.o.tf(p.x,p.d),mid=p.o.tf(p.x,p.d/2),w=p.w;let o;
-    if(w==="mv-tat")o={solid:2320,mid:1160,frame:true};else if(w==="egen")o={solid:2400,solidC:"#d9d2c2"};else if(w==="mv-dala")o={h:1560,ph:1300,bar:75};else if(w==="mv-kg2")o={gal:[Math.max(0,1-2000/p.d),1]};else if(w==="mv-kg1")o={gal:[Math.max(0,1-1000/p.d),1]};else if(w==="mv-faro")o={fh:(t,len,ph,H)=>faroH(t*len,len,ph,H)};else o={};
+    if(w==="mv-tat")o={solid:2320,mid:1160,frame:true};else if(w==="egen")o={solid:2400,solidC:"#d9d2c2"};else if(w==="mv-dala")o={h:1560,ph:1300,bar:75};else if(w==="mv-kg2"||w==="mv-kg1"){const g=galSpan188(w,p.d);o={gal:[1-g[1]/p.d,1-g[0]/p.d]}}else if(w==="mv-faro")o={fh:(t,len,ph,H)=>faroH(t*len,len,ph,H)};else o={};
     o.fr=frameCol(dr,dr.front);F.push({d:dep(mid[0],mid[1]),s:panel([a0[0],a0[1]],[a1[0],a1[1]],o)})});
   const walls=[[[0,0],[L,0],"N"],[[L,0],[L,W],"E"],[[L,W],[0,W],"S"],[[0,W],[0,0],"W"]];
   walls.forEach(([p,q,wk])=>{const mx=(p[0]+q[0])/2,mz=(p[1]+q[1])/2,far=dep(mx,mz)<dep(cx,cz)-1,h=far?2900:450;const dd=far?-1e10:dep(mx,mz)+1e6;allWins(dr).filter(x=>x.k===wk).forEach(x=>{const T=wk==="N"?(a,b)=>[a,b]:wk==="S"?(a,b)=>[a,W-b]:wk==="W"?(a,b)=>[b,a]:(a,b)=>[L-b,a];const a=T(x.p-x.w/2,0),b=T(x.p+x.w/2,0),y0=far?1500:0,y1=far?2300:h;F.push({d:dd+1,s:poly([[a[0],y0,a[1]],[b[0],y0,b[1]],[b[0],y1,b[1]],[a[0],y1,a[1]]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.2"`)+(far?ln([(a[0]+b[0])/2,1500,(a[1]+b[1])/2],[(a[0]+b[0])/2,2300,(a[1]+b[1])/2],`stroke="${ink}" stroke-width=".8"`):"")})});
@@ -3105,15 +3105,16 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="door"&&o.start+(+o.m.w)>near).forEach(o=>{const z=o.k==="N"?0:W,x0=Math.max(near,o.start),x1=o.start+(+o.m.w);G.push(poly([[x0,0,z],[x1,0,z],[x1,2400,z],[x0,2400,z]],`fill="url(#wklt)" stroke="${ink}" stroke-width="1.4"`))});
   allWins(dr).filter(x=>(x.k==="N"||x.k==="S")&&x.p+x.w/2>near+100).forEach(x=>{const z=x.k==="N"?0:W,x0=Math.max(near+100,x.p-x.w/2),x1=x.p+x.w/2,mid=(x0+x1)/2;G.push(poly([[x0,1500,z],[x1,1500,z],[x1,2300,z],[x0,2300,z]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.3"`)+ln([mid,1500,z],[mid,2300,z],`stroke="${ink}" stroke-width=".8"`)+ln([x0,1900,z],[x1,1900,z],`stroke="${ink}" stroke-width=".8"`))});
   const fr0=frameCol(dr,dr.front),wallName=w=>w||dr.wall;
-  (lvl>=4?partList(dr):[]).filter(pt=>(pt.o.k==="N"||pt.o.k==="S")).map(pt=>({x:pt.o.start+pt.x,k:pt.o.k,d:pt.d,w:wallName(pt.w)})).filter(q=>q.x>near+120).sort((a,b)=>b.x-a.x).forEach(q=>{const zF=q.k==="N"?q.d:W-q.d,zB=q.k==="N"?0:W,x=q.x,gal=q.w==="mv-tat"||q.w==="egen"?0:q.w==="mv-kg1"?1000:q.w==="mv-kg2"?2000:q.d,top=q.w==="mv-dala"?1560:2320,k=Math.min(.26,FOC/Math.max(300,x-camX));
-    const zg=q.k==="N"?Math.max(zB,zF-gal):Math.min(zB,zF+gal);let s="";
+  (lvl>=4?partList(dr):[]).filter(pt=>(pt.o.k==="N"||pt.o.k==="S")).map(pt=>({x:pt.o.start+pt.x,k:pt.o.k,d:pt.d,w:wallName(pt.w)})).filter(q=>q.x>near+120).sort((a,b)=>b.x-a.x).forEach(q=>{const zF=q.k==="N"?q.d:W-q.d,zB=q.k==="N"?0:W,x=q.x,gb=galSpan188(q.w,q.d),top=q.w==="mv-dala"?1560:2320,k=Math.min(.26,FOC/Math.max(300,x-camX));
+    const zAt=f=>zF+(zB-zF)*(f/q.d);let s="";
     const faro=q.w==="mv-faro",fhz=t=>faro?faroH((1-t)*q.d,q.d,1300,top):1300;
     if(faro){const Q=[[x,0,zF],[x,0,zB]];for(let i=16;i>=0;i--){const t=i/16;Q.push([x,fhz(t),zF+(zB-zF)*t])}s+=poly(Q,`fill="${fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`)}
     else s+=poly([[x,0,zF],[x,0,zB],[x,1300,zB],[x,1300,zF]],`fill="${q.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
     const nP=Math.max(1,Math.round(q.d/140));for(let i=1;i<nP;i++){const t=i/nP,z=zF+(zB-zF)*t;s+=ln([x,0,z],[x,fhz(t),z],`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`)}
-    if(top>1300){if(gal<q.d){s+=poly([[x,1300,zg],[x,1300,zB],[x,top,zB],[x,top,zg]],`fill="${q.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
-        if(q.w!=="egen"){const n2=Math.max(1,Math.round(Math.abs(zB-zg)/140));for(let i=1;i<n2;i++){const z=zg+(zB-zg)*i/n2;s+=ln([x,1300,z],[x,top,z],`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`)}}} /* plankorna syns även ovanför profilen (Maja 30) */
-      if(gal>0){const nb=Math.max(1,Math.round(gal/(q.w==="mv-dala"?75:105)));for(let i=1;i<nb;i++){const z=zF+(zg-zF)*i/nb,y0=fhz((z-zF)/((zB-zF)||1));if(y0<top-40)s+=ln([x,y0,z],[x,top,z],`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`)}}
+    if(top>1300){const sol=(f0,f1)=>{if(f1-f0<20)return;const za=zAt(f0),zb=zAt(f1);s+=poly([[x,1300,za],[x,1300,zb],[x,top,zb],[x,top,za]],`fill="${q.w==="egen"?"#d9d2c2":fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);
+        if(q.w!=="egen"){const n2=Math.max(1,Math.round((f1-f0)/140));for(let i=1;i<n2;i++){const z=za+(zb-za)*i/n2;s+=ln([x,1300,z],[x,top,z],`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`)}}}; /* plankorna syns även ovanför profilen (Maja 30) */
+      sol(0,gb[0]);sol(gb[1],q.d);
+      if(gb[1]>gb[0]){const GL=gb[1]-gb[0],nb=Math.max(1,Math.round(GL/(q.w==="mv-dala"?75:105)));for(let i=1;i<nb;i++){const f=gb[0]+GL*i/nb,z=zAt(f),y0=fhz(f/q.d);if(y0<top-40)s+=ln([x,y0,z],[x,top,z],`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`)}}
       s+=ln([x,top,zF],[x,top,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)}
     s+=ln([x,1300,zF],[x,1300,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s)});
   /* v167: boxarna som golvytor (steg 2) – även gavelboxar och hörnboxar, så att stallgången visar samma stall som ritningen */
@@ -4251,7 +4252,8 @@ function autoWindow(dr){const W=wins(dr),free=layout(dr).filter(o=>o.m.t==="box"
   const n=W.length,k=n%2?"S":"N",c=W.filter(x=>x.k===k).length;return addWindow(dr,k,dr.L/2+(c%2?1:-1)*(Math.ceil(c/2)+1)*2500)}
 function depthMax(dr,k){return Math.max(0,...(dr.walls[k]||[]).filter(m=>m.t==="box"||m.t==="room").map(m=>+m.d||0))}
 function aisle(dr){return dr.W-depthMax(dr,"N")-depthMax(dr,"S")}
-const wallLabelId=(dr,id)=>!id?"Mellanvägg (ej vald)":id==="egen"?`Egen mellanvägg (ingår ej)${dr.egenMat||dr.egenTh?", "+[dr.egenMat,dr.egenTh?dr.egenTh+" mm":""].filter(Boolean).join(", "):""}${dr.wallNote?", "+dr.wallNote:""}`:(prod(id)?.name||"Mellanvägg");
+const wallLabelId0=(dr,id)=>!id?"Mellanvägg (ej vald)":id==="egen"?`Egen mellanvägg (ingår ej)${dr.egenMat||dr.egenTh?", "+[dr.egenMat,dr.egenTh?dr.egenTh+" mm":""].filter(Boolean).join(", "):""}${dr.wallNote?", "+dr.wallNote:""}`:(prod(id)?.name||"Mellanvägg");
+const wallLabelId=(dr,id)=>wallLabelId0(dr,id)+(id==="mv-kg2"?", gallret mot ytterväggen":id==="mv-kg1"?", gallerfönster ca 1 m in från fronten":"");
 const wallLabel=dr=>!dr.wall?"Mellanvägg (ej vald)":dr.wall==="egen"?`Egen mellanvägg (platsbyggd, ingår ej)${dr.wallNote?", "+dr.wallNote:""}`:(prod(dr.wall)?.name||"Mellanvägg");
 function drwMaterials2(dr){
   const L=layout(dr),boxes=L.filter(o=>o.m.t==="box");
@@ -5746,6 +5748,15 @@ wizAuto=function(){clearTimeout(wizAuto.t)};
 {const ICO184={Ingångar:'<path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20"/><path d="M14 12h.01"/>',Boxar:'<rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M12 4v16"/>',Fönster:'<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/>',Rum:'<path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-7h6v7"/>'},
   SUB184={Ingångar:"Var kommer man in i stallet?",Boxar:"Hur många längs varje vägg?",Fönster:"Var sitter fönstren?",Rum:"Spolspilta, sadelkammare med mera"};
  const _al184=addLib;addLib=function(){let h=_al184.apply(this,arguments);try{h=h.replace(/<div class="al-gt"><b>(Ingångar|Boxar|Fönster|Rum)<\/b>(.*?)<\/div>/g,(m,t,rest)=>`<div class="al-gh"><span class="al-gi"><svg viewBox="0 0 24 24" fill="none" stroke="#23412a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO184[t]}</svg></span><span class="al-gt2"><b>${t}</b><small>${SUB184[t]}</small></span>${rest}</div>`)}catch(_){}return h}}
+
+/* v189 (Carl 13/11): som på hemsidans bilder.
+   - Kontaktgaller 2 m: gallret mot ytterväggen, tätt mot stallgången. Kontaktgaller 1 m: gallerfönster ca 1 m in från fronten.
+     galSpan188 ger gallrets del räknat i mm från fronten [från, till].
+   - Dekorbrädan: en mörk rundad platta i varje sektion, på ett band i ramens färg. */
+function galSpan188(w,d){d=+d||3500;if(w==="mv-tat"||w==="egen")return [0,0];if(w==="mv-kg2")return [Math.max(0,d-2000),d];if(w==="mv-kg1"){const f0=Math.max(0,Math.min(1000,(d-1000)/2));return [f0,Math.min(d,f0+1000)]}return [0,d]}
+function plate188(x0,x1,y0,y1){const L=x1-x0,mx=Math.min(90,L*.06),my=(y1-y0)*.2,h=(y1-y0)-2*my,r=Math.min(h/2,(L-2*mx)/2),yc=(y0+y1)/2,a=x0+mx+r,b=x1-mx-r,P=[];
+  for(let i=0;i<=8;i++){const t=Math.PI/2+Math.PI*i/8;P.push([a+Math.cos(t)*r,yc+Math.sin(t)*h/2])}
+  for(let i=0;i<=8;i++){const t=-Math.PI/2+Math.PI*i/8;P.push([b+Math.cos(t)*r,yc+Math.sin(t)*h/2])}return P}
 </script>
 
 </html>
