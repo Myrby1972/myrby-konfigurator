@@ -2233,6 +2233,15 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .movetip span,html body #wiz .movetip span,html body #wiz .movetip span *{color:var(--ink-2)!important}
 #wiz .movetip b,html body #wiz .movetip span b{color:var(--ink)!important}
 #wiz .cchips.fit183>.cchip{flex:none}
+
+/* v184 (Carl 13/11): Lägg till – rubrik med ikon och förklaring (mockup A) */
+#wiz .al-gh{display:flex;align-items:center;gap:12px;margin:2px 0 12px}
+#wiz .al-gi{flex:none;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:#e7eee4}
+#wiz .al-gi svg{width:22px;height:22px}
+#wiz .al-gt2{display:flex;flex-direction:column;gap:1px}
+#wiz .al-gt2 b{font:500 1.38rem/1.1 var(--f-display,"EB Garamond",serif)!important;color:var(--green)!important;letter-spacing:0!important;text-transform:none!important}
+#wiz .al-gt2 small{font-size:.92rem;color:var(--ink-2)}
+#wiz .al-h span{display:none}
 </style>
 
 <div class="app">
@@ -5715,6 +5724,13 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
 window.addEventListener("resize",()=>{clearTimeout(fit183.t);fit183.t=setTimeout(fit183,120)});
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 {const _lg183=cfgLegend;cfgLegend=function(){try{const mix=(fmixOn()&&fmixList().length>1)||(wmixOn()&&wmixList().length>1)||(D.drawing&&+D.drawing.fans&&D.drawing.fanType==="vagg");if(!mix&&cfgPgKey()!=="sum")return ""}catch(_){}return _lg183.apply(this,arguments)}}
+
+/* v184 (Carl 13/11): inga sidor hoppar vidare av sig själva. Kunden väljer och trycker själv på Nästa, så hon kan prova olika utseenden.
+   Lägg till-menyn: varje del får ikon, större rubrik och en kort fråga (mockup A). */
+wizAuto=function(){clearTimeout(wizAuto.t)};
+{const ICO184={Ingångar:'<path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20"/><path d="M14 12h.01"/>',Boxar:'<rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M12 4v16"/>',Fönster:'<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/>',Rum:'<path d="M3 21V9l9-6 9 6v12"/><path d="M9 21v-7h6v7"/>'},
+  SUB184={Ingångar:"Var kommer man in i stallet?",Boxar:"Hur många längs varje vägg?",Fönster:"Var sitter fönstren?",Rum:"Spolspilta, sadelkammare med mera"};
+ const _al184=addLib;addLib=function(){let h=_al184.apply(this,arguments);try{h=h.replace(/<div class="al-gt"><b>(Ingångar|Boxar|Fönster|Rum)<\/b>(.*?)<\/div>/g,(m,t,rest)=>`<div class="al-gh"><span class="al-gi"><svg viewBox="0 0 24 24" fill="none" stroke="#23412a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO184[t]}</svg></span><span class="al-gt2"><b>${t}</b><small>${SUB184[t]}</small></span>${rest}</div>`)}catch(_){}return h}}
 </script>
 
 </html>
