@@ -5760,7 +5760,7 @@ function plate188(x0,x1,y0,y1){const L=x1-x0,mx=Math.min(90,L*.06),my=(y1-y0)*.2
 
 /* v190 (Carl 13/11, mockup B): fyllig halmbädd i 3D och Stallgången. Tät halm i varma toner, vallad upp mot väggarna, svag skugga längs fronten.
    Ritningen (planvyn) behåller den gamla, lätta halmen. */
-var BED190=["#fbf1d2","#f2e0a8","#e5cb88","#d4b06a","#b99150"];
+var BED190=["#ead296","#e2c47c","#d6b468","#c89f55","#ac8445"];BED_C.splice(0,5,"#ead296","#e2c47c","#d6b468","#c89f55","#ac8445"); /* v191: nästan inga vita strån (Carl) */
 function rng190(seed){let s=Math.abs(Math.round(seed*7919))%233280+11;return ()=>(s=(s*9301+49297)%233280)/233280}
 function bedStrands190(w,d,seed,dens){const r=rng190(seed),FR=150,D=d-FR,n=Math.max(50,Math.round(w*d/(dens||9000))),out=[];
   for(let i=0;i<n;i++){const x=40+r()*(w-80),y=40+r()*(D-80),edge=Math.min(x,w-x,y),h=(edge<600?(1-edge/600)*320:0)+r()*40,len=110+r()*230,a=r()*Math.PI*2,dx=Math.cos(a)*len/2,dy=Math.sin(a)*len/2,bend=(r()-.5)*len*.4;
@@ -5768,7 +5768,7 @@ function bedStrands190(w,d,seed,dens){const r=rng190(seed),FR=150,D=d-FR,n=Math.
 {const _bed190=bedSVG;bedSVG=function(w,d,seed,map,sw,op){if(!sw||sw[0]>5)return _bed190.apply(this,arguments);
   const f=v=>v.toFixed(1),FR=150,D=d-FR,P=(x,y,h)=>map(x,y,h||0).map(f).join(","),poly=(pts,att)=>`<polygon points="${pts.map(p=>P(...p)).join(" ")}" ${att}/>`;
   let o=poly([[0,0],[w,0],[w,D],[0,D]],`fill="#d9bd7c"`);
-  [[600,60,"#e1c784"],[400,190,"#ead394"],[200,330,"#f4e3b0"]].forEach(([ins,h,c])=>{
+  [[600,60,"#dcc07c"],[400,190,"#e2c886"],[200,330,"#e7cf90"]].forEach(([ins,h,c])=>{
     o+=poly([[0,0,h],[w,0,h],[w-ins,ins],[ins,ins]],`fill="${c}" opacity=".9"`)+poly([[0,0,h],[ins,ins],[ins,D],[0,D,h]],`fill="${c}" opacity=".9"`)+poly([[w,0,h],[w,D,h],[w-ins,D],[w-ins,ins]],`fill="${c}" opacity=".9"`)});
   o+=poly([[0,D-260],[w,D-260],[w,D],[0,D]],`fill="#6b5122" opacity=".14"`);
   const S=BED190.map(()=>[]),Sh=[],r=rng190(seed+7);bedStrands190(w,d,seed).forEach(t=>{const A=map(t.x1,t.y1,t.h+20),B=map(t.x2,t.y2,t.h+20),C=map(t.cx,t.cy,t.h+40),dd=`M${f(A[0])} ${f(A[1])}Q${f(C[0])} ${f(C[1])} ${f(B[0])} ${f(B[1])}`;S[t.c].push(dd);if(r()<.3)Sh.push(`M${f(A[0]+.6)} ${f(A[1]+1.2)}Q${f(C[0]+.6)} ${f(C[1]+1.2)} ${f(B[0]+.6)} ${f(B[1]+1.2)}`)});
