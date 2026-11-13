@@ -5565,7 +5565,7 @@ document.addEventListener("keydown",e=>{const w=document.getElementById("wiz");i
 
 /* ===== v178 (Carl 13/11): sex exempelstall att börja från. Urval efter Jordbruksverkets statistik (79 % har högst 5 hästar).
    Varje exempel byggs med samma motor som allt annat och kontrolleras (ingen röd ruta, inga varningar) innan det visas. ===== */
-function rooms178(){try{return !!(D&&D.ui&&D.ui.tpl)}catch(_){return false}}
+function rooms178(){try{return !!(window.__thumb178||(D&&D.ui&&D.ui.tpl))}catch(_){return false}}
 const TPL178=[
  {id:"t2",title:"Två boxar",sub:"Sadelkammare i raden",L:11000,W:6500,A:{n:2,mode:"lika",rooms:["Sadelkammare"]},B:{n:0},door:"W"},
  {id:"t3",title:"Tre boxar",sub:"Sadelkammare och spolspilta",L:11500,W:10000,A:{n:3,mode:"lika"},B:{n:0,rooms:["Sadelkammare","Spolspilta"]},door:"W"},
@@ -5583,7 +5583,30 @@ function tplBuild178(t){const dr=newDrawing3();dr.L=t.L;dr.W=t.W;dr.doors=[];dr.
   const key="door-"+t.door;toggleExtra(dr,key);if(extraFind(dr,key))centerGableDoor(dr,key);autoAll(dr);return dr}
 function tplCheck178(dr){try{return !ovfInfo(dr).length&&!drwWarnings(dr).length}catch(_){return false}}
 function tplList178(){if(!S.tpl178){S.tpl178=TPL178.map(t=>{let dr=null,ok=false;try{const D0=D.drawing;dr=tplBuild178(t);ok=tplCheck178(dr);D.drawing=D0}catch(_){ok=false}const lay=dr?layout(dr):[];return {...t,dr,ok,boxes:lay.filter(o=>o.m.t==="box").length,rooms:lay.filter(o=>o.m.t==="room").map(o=>o.m.name)}})}return S.tpl178}
-function tplThumb178(t){if(!t.svg){try{t.svg=thumb178(t.dr)}catch(_){t.svg=""}}return t.svg}
+function tplThumb178(t){if(!t.svg){try{t.svg=thumbStyled178(t.dr,t.id)}catch(_){try{t.svg=thumb178(t.dr)}catch(__){t.svg=""}}}return t.svg}
+/* Miniatyr i Myrbys ritstil: streckade ytterväggar, HÄSTBOX + nummer i Garamond, rum med inredning och kursiv rubrik, stallgång, A/B. Ritas ur samma layout som ritningen. */
+function thumbStyled178(dr,uid){const L=dr.L,W=dr.W,WT=230,pad=380,lay=layout(dr),C={ink:"#26352e",line:"#3a463f",aisle:"#efe8da",box:"#fffdf8",boxLine:"#cbbf9f",part:"#6f6249",room:"#e6ece1",roomLine:"#a9b9a2",green:"#23412a"},F=Math.max(1,Math.max(L,W)/11000),id="th"+uid,g=[],top=[];
+  const serif='font-family="EB Garamond,Georgia,serif"',sans='font-family="Lato,Arial,sans-serif"';
+  g.push(`<defs><pattern id="${id}h" width="140" height="140" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="140" height="140" fill="#f4efe4"/><rect width="34" height="140" fill="#cdc3ad"/></pattern></defs>`);
+  g.push(`<rect x="${-WT}" y="${-WT}" width="${L+2*WT}" height="${W+2*WT}" fill="url(#${id}h)" stroke="${C.line}" stroke-width="22"/><rect x="0" y="0" width="${L}" height="${W}" fill="${C.aisle}" stroke="${C.line}" stroke-width="16"/>`);
+  const R=o=>{const w=+o.m.w,d=+o.m.d||3500,P=[[0,0],[w,0],[w,d],[0,d]].map(q=>o.tf(...q)),xs=P.map(q=>q[0]),ys=P.map(q=>q[1]);return {x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys),w,d}};
+  lay.forEach(o=>{if(o.door||!o.m||o.m.t==="gap")return;const r=R(o),bw=r.x1-r.x0,bh=r.y1-r.y0,cx=(r.x0+r.x1)/2,cy=(r.y0+r.y1)/2,mn=Math.min(bw,bh);
+    if(o.m.t==="box"){g.push(`<rect x="${r.x0}" y="${r.y0}" width="${bw}" height="${bh}" fill="${C.box}" stroke="${C.boxLine}" stroke-width="40"/>`);
+      const fp=o.tf(0,r.d),fq=o.tf(r.w,r.d);top.push(`<line x1="${fp[0]}" y1="${fp[1]}" x2="${fq[0]}" y2="${fq[1]}" stroke="${C.green}" stroke-width="70"/>`);
+      const a=o.tf(0,0),b=o.tf(0,r.d),c2=o.tf(r.w,0),d2=o.tf(r.w,r.d);top.push(`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${C.part}" stroke-width="55"/><line x1="${c2[0]}" y1="${c2[1]}" x2="${d2[0]}" y2="${d2[1]}" stroke="${C.part}" stroke-width="55"/>`);
+      const fs=mn*.36;top.push(`<text x="${cx}" y="${cy-fs*.55}" text-anchor="middle" ${sans} font-weight="700" font-size="${mn*.085}" letter-spacing="${mn*.02}" fill="#7d7563">HÄSTBOX</text><text x="${cx}" y="${cy+fs*.42}" text-anchor="middle" ${serif} font-size="${fs}" fill="${C.ink}">${o.nr}</text>`)}
+    else{g.push(`<rect x="${r.x0}" y="${r.y0}" width="${bw}" height="${bh}" fill="${C.room}" stroke="${C.roomLine}" stroke-width="40"/>`);try{g.push(roomFixtures(o.m,o.tf,r.w,r.d,F))}catch(_){}
+      const nm=o.m.name||"Rum",fs=Math.min(mn*.17,(bw-260)/(nm.length*.6));top.push(`<text x="${cx}" y="${cy+fs*.3}" text-anchor="middle" ${serif} font-style="italic" font-size="${fs}" fill="${C.ink}" stroke="${C.room}" stroke-width="${fs*.18}" paint-order="stroke">${esc(nm)}</text>`)}});
+  doors(dr).forEach(d=>{const p=+d.p||0,w=+d.w||0;let x0,y0,x1,y1;if(d.k==="N"){x0=p;x1=p+w;y0=-WT;y1=0}else if(d.k==="S"){x0=p;x1=p+w;y0=W;y1=W+WT}else if(d.k==="W"){x0=-WT;x1=0;y0=p;y1=p+w}else{x0=L;x1=L+WT;y0=p;y1=p+w}
+    top.push(`<rect x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="${C.aisle}"/>`);const h=w/2;
+    if(d.k==="W"||d.k==="E"){const xo=d.k==="W"?-WT:L+WT,s=d.k==="W"?-1:1;top.push(`<path d="M${xo} ${p}h${s*h*.9}M${xo} ${p+w}h${s*h*.9}" stroke="${C.line}" stroke-width="40"/><path d="M${xo+s*h*.9} ${p}A${h*.9} ${h*.9} 0 0 ${d.k==="W"?0:1} ${xo} ${p+h*.9}M${xo+s*h*.9} ${p+w}A${h*.9} ${h*.9} 0 0 ${d.k==="W"?1:0} ${xo} ${p+w-h*.9}" fill="none" stroke="${C.line}" stroke-width="16" stroke-dasharray="60 40"/>`)}
+    else{const yo=d.k==="N"?-WT:W+WT,s=d.k==="N"?-1:1;top.push(`<path d="M${p} ${yo}v${s*h*.9}M${p+w} ${yo}v${s*h*.9}" stroke="${C.line}" stroke-width="40"/>`)}});
+  const dN=depthMax(dr,"N"),dS=depthMax(dr,"S"),ay=(dN+W-dS)/2,afs=Math.min(420,(W-dN-dS)*.16);if(W-dN-dS>1500)top.push(`<text x="${L/2}" y="${ay+afs*.35}" text-anchor="middle" ${sans} font-weight="700" font-size="${afs}" letter-spacing="${afs*.45}" fill="#6d6a5f">STALLGÅNG</text>`);
+  const mr=330*Math.min(1.8,F),mk=(x,y,t)=>`<circle cx="${x}" cy="${y}" r="${mr}" fill="${C.ink}" stroke="#fff" stroke-width="${mr*.18}"/><text x="${x}" y="${y+mr*.36}" text-anchor="middle" ${serif} font-weight="700" font-size="${mr*1.03}" fill="#fff">${t}</text>`;top.push(mk(L/2,-WT/2,"A"),mk(L/2,W+WT/2,"B"));
+  return `<svg viewBox="${-WT-pad} ${-WT-pad} ${L+2*(WT+pad)} ${W+2*(WT+pad)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Planritning">${g.join("")}${top.join("")}</svg>`}
+/* Miniatyren ritas av samma ritmotor som ritningen (planPretty), utan handtag och mått, beskuren till stallet. */
+function thumbPretty178(dr){const st0=S.wizStep;let svg="";window.__thumb178=true;try{const si=wizPages().findIndex(p=>p.key==="sum");if(si>=0)S.wizStep=si;svg=planPretty(dr,{interactive:false,lvl:2})}finally{S.wizStep=st0;window.__thumb178=false}
+  const pad=420,WT=260;svg=svg.replace(/viewBox="[^"]*"/,`viewBox="${-WT-pad} ${-WT-pad} ${dr.L+2*(WT+pad)} ${dr.W+2*(WT+pad)}"`).replace(/<svg /,'<svg preserveAspectRatio="xMidYMid meet" ');return svg}
 function thumb178(dr){const L=dr.L,W=dr.W,WT=220,pad=500,lay=layout(dr),g=[],AB={Sadelkammare:"SA",Foderkammare:"FO",Spolspilta:"SP",Torkrum:"TO",Uppställningsplats:"UP"};
   g.push(`<rect x="${-WT}" y="${-WT}" width="${L+2*WT}" height="${W+2*WT}" fill="#cfc6b3"/><rect x="0" y="0" width="${L}" height="${W}" fill="#efe8da"/>`);
   lay.forEach(o=>{if(o.door||!o.m||o.m.t==="gap")return;const w=+o.m.w,d=+o.m.d||3500,P=[[0,0],[w,0],[w,d],[0,d]].map(q=>o.tf(...q)),xs=P.map(q=>q[0]),ys=P.map(q=>q[1]),x0=Math.min(...xs),y0=Math.min(...ys),x1=Math.max(...xs),y1=Math.max(...ys),cx=(x0+x1)/2,cy=(y0+y1)/2,fs=Math.min(x1-x0,y1-y0)*.42;
