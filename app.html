@@ -4923,7 +4923,7 @@ document.addEventListener("click",async e=>{
   if(d.gclose!==undefined){const dr=D.drawing;["W","E"].forEach(g=>{const c=dr.cfg?.[g];if(c){c.n=0;c.auto=true;autoFill(dr,g)}});autoAll(dr);fitBoxes(dr);D.ui.bopen="N";saveD();wizRefresh();return}
   if(d.sn&&(d.sn==="W"||d.sn==="E")&&+d.v>0)D.ui.bsame=0;
   if(d.sn==="S"||d.smode==="S"||d.sd==="S"||d.salign==="S")D.ui.bsame=0;
-  if(d.sn){D.ui.measured=true;const dr=D.drawing;dr.cfg=dr.cfg||{};dr.cfg[d.sn]=dr.cfg[d.sn]||{n:0,mode:"lika",std:3500,d:(dr.cfg.N||{}).d||3500,auto:true};const c=dr.cfg[d.sn],cur=(dr.walls[d.sn]||[]).filter(m=>m.t==="box").length;c.n=Math.max(0,Math.min(20,cur+ +d.v));c.auto=true;D.ui.touchedN=true;autoFill(dr,d.sn);if(d.sn==="W"||d.sn==="E"||abGable(dr).some(x=>x)){autoAll(dr);autoFill(dr,d.sn);autoAll(dr);fitBoxes(dr)}saveD();wizRefresh();return}
+  if(d.sn){D.ui.measured=true;const dr=D.drawing;dr.cfg=dr.cfg||{};dr.cfg[d.sn]=dr.cfg[d.sn]||{n:0,mode:"lika",std:3500,d:(dr.cfg.N||{}).d||3500,auto:true};const c=dr.cfg[d.sn],cur=(dr.walls[d.sn]||[]).filter(m=>m.t==="box").length;const pre171=(d.sn==="W"||d.sn==="E")&&+d.v>0?gableKeep171(dr):null;c.n=Math.max(0,Math.min(20,cur+ +d.v));c.auto=true;D.ui.touchedN=true;autoFill(dr,d.sn);if(d.sn==="W"||d.sn==="E"||abGable(dr).some(x=>x)){autoAll(dr);autoFill(dr,d.sn);autoAll(dr);fitBoxes(dr)}if(pre171)pre171();saveD();wizRefresh();return}
   if(d.salign){const c=D.drawing.cfg[d.salign];c.align=d.v;autoAll(D.drawing);saveD();wizRefresh();return}
   if(d.smode){const c=D.drawing.cfg[d.smode];if(d.v==="per"&&c.mode!=="per")c.ws=(D.drawing.walls[d.smode]||[]).filter(m=>m.t==="box").map(m=>m.w);if(d.v==="fast"&&c.mode!=="fast"&&c.mode!=="sista"){const b0=(D.drawing.walls[d.smode]||[]).find(m=>m.t==="box");c.std=nearestSize(Math.min(b0?.w||3500,4000),D.drawing.front)}c.mode=d.v;c.auto=true;autoFill(D.drawing,d.smode);saveD();wizRefresh(true);return}
   if(d.d3size&&d.d3size.startsWith("w-std:")&&!t.closest("#drw2")){const k=d.d3size.slice(6);D.drawing.cfg[k].std=+d.v;D.drawing.cfg[k].auto=true;autoFill(D.drawing,k);saveD();wizRefresh(true);return}
@@ -5436,6 +5436,11 @@ function frontBackBtn(){const b=S.frontBack,sp=D.spec||{};if(!b||!b.from||b.from
      const S1=JSON.parse(snap);dr.walls=S1.w;dr.cfg=S1.c;dr.doors=S1.d}finally{busy=false}};
  const _aa171=autoAll;autoAll=function(dr){const r=_aa171.apply(this,arguments);fix(dr);return r};
  const _af171=autoFill;autoFill=function(dr,k){const r=_af171.apply(this,arguments);if(k==="W"||k==="E")fix(dr);return r}}
+
+/* v171 (Carl 13/11): en ny gavelbox gör aldrig boxarna på långsidorna smalare än 3 000 mm. Då läggs den inte till, och ett meddelande säger varför. */
+function gableKeep171(dr){const ws=k=>(dr.walls[k]||[]).filter(m=>m.t==="box").map(m=>+m.w),all=[...ws("N"),...ws("S")];if(!all.length)return null;const lim=Math.min(3000,...all),snap=JSON.stringify({w:dr.walls,c:dr.cfg,d:dr.doors});
+  return ()=>{try{const now=[...ws("N"),...ws("S")];if(!now.length||Math.min(...now)>=lim)return;const S0=JSON.parse(snap);dr.walls=S0.w;dr.cfg=S0.c;dr.doors=S0.d;autoAll(dr);
+    if(typeof toast==="function")setTimeout(()=>toast("En gavelbox till får inte plats utan att boxarna på långsidorna blir smalare än 3 meter. Gör stallet längre eller ta bort en box på långsidan först."),60)}catch(_){}}}
 </script>
 
 </html>
