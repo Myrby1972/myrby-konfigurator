@@ -2291,6 +2291,8 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .cfg-head.slim .vbar:not(.has-picks)>[data-hundo]{margin-left:auto}
 #wiz .cfg-head.slim{align-items:center}
 #wiz .cfg-plan.pg-sum .fsheet svg{margin-inline:auto}
+/* v198: ingen intoning av korten under ritningen, så de inte hoppar vid sidbyte */
+#wiz .crow194 .cchip,#wiz .crow194 .add194,#wiz .crow194 .al-btn{animation:none!important;transition:none!important}
 </style>
 
 <div class="app">
@@ -5857,6 +5859,15 @@ function fit197(){try{const a=document.getElementById("cfgplan");if(!a||innerWid
   sv.style.maxHeight="";const z=parseFloat(getComputedStyle(sh).zoom)||1;const over=a.scrollHeight-a.clientHeight;
   if(over>0){const h=sv.getBoundingClientRect().height;sv.style.maxHeight=Math.max(200,Math.floor((h-over-2)/z))+"px"}}catch(_){}}
 {const _f195=fit195;fit195=function(){_f195();fit197()}}
+try{fitLater195()}catch(_){}
+
+/* v198 (Carl 14/11): raden under ritningen står helt still mellan sidorna. Ritningen fyller alltid ut till samma nederkant, och höjden räknas direkt innan sidan visas. */
+function fit198(){try{const a=document.getElementById("cfgplan"),d=document.getElementById("cfgcanvas");if(!a||!d||innerWidth<=900)return;
+  d.style.height="";const h=d.getBoundingClientRect().height;let bot=0;[...a.children].forEach(c=>{const r=c.getBoundingClientRect();if(r.height>0)bot=Math.max(bot,r.bottom)});
+  const ar=a.getBoundingClientRect(),avail=ar.bottom-parseFloat(getComputedStyle(a).paddingBottom||0)+a.scrollTop;
+  d.style.height=Math.max(280,Math.floor(h+(avail-bot)-1))+"px"}catch(_){}}
+fit195=(function(prev){return function(){const d=document.getElementById("cfgcanvas");if(d&&innerWidth>900){fit198();try{fit197()}catch(_){}}else prev()}})(fit195);
+{const _fl198=fitLater195;fitLater195=function(){try{fit195()}catch(_){}_fl198()}}
 try{fitLater195()}catch(_){}
 </script>
 
