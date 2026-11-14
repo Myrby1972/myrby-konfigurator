@@ -2293,6 +2293,13 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .cfg-plan.pg-sum .fsheet svg{margin-inline:auto}
 /* v198: ingen intoning av korten under ritningen, så de inte hoppar vid sidbyte */
 #wiz .crow194 .cchip,#wiz .crow194 .add194,#wiz .crow194 .al-btn{animation:none!important;transition:none!important}
+/* v199: tydlig bekräftelse (ljus på det gröna) */
+.toast{background:#fffdf8;color:#1e3932;box-shadow:0 0 0 1.5px #c9a95f,0 14px 40px rgba(20,38,25,.35)}
+.toast svg{color:#2f7a3e}
+.toast .toast-act{background:#23412a;color:#fffdf8}
+#wiz .ichips194 .cchip.prod{padding-right:6px}
+#wiz .ichips194 .cchip.prod .cx{color:#fffdf8;opacity:.8;background-color:transparent}
+#wiz .ichips194 .cchip.prod .cx:hover{opacity:1;background-color:rgba(255,255,255,.14)}
 </style>
 
 <div class="app">
@@ -5869,6 +5876,39 @@ function fit198(){try{const a=document.getElementById("cfgplan"),d=document.getE
 fit195=(function(prev){return function(){const d=document.getElementById("cfgcanvas");if(d&&innerWidth>900){fit198();try{fit197()}catch(_){}}else prev()}})(fit195);
 {const _fl198=fitLater195;fitLater195=function(){try{fit195()}catch(_){}_fl198()}}
 try{fitLater195()}catch(_){}
+
+/* v199 (Carl 14/11):
+   1) Under ritningen bara måtten (Stallet, Boxar) och Lägg till. Allt man köper (inredning, rum, produkter) ligger ovanför.
+   2) Mellanvägg, Stolpar och Dekorbräda får samma lista som Front, Fyllning och Yta.
+   3) Kulörerna syns även när Varmförzinkat är valt. Väljer man en kulör blir det pulverlackerat. */
+var BOT199={"s-matt":1,"s-boxA":1};
+{const _cc199=cfgChips;cfgChips=function(lvl,part){if(part!=="top"&&part!=="bottom"&&part!==undefined)return _cc199.apply(this,arguments);
+  const top=_cc199.call(this,lvl,"top"),bot=_cc199.call(this,lvl);try{const t=document.createElement("template");t.innerHTML=bot;const keep=[],move=[];
+  [...t.content.childNodes].forEach(n=>{const j=n.getAttribute&&n.getAttribute("data-wjump");(j&&BOT199[j]?keep:move).push(n.outerHTML||n.textContent||"")});
+  return part==="top"?top+move.join(""):keep.join("")}catch(_){return part==="top"?top:bot}}}
+const VM199={"p-vagg":["wall199","spec.wall"],"p-stolpe":["post199","spec.post"],"p-dekor":["decor199","spec.decor"]};
+function pageOpts199(pid,key){try{const pg=wizPages().map(p=>(p.list||[]).find(x=>x.id===pid)).find(Boolean);if(!pg||typeof pg.html!=="function")return [];
+  const t=document.createElement("template");t.innerHTML=pg.html();return [...t.content.querySelectorAll(`[data-pick1="${key}"]`)].map(b=>{const c=b.cloneNode(true);c.querySelectorAll(".ibtn,.badge,.tag,.qtag,em,i").forEach(x=>x.remove());
+    const nm=(c.querySelector("b")||{}).textContent||c.textContent;const sm=(c.querySelector("small")||{}).textContent||"";return {v:b.getAttribute("data-v"),t:String(nm).replace(/\s+/g," ").trim(),s:String(sm).replace(/\s+/g," ").trim(),on:b.getAttribute("aria-pressed")==="true"}}).filter(o=>o.v&&o.t)}catch(_){return []}}
+function pop199(key,ops){return `<div class="vm-pop" role="listbox">${ops.map(o=>`<button type="button" class="vm-it" role="option" data-pick1="${key}" data-v="${esc(o.v)}" aria-selected="${o.on}"><span class="vm-ck">${o.on?"✓":""}</span><span class="vm-tx"><b>${esc(o.t)}</b>${o.s?`<small>${esc(o.s)}</small>`:""}</span></button>`).join("")}</div>`}
+topChips194=function(lvl){let h="";try{h=cfgChips(lvl,"top")}catch(_){}if(!h)return "";let picks="";try{picks=viewPick()}catch(_){}
+  const pk=document.createElement("template");pk.innerHTML=picks;const avail={};pk.content.querySelectorAll("[data-vm]").forEach(b=>{avail[b.getAttribute("data-vm")]=b.closest(".vm")});
+  const t=document.createElement("template");t.innerHTML=h;let out="";
+  [...t.content.children].forEach(c=>{if(!c.classList.contains("cchip")){return}const j=c.getAttribute("data-wjump");c.classList.add("ichip194","pick");
+    const own=VM199[j];let vm=TOP194[j]||"",pop="";
+    if(own){const ops=pageOpts199(j,own[1]);if(ops.length>1){vm=own[0];if(S.vmenu===vm)pop=pop199(own[1],ops)}else vm=""}
+    else if(vm&&avail[vm]){const p=avail[vm].querySelector(".vm-pop");pop=p?p.outerHTML:""}else vm="";
+    if(vm){c.insertAdjacentHTML("beforeend",'<i class="vm-car"></i>');c.removeAttribute("data-wjump");c.setAttribute("data-vm",vm);c.setAttribute("aria-haspopup","listbox");c.setAttribute("aria-expanded",S.vmenu===vm?"true":"false");out+=`<span class="vm">${c.outerHTML}${S.vmenu===vm?pop:""}</span>`}
+    else out+=`<span class="vm">${c.outerHTML}</span>`});
+  return out?`<span class="ichips194">${out}</span>`:""};
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest('.vm-pop [data-pick1]');if(t)S.vmenu=null},true);
+/* 3) kulörer även vid varmförzinkat */
+const RAL199=[["RAL 9005","Svart","#141516"],["RAL 6009","Myrbygrön","#273a2d"],["RAL 7016","Antracit","#383e42"],["RAL 9010","Vit","#efeee7"],["RAL 3005","Vinröd","#5a1c22"],["RAL 5011","Stålblå","#1c2b45"]];
+function ral199(){try{const q=document.getElementById("q-p-yta");if(!q||q.querySelector(".swgrid.ral"))return;const cards=q.querySelector(".qcards");if(!cards)return;
+  cards.insertAdjacentHTML("afterend",`<p class="hintline" style="margin-top:14px">Vill du ha färg? Tryck på en kulör så blir det pulverlackerat. Valfri RAL går bra.</p><div class="swgrid ral">${RAL199.map(r=>`<button type="button" class="swi ralb" data-pick1="spec.ral" data-v="${r[0]}" aria-pressed="false"><span class="swbig" style="background:${r[2]}"></span><b>${r[1]}</b><small>${r[0]}</small></button>`).join("")}</div>`)}catch(_){}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest('[data-pick1="spec.ral"]');if(!t)return;try{D.spec=D.spec||{};if(!/ulverlack/.test(D.spec.finish||""))D.spec.finish="Pulverlack (RAL)"}catch(_){}},true);
+try{new MutationObserver(()=>ral199()).observe(document.body,{childList:true,subtree:true})}catch(_){}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
 </html>
