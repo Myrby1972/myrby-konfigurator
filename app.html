@@ -5949,7 +5949,7 @@ const LAG202={"s-matt":"matt","s-boxA":"boxA","s-front":"front","p-vagg":"vagg",
 function passed202(pg){try{const i=pageIdx182(pg);if(i<0)return true;return reach182()>i}catch(_){return true}}
 {const _cc202=cfgChips;cfgChips=function(lvl,part){const h=_cc202.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;
   [...t.content.children].forEach(c=>{if(!c.classList||!c.classList.contains("cchip"))return;const j=c.getAttribute("data-wjump");
-    if(j&&LAG202[j]){if(!passed202(LAG202[j]))c.remove()}else if(!j&&c.classList.contains("prod")){const mi=pageIdx182("mer");if(mi>=0&&(S.wizStep||0)===mi&&!passed202("mer"))c.remove()}});
+    if(j&&LAG202[j]){if(!passed202(LAG202[j]))c.remove()}/* v207: produkter man lägger till syns direkt */});
   return t.innerHTML}catch(_){return h}}}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 
@@ -5987,12 +5987,19 @@ const MONT205=[["Ja","Myrby monterar","Våra montörer bygger allt färdigt"],["
   const open=S.vmenu==="mont205";const chip=`<span class="vm"><button type="button" class="cchip pick ichip194" data-vm="mont205" aria-haspopup="listbox" aria-expanded="${open}"><span><small>Montering</small><b>${esc(m[1])}</b></span><i class="vm-car"></i></button>${open?`<div class="vm-pop" role="listbox">${MONT205.map(x=>`<button type="button" class="vm-it" role="option" data-pick1="project.mount" data-v="${esc(x[0])}" aria-selected="${x[0]===v}"><span class="vm-ck">${x[0]===v?"✓":""}</span><span class="vm-tx"><b>${esc(x[1])}</b><small>${esc(x[2])}</small></span></button>`).join("")}</div>`:""}</span>`;
   if(!h)return `<span class="ichips194">${chip}</span>`;const t=document.createElement("template");t.innerHTML=h;const box=t.content.querySelector(".ichips194");if(!box)return h;
   const rum=box.querySelector('.cchip[data-wjump="s-extra"]'),after=rum?rum.closest(".vm"):[...box.querySelectorAll(":scope>.vm")].filter(x=>x.querySelector(".cchip:not(.prod)")).pop();
-  if(after)after.insertAdjacentHTML("afterend",chip);else box.insertAdjacentHTML("beforeend",chip);h=t.innerHTML}catch(_){}return h}}
+  box.insertAdjacentHTML("beforeend",chip); /* v207: Montering sist, i flödets ordning */h=t.innerHTML}catch(_){}return h}}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 /* v205: Materiallista rullar fram när den öppnas. Ritningen räknas som om listan vore stängd, så inget krymper. */
 {const _f198=fit198;fit198=function(){const a=document.getElementById("cfgplan");if(a)a.classList.add("matfit205");try{_f198()}finally{if(a)a.classList.remove("matfit205")}}}
 {const _f197=fit197;fit197=function(){const a=document.getElementById("cfgplan");if(a)a.classList.add("matfit205");try{_f197()}finally{if(a)a.classList.remove("matfit205")}}}
 document.addEventListener("toggle",e=>{const d=e.target;if(!d||!d.matches||!d.matches("#cfgplan details.cfg-mat")||!d.open)return;setTimeout(()=>{try{d.scrollIntoView({behavior:"smooth",block:"start"})}catch(_){}},30)},true);
+
+/* v207 (Carl 14/11): det man lägger till på "Mer till gården" (eller via Lägg till) syns direkt ovanför ritningen.
+   Ventilation visas en gång: kortet med intag och fläktar ersätter produktkortet Ventilation. */
+{const _tc207=topChips194;topChips194=function(lvl){let h=_tc207.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;
+  if(t.content.querySelector('.cchip[data-wjump="s-vent"]')){const x=t.content.querySelector('.cchip.prod .cx[data-wpick="ventilation"]');if(x){const v=x.closest(".vm")||x.closest(".cchip");if(v)v.remove()}}
+  h=t.innerHTML}catch(_){}return h}}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
 </html>
