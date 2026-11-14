@@ -2392,6 +2392,16 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 .fq-homebar:hover{border-color:#c9a64a}.fq-hb-dot{flex:none;width:30px;height:30px;border-radius:50%;background:#e5c97d;color:#1f3328;display:grid;place-items:center;font-weight:700}
 .fq-homebar>span:nth-child(2){flex:1}.fq-hb-go{font-weight:600;color:#1f3328}
 
+
+/* v214 */
+body{margin:0}
+.cfg-steps.c214 .cstep:not(.cur) .cl{display:none}
+.cfg-steps.c214 .cstep{padding-left:6px;padding-right:6px}
+.fgrid:has(.field.err) + .khint{display:none}
+.th-btn[disabled]{opacity:.7;cursor:wait}
+.hn-g label span{font-size:12px}
+.hn-h small{font-size:13px}
+
 </style>
 
 <div class="app">
@@ -3714,7 +3724,7 @@ function wizScreens(){
    
    ]),
    {id:"m-mer",pg:"mer",sec:"Mer till gården",html:()=>`<h2>${stall?"Något mer till gården?":"Vad är du intresserad av?"}</h2><p class="lead">Vi hjälper dig att plocka ihop resten. Svara på några frågor så föreslår vi det som passar. Allt är valfritt.</p>
-     ${stall&&dr?(()=>{const n=allWins(dr).length;return `<div class="dbox winrem"><p class="mbox-h">${svg("star",16)} ${n?`Du markerade ${n} fönster i stallet`:"Inga fönster i stallet?"}</p><p class="fx-help">${n?"Gamla fönster släpper in kyla och drag, och galler inuti skyddar glaset från hästarna. Myrbys stålfönster har termoglas, invändigt galler och 10 års garanti. Vill du byta samtidigt som inredningen monteras?":"Dagsljus gör stallet trivsammare för både hästar och människor. Ett fönster per box är en vanlig standard. Lägg till, så placerar vi ett fönster mitt i varje box i ritningen. Du kan sedan flytta dem som du vill."}</p><div class="mmgrid">${mmCard("stalfonster")}${mmCard("trafonster")}</div></div>`})():""}
+     ${stall&&dr?(()=>{const n=allWins(dr).length;return `<div class="dbox winrem"><p class="mbox-h">${svg("star",16)} ${n?`Det finns ${n} fönster i ritningen`:"Inga fönster i stallet?"}</p><p class="fx-help">${n?"Gamla fönster släpper in kyla och drag, och galler inuti skyddar glaset från hästarna. Myrbys stålfönster har termoglas, invändigt galler och 10 års garanti. Vill du byta samtidigt som inredningen monteras?":"Dagsljus gör stallet trivsammare för både hästar och människor. Ett fönster per box är en vanlig standard. Lägg till, så placerar vi ett fönster mitt i varje box i ritningen. Du kan sedan flytta dem som du vill."}</p><div class="mmgrid">${mmCard("stalfonster")}${mmCard("trafonster")}</div></div>`})():""}
      <div class="gview seg fx-mode"><button type="button" class="opt" data-gview="guide" aria-pressed="${D.ui.gview!=="all"}">${svg("star",16)} Hjälp mig välja</button><button type="button" class="opt" data-gview="all" aria-pressed="${D.ui.gview==="all"}">Visa alla produkter</button></div>
      <p class="hintline mcathint">Gummimattor, krubbor, vattenkoppar och ventilation finns under <b>Stall- &amp; boxtillbehör</b>.</p>
      <div class="pills mcat">${MORE_CATS.map(id=>{const n=D.items.filter(i=>prod(i.product)?.cat===id).length;return `<button type="button" class="pill" data-wcat="${id}" aria-pressed="${wizCat===id}">${esc(catName(id))}${n?` <span class="n num">${n}</span>`:""}</button>`}).join("")}</div>
@@ -4648,7 +4658,7 @@ function sheetSVG(dr,q){
   const lines=[["MATERIALLISTA",30,true],[`Myrby ${f?.name||""}`,26],[`Fyllning: ${dr.fill||"ej vald"}`,22],[`Ytbehandling: ${dr.finish||"ej vald"}`,22],[`Höjd till tak i stallet min ${mm(dr.ceil)} mm`,22],[`A1 = Myrby ${f?.name||""} front`,22],[`B1 = ${dr.wall==="egen"?wallLabel(dr):"Myrby "+(w?.name||"")}`,22],dr.post!=="ingen"?[`C1 = ${POSTS[dr.post]||"Mellanstolpe (ej vald)"}`,22]:null,(dr.cornerPost||dr.post)!=="ingen"?[`C2 = ${(POSTS[dr.cornerPost||dr.post]||"Hörnstolpe (ej vald)").replace("mellanstolpe","hörnstolpe")}`,22]:null,(dr.decor==="med"||dr.front==="stromsholm")?["Dekorbräda: Ja",22]:null,dr.intag?["⊠ = Friskluftsintag",20]:null,dr.fans?["⊗ = Frånluftsfläkt",20]:null,["▬ = Öppningsbart fönster",20]].filter(Boolean);
   let y=110;const T=lines.map(([t,fs,b])=>{y+=fs*1.7;return `<text x="${colX+40}" y="${y}" font-size="${fs}" ${b?'font-weight="700" letter-spacing="2"':""} fill="${INK}">${esc(t)}</text>`}).join("");
   y+=40;const M=mat.rows.map(r=>{y+=34;return `<text x="${colX+40}" y="${y}" font-size="20" fill="${INK}">${esc(r[0]?r[0]+"  ":"")}${esc(r[1])}</text><text x="${Wd-80}" y="${y}" font-size="20" font-weight="700" text-anchor="end" fill="${INK}">${r[2]} st</text>`}).join("");
-  const today=new Date().toLocaleDateString("sv-SE"),seller=ROLES[q?.createdRole||S.role]?.name||"";
+  const today=new Date().toLocaleDateString("sv-SE"),seller=(isPublic()||q?.source==="myrby.com")?"":(ROLES[q?.createdRole||S.role]?.name||"");
   const noteY=Math.min(y+70,1500);
   return `<svg viewBox="0 0 ${Wd} ${Hd}" xmlns="http://www.w3.org/2000/svg" font-family="Carlito,Calibri,Arial,sans-serif" style="background:#fff">
    <rect x="20" y="20" width="${Wd-40}" height="${Hd-40}" fill="#fff" stroke="${INK}" stroke-width="3"/>
@@ -5381,10 +5391,10 @@ async function pubSaveOpen(){pubStore();let link="";try{link=pubBaseUrl()+"#rita
     try{window.top.location.href=href}catch(e){location.href=href}toast("Ditt mejlprogram öppnas")};
   const sh=m.querySelector("[data-pmshare]");if(sh)sh.onclick=()=>{navigator.share({title:"Min stallritning hos Myrby",url:link}).catch(()=>{})}}
 function publicBoot(){pubTakeover();
-  document.body.classList.add("pub");document.title="Bygg din stallinredning · Myrby";
+  document.body.classList.add("pub");document.title="Rita din stallinredning · Myrby";
   S.dbReady=true;S.db=null;S.assets=null;
   D=emptyDraft();ls.set("myrby.draft2",D);D.ui=D.ui||{};S.wizStep=0;S.pubDone=false;
-  const w=$("#wiz");w.setAttribute("aria-label","Bygg din stallinredning");w.hidden=false;w.classList.add("on");
+  const w=$("#wiz");w.setAttribute("aria-label","Rita din stallinredning");w.hidden=false;w.classList.add("on");
   const saved=pubLoad();
   renderWiz();
   if(!pubBoot.timer){pubBoot.timer=setInterval(pubStore,3000);window.addEventListener("pagehide",pubStore);document.addEventListener("visibilitychange",()=>{if(document.hidden)pubStore()})}
@@ -5420,7 +5430,7 @@ function publicText(d){return publicLines(d).map(([k,v])=>k==="#"?"\n"+v.toUpper
 async function publicPDF(d){
   const {jsPDF}=window.jspdf;const pdf=new jsPDF({unit:"mm",format:"a4"});
   pdf.setFillColor(35,65,42);pdf.rect(0,0,210,30,"F");pdf.setTextColor(237,216,188);pdf.setFont("helvetica","bold");pdf.setFontSize(20);pdf.text("Myrby",15,19);
-  pdf.setFont("helvetica","normal");pdf.setFontSize(11);pdf.text("Bygg din stallinredning",195,19,{align:"right"});
+  pdf.setFont("helvetica","normal");pdf.setFontSize(11);pdf.text("Rita din stallinredning",195,19,{align:"right"});
   pdf.setTextColor(30,57,50);pdf.setFontSize(18);pdf.text("Förfrågan: "+(publicName(d)||"stallinredning"),15,45);
   pdf.setFontSize(10);pdf.setTextColor(110,120,115);pdf.text("Skickad från myrby.com "+new Date().toLocaleDateString("sv-SE")+". Inget är bindande, Myrby återkommer med ett förslag.",15,52);
   let y=62;const nl=h=>{if(y+h>282){pdf.addPage();y=20}};
@@ -6276,6 +6286,48 @@ function fqCopy(){const w=$("#wiz");if(!w)return;const tw=document.createTreeWal
 {const _r=render;render=function(){const r=_r.apply(this,arguments);try{if(view()==="hem"&&S.role!=="christian"){const n=(S.fq||[]).filter(f=>f.status==="ny").length,pg=$("#app .page")||$("#app");if(n&&pg&&!pg.querySelector(".fq-homebar"))pg.insertAdjacentHTML("afterbegin",`<a class="fq-homebar" href="#forfragan"><span class="fq-hb-dot">${n}</span><span><b>${n===1?"Ny ritning från hemsidan":n+" nya ritningar från hemsidan"}</b><span class="muted"> · ${esc((S.fq.find(f=>f.status==="ny")||{}).name||"")}${n>1?" m.fl.":""}</span></span><span class="fq-hb-go">Öppna ›</span></a>`)}}catch(_){}return r}}
 try{if(typeof render==="function"&&!$("#wiz")?.classList.contains("on"))render()}catch(_){}
 }
+
+
+/* ===== v214 (Carl 14/11): genomgång av hela Rita din stallinredning inför lansering ===== */
+/* 1) Ett fönster i varje box följer boxarna. Flyttas, läggs till eller tas boxar bort hamnar fönstren mitt i rätt box igen. */
+function syncBoxWins214(dr){if(!dr||!dr.winBox)return;try{const L=layout(dr).filter(o=>o.m.t==="box"),W=wins(dr),inBox=(x,o)=>x.k===o.k&&x.p>=o.start&&x.p<=o.start+(+o.m.w),used=new Set();
+  dr.wins=W.filter(x=>{if(!x.box)return true;const o=L.find(o=>inBox(x,o));if(!o)return false;const id=o.k+":"+o.start;if(used.has(id)||W.some(y=>!y.box&&inBox(y,o)))return false;used.add(id);x.p=Math.round(o.start+(+o.m.w)/2);return true});
+  applyBoxWins(dr)}catch(_){}}
+/* 2) Ett fönster får inte sitta där ingången är. */
+{const _dw214=drwWarnings;drwWarnings=function(dr){const w=_dw214.apply(this,arguments);try{const ds=(typeof doors==="function"?doors(dr):dr.doors)||[];const hit=new Set();
+  wins(dr).forEach(x=>ds.forEach(d=>{if(d.k===x.k&&x.p+x.w/2>d.p+20&&x.p-x.w/2<d.p+d.w-20)hit.add(d.k)}));
+  const LL={N:"långsida A",S:"långsida B",W:"vänster gavel",E:"höger gavel"};hit.forEach(k=>w.push(`Ett fönster sitter där ingången är på ${LL[k]||"väggen"}. Dra fönstret åt sidan.`))}catch(_){}return w}}
+/* 3) Siffror och enheter bryts aldrig isär ("2 700 mm" står ihop på en rad). */
+function nbsp214(root){if(!root)return;try{const tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentNode&&n.parentNode.nodeName;return /^(TEXTAREA|SCRIPT|STYLE|INPUT)$/.test(p||"")||!/\d /.test(n.nodeValue)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}});
+  const L=[];while(tw.nextNode())L.push(tw.currentNode);
+  L.forEach(n=>{const v=n.nodeValue,t=v.replace(/(\d) (?=\d{3}(?!\d))/g,"$1 ").replace(/(\d) (?=(mm|m²|m|st|cm|kr)(?![\wåäöÅÄÖ]))/g,"$1 ");if(t!==v)n.nodeValue=t})}catch(_){}}
+/* 4) Stegraden: får inte alla steg plats visas bara siffrorna, det aktuella steget med namn. */
+function steps214(){try{document.querySelectorAll("#wiz .cfg-steps").forEach(el=>{el.querySelectorAll(".cstep").forEach(b=>{const l=b.querySelector(".cl");if(l&&!b.title){b.title=l.textContent.trim();if(!b.getAttribute("aria-label"))b.setAttribute("aria-label",b.title)}});
+  el.classList.remove("c214");if(el.scrollWidth>el.clientWidth+2)el.classList.add("c214");const c=el.querySelector(".cstep.cur");if(c&&el.classList.contains("c214"))c.scrollIntoView({block:"nearest",inline:"center"})})}catch(_){}}
+window.addEventListener("resize",()=>{clearTimeout(steps214.t);steps214.t=setTimeout(steps214,120)});
+/* 5) Webbläsarens bakåtknapp går ett steg bakåt i stället för att lämna sidan (bara på hemsidan). */
+const NAV214={pop:false,last:null};
+function hist214(){if(!isPublic()||S.pubDone)return;try{const st=S.wizStep||0,cur=history.state&&history.state.wiz214;
+  if(NAV214.pop||cur===st){NAV214.pop=false;NAV214.last=st;return}
+  if(cur==null||NAV214.last==null)history.replaceState(Object.assign({},history.state||{},{wiz214:st}),"");else history.pushState({wiz214:st},"");NAV214.last=st}catch(_){}}
+if(isPublic())window.addEventListener("popstate",e=>{const st=e.state&&e.state.wiz214;if(st==null||S.pubDone||!document.querySelector("#wiz .cfg-steps"))return;try{if(document.querySelector("#pubmodal"))pubModalClose();NAV214.pop=true;renderWiz.dir=st<(S.wizStep||0)?-1:1;S.wizStep=Math.max(0,Math.min(st,wizPages().length-1));renderWiz()}catch(_){}});
+/* 6) "Ångra"-rutan efter ett exempel försvinner när man går vidare (den låg annars kvar över stegraden och tacksidan). */
+function toastOff214(){const t=document.getElementById("toast");if(t&&t.classList.contains("act")){clearTimeout(toast.t);t.classList.remove("on","act")}}
+{const _rw214=renderWiz;renderWiz=function(){const st0=renderWiz._st214;try{if(D&&D.drawing&&D.drawing.winBox)syncBoxWins214(D.drawing)}catch(_){}
+  const r=_rw214.apply(this,arguments);const st=S.wizStep||0;if(st0!==undefined&&st0!==st)toastOff214();renderWiz._st214=st;
+  nbsp214(document.getElementById("wiz"));steps214();requestAnimationFrame(steps214);hist214();return r};Object.keys(_rw214).forEach(k=>{try{renderWiz[k]=_rw214[k]}catch(_){}})}
+{const _cpr214=typeof cfgPanelRefresh==="function"?cfgPanelRefresh:null;if(_cpr214){cfgPanelRefresh=function(){const r=_cpr214.apply(this,arguments);nbsp214(document.getElementById("wiz"));return r}}}
+/* 7) Skicka: ett klick ger ett mejl, även om man trycker flera gånger. Fönstren stäms av innan ritningen skickas. */
+{const _ps214=publicSend;publicSend=async function(){if(publicSend.busy214)return;publicSend.busy214=true;try{if(D&&D.drawing)syncBoxWins214(D.drawing);return await _ps214.apply(this,arguments)}finally{publicSend.busy214=false}}}
+/* 8) Tacksidan: ingen gammal Ångra-ruta. Gick det inte att skicka finns ritningen kvar, Försök igen skickar på nytt direkt, och PDF:en går att spara och mejla. */
+{const _pt214=publicThanks;publicThanks=function(o){toastOff214();const r=_pt214.apply(this,arguments);try{const fail=o&&o.tried&&!o.sent;if(!fail)return r;const w=document.getElementById("wiz");if(!w)return r;
+  const lead=w.querySelector(".th-lead");if(lead)lead.textContent="Något hände på vägen, men din ritning är kvar. Försök igen, eller ring oss så tar vi det direkt.";
+  const acts=w.querySelector(".th-acts");if(acts&&o.pdf&&!acts.querySelector("a[download]"))acts.insertAdjacentHTML("beforeend",`<a class="th-btn line" href="#spara" download="${esc(o.file)}">${svg("doc",18)} Spara som PDF</a>`);
+  const card=w.querySelector(".th-card");if(card)card.innerHTML=`<p class="th-kick">Om det krånglar</p><h3>Så får du iväg den ändå</h3><ol><li><b>Tryck på Försök igen</b><span>Ofta räcker det.</span></li><li><b>Spara som PDF</b><span>Mejla den sedan till info@myrby.com.</span></li><li><b>Ring oss</b><span>0171-857 90, vardagar. Vi hjälper dig gärna.</span></li></ol>`;
+  const again=w.querySelector("[data-pubagain]");if(again){again.textContent="Tillbaka till min ritning";again.setAttribute("data-pubback214","");again.removeAttribute("data-pubagain")}
+  const h=w.onclick;w.onclick=e=>{const rt=e.target.closest("[data-pubretry]");if(rt){e.stopPropagation();if(rt.disabled)return;rt.disabled=true;rt.innerHTML=`${svg("chev",18)} Skickar…`;Promise.resolve(publicSend()).catch(()=>{}).finally(()=>{const b=document.querySelector("[data-pubretry]");if(b){b.disabled=false;b.innerHTML=`${svg("chev",18)} Försök igen`}});return}
+    if(e.target.closest("[data-pubback214]")){e.stopPropagation();w.onclick=null;S.pubDone=false;const P=wizPages();S.wizStep=Math.max(0,P.findIndex(x=>x.key==="kund"));renderWiz.dir=-1;renderWiz();return}
+    if(h)h.call(w,e)}}catch(_){}return r}}
 
 </script>
 
