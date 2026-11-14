@@ -3239,7 +3239,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   for(let x=Math.ceil((near+200)/1800)*1800;x<L;x+=1800)G.push(poly([[x,CEIL,zA],[x+140,CEIL,zA],[x+140,CEIL,zB],[x,CEIL,zB]],`fill="#d8ccb0" stroke="${ink}" stroke-width=".7"`));
   layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="door"&&o.start+(+o.m.w)>near).forEach(o=>{const z=o.k==="N"?0:W,x0=Math.max(near,o.start),x1=o.start+(+o.m.w);G.push(poly([[x0,0,z],[x1,0,z],[x1,2400,z],[x0,2400,z]],`fill="url(#wklt)" stroke="${ink}" stroke-width="1.4"`))});
   allWins(dr).filter(x=>(x.k==="N"||x.k==="S")&&x.p+x.w/2>near+100).forEach(x=>{const z=x.k==="N"?0:W,x0=Math.max(near+100,x.p-x.w/2),x1=x.p+x.w/2,mid=(x0+x1)/2;G.push(poly([[x0,1500,z],[x1,1500,z],[x1,2300,z],[x0,2300,z]],`fill="#eef4f2" stroke="${ink}" stroke-width="1.3"`)+ln([mid,1500,z],[mid,2300,z],`stroke="${ink}" stroke-width=".8"`)+ln([x0,1900,z],[x1,1900,z],`stroke="${ink}" stroke-width=".8"`))});
-  const fr0=frameCol(dr,dr.front),wallName=w=>w||dr.wall;
+  const fr0=frameCol(dr,dr.front),wallName=w=>w||dr.wall,PART={};
   (lvl>=4?partList(dr):[]).filter(pt=>(pt.o.k==="N"||pt.o.k==="S")).map(pt=>({x:pt.o.start+pt.x,k:pt.o.k,d:pt.d,w:wallName(pt.w)})).filter(q=>q.x>near+120).sort((a,b)=>b.x-a.x).forEach(q=>{const zF=q.k==="N"?q.d:W-q.d,zB=q.k==="N"?0:W,x=q.x,gb=galSpan188(q.w,q.d),top=q.w==="mv-dala"?1560:2320,k=Math.min(.26,FOC/Math.max(300,x-camX));
     const zAt=f=>zF+(zB-zF)*(f/q.d);let s="";
     const faro=q.w==="mv-faro",fhz=t=>faro?faroH((1-t)*q.d,q.d,1300,top):1300;
@@ -3251,7 +3251,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
       sol(0,gb[0]);sol(gb[1],q.d);
       if(gb[1]>gb[0]){const GL=gb[1]-gb[0],nb=Math.max(1,Math.round(GL/(q.w==="mv-dala"?75:105)));for(let i=1;i<nb;i++){const f=gb[0]+GL*i/nb,z=zAt(f),y0=fhz(f/q.d);if(y0<top-40)s+=ln([x,y0,z],[x,top,z],`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`)}}
       s+=ln([x,top,zF],[x,top,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)}
-    s+=ln([x,1300,zF],[x,1300,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s)});
+    s+=ln([x,1300,zF],[x,1300,zB],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s);PART[q.k+":"+Math.round(x)]=s});
   /* v167: boxarna som golvytor (steg 2) – även gavelboxar och hörnboxar, så att stallgången visar samma stall som ritningen */
   if(lvl===2){const dash=`fill="#e7ebe1" stroke="#9fae97" stroke-width="1.2" stroke-dasharray="6 4"`,ghost=`fill="#fbfaf5" fill-opacity=".72" stroke="#7f9278" stroke-width="1.4" stroke-dasharray="7 4"`,H=1300,items=[];
     layout(dr).filter(o=>!o.door&&o.m.t==="box").forEach(o=>{const w=+o.m.w,d=+o.m.d||0,c0=o.cx0||0,c1=o.cx1||0;
@@ -3270,19 +3270,37 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
       if(!tat){const nb=Math.max(1,Math.round((xb-x0)/105));for(let i=1;i<nb;i++){const x=x0+(xb-x0)*i/nb;s2+=ln([x,1300,Z],[x,2320,Z],`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`)}}
       s2+=ln([x0,2320,Z],[xb,2320,Z],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)+ln([x0,1300,Z],[xb,1300,Z],`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`);G.push(s2)});
     if(side==="W"){fronts();parts()}else{parts();fronts()}};
+  /* v213: rum på bortre gaveln syntes inte i stallgången (Carl 14/11) */
+  if(lvl>=5||rooms178())layout(dr).filter(o=>o.k==="E"&&o.m.t==="room").forEach(o=>{const a=o.start,b=o.start+(+o.m.w),d=+o.m.d,xf=L-d,zm=(a+b)/2,H=2600,nm=(o.m.name||"").toLowerCase(),lab=o.m.name||"Rum",k=Math.min(.26,FOC/Math.max(300,xf-camX));if(L<=near+300)return;const x0=Math.max(near+40,xf);let s="";
+    const hang=()=>{if(xf<near+1300)return "";const sw=Math.min(1100,b-a-200),A=pr(xf,2470,zm-sw/2),B=pr(xf,2170,zm+sw/2),w=B[0]-A[0],h=B[1]-A[1];if(w<6)return "";let t=[zm-sw/2+120,zm+sw/2-120].map(zz=>ln([xf,2470,zz],[xf,CEIL,zz],`stroke="${ink}" stroke-width="${fx(Math.max(.5,9*k))}"`)).join("");t+=`<rect x="${fx(A[0])}" y="${fx(A[1])}" width="${fx(w)}" height="${fx(h)}" rx="${fx(Math.min(4,h*.12))}" fill="url(#wkbrass)" stroke="#8a6a2c" stroke-width="${fx(Math.max(.6,7*k))}"/>`;const fs=Math.min(h*.6,w*.9/(Math.max(4,lab.length)*.47));if(fs>=4.5)t+=`<text x="${fx(A[0]+w/2)}" y="${fx(A[1]+h/2)}" text-anchor="middle" dominant-baseline="central" font-family="EB Garamond,serif" font-style="italic" font-size="${fx(fs)}" fill="#3d2c0c">${esc(lab)}</text>`;return t};
+    if(openBay(o.m)){const sp=/spol/.test(nm),T=sp?`fill="#dfe8ea" stroke="#9fb3b8" stroke-width="${fx(2*k)}"`:`fill="${wallC(dr)[0]}" stroke="${ink}" stroke-width=".8"`,TL=`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`;
+      s+=poly([[x0,0,a],[L,0,a],[L,0,b],[x0,0,b]],`fill="${sp?"#cfd9da":"#c9c3b6"}"`);
+      if(sp){s+=poly([[L,0,a],[L,0,b],[L,H,b],[L,H,a]],T);for(let y=300;y<H;y+=300)s+=ln([L,y,a],[L,y,b],TL);for(let zz=Math.ceil(a/300)*300;zz<b;zz+=300)s+=ln([L,0,zz],[L,H,zz],TL)}
+      const side=zz=>{if(zz<=60||zz>=W-60)return;s+=poly([[x0,0,zz],[L,0,zz],[L,H,zz],[x0,H,zz]],T);if(sp)for(let y=300;y<H;y+=300)s+=ln([x0,y,zz],[L,y,zz],TL)},sd=[a,b].sort((p,q)=>Math.abs(q-camZ)-Math.abs(p-camZ));
+      side(sd[0]);
+      if(sp){const c=pr(L,1200,zm);s+=`<path d="M${pr(L,1800,zm-500).map(fx).join(" ")} Q${c.map(fx).join(" ")} ${pr(L,1900,zm+300).map(fx).join(" ")}" fill="none" stroke="#3f6f8f" stroke-width="${fx(28*k)}" stroke-linecap="round"/>`;if(xf+d/2>near+300){const dc=pr(xf+d/2,0,zm);s+=`<ellipse cx="${fx(dc[0])}" cy="${fx(dc[1])}" rx="${fx(220*k)}" ry="${fx(80*k)}" fill="#c9d3cf" stroke="${ink}" stroke-width="${fx(2*k)}"/>`}}
+      else [zm-450,zm+450].forEach(zz=>{const c=pr(L,1500,zz);s+=`<circle cx="${fx(c[0])}" cy="${fx(c[1])}" r="${fx(Math.max(1.2,55*k))}" fill="none" stroke="#8a6a2c" stroke-width="${fx(Math.max(.6,14*k))}"/>`});
+      side(sd[1]);s+=hang()}
+    else if(xf>near+120){s+=poly([[xf,0,a],[xf,0,b],[xf,H,b],[xf,H,a]],`fill="#e6ece2" stroke="${ink}" stroke-width="1.2"`);const dl=zm-500,dR=zm+500;s+=poly([[xf,0,dl],[xf,0,dR],[xf,2100,dR],[xf,2100,dl]],`fill="#8a5a33" stroke="${ink}" stroke-width="${fx(10*k)}"`);for(let i=1;i<5;i++)s+=ln([xf,0,dl+(dR-dl)*i/5],[xf,2100,dl+(dR-dl)*i/5],`stroke="#6a4224" stroke-width="${fx(6*k)}"`);s+=ln([xf,1000,dR-170],[xf,1140,dR-170],`stroke="#c9a24e" stroke-width="${fx(26*k)}" stroke-linecap="round"`);s+=hang()}
+    G.push(s)});
   GW("E");
   const rows=layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&((o.m.t==="box"&&lvl>=3)||(o.m.t==="room"&&(lvl>=5||rooms178())))).map(o=>({o,z:o.k==="N"?+o.m.d:W-(+o.m.d),x0:o.start,x1:o.start+(+o.m.w)}));
   rows.sort((p,q)=>q.x0-p.x0).forEach(({o,z,x0,x1})=>{if(x1<near)return;const xs=Math.max(x0,near),len=x1-xs,pt=(t,y)=>[xs+t*len,y,z],box=o.m.t==="box";
     if(!box){const H=2600,nm=(o.m.name||"").toLowerCase(),k=Math.min(.26,FOC/Math.max(300,(x0+x1)/2-camX)),zB=o.k==="N"?0:W,wall=`fill="#e6ece2" stroke="${ink}" stroke-width="1.2"`;let s="";
-      if(/spol/.test(nm)){const T=`fill="#dfe8ea" stroke="#9fb3b8" stroke-width="${fx(2*k)}"`;s+=poly([[xs,0,zB],[x1,0,zB],[x1,H,zB],[xs,H,zB]],T);for(let y=300;y<H;y+=300)s+=ln([xs,y,zB],[x1,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);for(let xx=Math.ceil(xs/300)*300;xx<x1;xx+=300)s+=ln([xx,0,zB],[xx,H,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);
-        [x0,x1].forEach(xx=>{if(xx<=near+120)return;s+=poly([[xx,0,z],[xx,0,zB],[xx,H,zB],[xx,H,z]],T);for(let y=300;y<H;y+=300)s+=ln([xx,y,z],[xx,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`)});
-        const nearRoom=x0<camX+4500,hx=(x0+x1)/2,hz=zB;if(!nearRoom)s+=`<path d="M${pr(hx-500,1800,hz).map(fx).join(" ")} Q${pr(hx,1200,hz).map(fx).join(" ")} ${pr(hx+300,1900,hz).map(fx).join(" ")}" fill="none" stroke="#3f6f8f" stroke-width="${fx(28*k)}" stroke-linecap="round"/>`;const dc=pr(hx,0,(z+zB)/2);if(!nearRoom)s+=`<ellipse cx="${fx(dc[0])}" cy="${fx(dc[1])}" rx="${fx(220*k)}" ry="${fx(80*k)}" fill="#c9d3cf" stroke="${ink}" stroke-width="${fx(2*k)}"/>`;
+      /* v213: rumsskylt som sticker ut från väggen vid ingången och vänder sig mot den som går i stallgången (Carl 14/11) */
+      const sg=o.k==="N"?1:-1,sign=(xm,lab)=>{if(xm<near+1300)return "";const za=z+sg*120,zb=z+sg*980,a=pr(xm,2470,Math.min(za,zb)),b=pr(xm,2170,Math.max(za,zb)),w=b[0]-a[0],h=b[1]-a[1];if(w<6)return "";const kk=Math.min(.26,FOC/Math.max(300,xm-camX));
+        let t=ln([xm,2600,z],[xm,2600,zb],`stroke="${ink}" stroke-width="${fx(Math.max(.8,22*kk))}" stroke-linecap="round"`)+ln([xm,2600,za+sg*90],[xm,2470,za+sg*90],`stroke="${ink}" stroke-width="${fx(Math.max(.5,9*kk))}"`)+ln([xm,2600,zb-sg*90],[xm,2470,zb-sg*90],`stroke="${ink}" stroke-width="${fx(Math.max(.5,9*kk))}"`);
+        t+=`<rect x="${fx(a[0])}" y="${fx(a[1])}" width="${fx(w)}" height="${fx(h)}" rx="${fx(Math.min(4,h*.12))}" fill="url(#wkbrass)" stroke="#8a6a2c" stroke-width="${fx(Math.max(.6,7*kk))}"/>`;
+        const fs=Math.min(h*.6,w*.9/(Math.max(4,lab.length)*.47));if(fs>=4.5)t+=`<text x="${fx(a[0]+w/2)}" y="${fx(a[1]+h/2)}" text-anchor="middle" dominant-baseline="central" font-family="EB Garamond,serif" font-style="italic" font-size="${fx(fs)}" fill="#3d2c0c">${esc(lab)}</text>`;return t};
+      if(openBay(o.m)){const sp=/spol/.test(nm),T=sp?`fill="#dfe8ea" stroke="#9fb3b8" stroke-width="${fx(2*k)}"`:`fill="${wallC(dr)[0]}" stroke="${ink}" stroke-width=".8"`;s+=poly([[xs,0,z],[x1,0,z],[x1,0,zB],[xs,0,zB]],`fill="${sp?"#cfd9da":"#c9c3b6"}"`);if(sp)s+=poly([[xs,0,zB],[x1,0,zB],[x1,H,zB],[xs,H,zB]],T);if(sp)for(let y=300;y<H;y+=300)s+=ln([xs,y,zB],[x1,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);if(sp)for(let xx=Math.ceil(xs/300)*300;xx<x1;xx+=300)s+=ln([xx,0,zB],[xx,H,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);
+        const spW=xx=>{if(xx<=near+120)return;const pw=PART[o.k+":"+Math.round(xx)];if(pw){s+=pw;return}s+=poly([[xx,0,z],[xx,0,zB],[xx,H,zB],[xx,H,z]],T);if(sp)for(let y=300;y<H;y+=300)s+=ln([xx,y,z],[xx,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`)};spW(x1);
+        const hx=(x0+x1)/2,hz=zB,vis=sp&&hx>near+400;if(!sp&&hx>near+400)[hx-450,hx+450].forEach(rx=>{const c=pr(rx,1500,hz),kk=Math.min(.26,FOC/Math.max(300,rx-camX));s+=`<circle cx="${fx(c[0])}" cy="${fx(c[1])}" r="${fx(Math.max(1.2,55*kk))}" fill="none" stroke="#8a6a2c" stroke-width="${fx(Math.max(.6,14*kk))}"/>`});if(vis)s+=`<path d="M${pr(hx-500,1800,hz).map(fx).join(" ")} Q${pr(hx,1200,hz).map(fx).join(" ")} ${pr(hx+300,1900,hz).map(fx).join(" ")}" fill="none" stroke="#3f6f8f" stroke-width="${fx(28*k)}" stroke-linecap="round"/>`;const dc=pr(hx,0,(z+zB)/2);if(vis)s+=`<ellipse cx="${fx(dc[0])}" cy="${fx(dc[1])}" rx="${fx(220*k)}" ry="${fx(80*k)}" fill="#c9d3cf" stroke="${ink}" stroke-width="${fx(2*k)}"/>`;
         /* v211: spolspiltan är öppen mot stallgången, ingen front eller räcke (Carl 14/11) */
-        const c=pr(...pt(.5,H-250));if(!nearRoom)s+=`<text x="${fx(c[0])}" y="${fx(c[1])}" text-anchor="middle" font-family="Carlito,sans-serif" font-weight="700" letter-spacing="${fx(2*k)}" font-size="${fx(Math.max(8,160*k))}" fill="${ink}" opacity=".7">SPOLSPILTA</text>`;G.push(s);return}
-      s+=poly([pt(0,0),pt(1,0),pt(1,H),pt(0,H)],wall);const mid=(x0+x1)/2,dl=Math.max(xs,mid-500),dR=mid+500;
+        spW(x0);s+=sign(hx,o.m.name||(sp?"Spolspilta":"Uppställningsplats"));G.push(s);return}
+      if(x0>near+120)s+=poly([[x0,0,z],[x0,0,zB],[x0,H,zB],[x0,H,z]],`fill="#dfe6db" stroke="${ink}" stroke-width=".8"`)+(PART[o.k+":"+Math.round(x0)]||"");s+=poly([pt(0,0),pt(1,0),pt(1,H),pt(0,H)],wall);const mid=(x0+x1)/2,dl=Math.max(xs,mid-500),dR=mid+500;
       if(dR>xs){s+=poly([[dl,0,z],[dR,0,z],[dR,2100,z],[dl,2100,z]],`fill="#8a5a33" stroke="${ink}" stroke-width="${fx(10*k)}"`);const nq=5;for(let i=1;i<nq;i++)s+=ln([dl+(dR-dl)*i/nq,0,z],[dl+(dR-dl)*i/nq,2100,z],`stroke="#6a4224" stroke-width="${fx(6*k)}"`);s+=ln([dR-170,1000,z],[dR-170,1140,z],`stroke="#c9a24e" stroke-width="${fx(26*k)}" stroke-linecap="round"`);
         const w0=Math.max(xs,dR+300),w1=dR+1000;if(w1>w0+300&&w1<x1-150)s+=poly([[w0,1500,z],[w1,1500,z],[w1,2100,z],[w0,2100,z]],`fill="#eef4f2" stroke="${ink}" stroke-width="${fx(8*k)}"`)+ln([(w0+w1)/2,1500,z],[(w0+w1)/2,2100,z],`stroke="${ink}" stroke-width="${fx(5*k)}"`);
-        const pw=Math.min(1100,(o.m.name||"").length*95+200);if(mid-pw/2>xs){s+=poly([[mid-pw/2,2200,z],[mid+pw/2,2200,z],[mid+pw/2,2420,z],[mid-pw/2,2420,z]],`fill="url(#wkbrass)" stroke="#8a6a2c" stroke-width="${fx(6*k)}"`);const c=pr(mid,2270,z);s+=`<text x="${fx(c[0])}" y="${fx(c[1])}" text-anchor="middle" font-family="EB Garamond,serif" font-style="italic" font-size="${fx(Math.max(7,140*k))}" fill="#3d2c0c">${esc(o.m.name||"Rum")}</text>`}}
+        }s+=sign(mid,o.m.name||"Rum");
       G.push(s);return}
     const f=o.f||dr.front,S=frontProfile(f,x1-x0,o.m.dir),P=(x,y)=>pr(x0+x,y,z),kAt=x=>Math.min(.26,FOC/Math.max(300,x0+x-camX));
     G.push(frontSVG(S,P,kAt,{balls:dr.balls,fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:o.m.dir,xmin:near-x0,pre:"wk",post:dr.post,decor:hasDecor(dr,f)}))});
@@ -6143,7 +6161,7 @@ function fqSummary(d){try{const dr=d&&d.drawing,bx=dr?layout(dr).filter(o=>o.m.t
 if(!isPublic()){
 S.fq=[];S.fqView="cur";
 NAV.push(["forfragan","Från hemsidan","lead"]);
-{const _v210=view;view=function(){const h=location.hash||"";if(h.startsWith("#f-")||h==="#forfragan")return "forfragan";return _v210.apply(this,arguments)}}
+{const _v210=view;view=function(){const h=location.hash||"";if(h.startsWith("#f-")||h.startsWith("#forfragan"))return "forfragan";return _v210.apply(this,arguments)}}
 {const _rn210=renderNav;renderNav=function(){_rn210.apply(this,arguments);try{const n=S.fq.filter(f=>f.status==="ny").length,a=$('#sidenav a[href="#forfragan"]');if(a&&n)a.insertAdjacentHTML("beforeend",`<span class="count num">${n}</span>`)}catch(_){}}}
 {const _r210=render;render=function(){if(view()!=="forfragan")return _r210.apply(this,arguments);renderNav();$("#app").innerHTML=vFq();try{renderResume()}catch(_){}try{syncRoom()}catch(_){}fqPinsDraw()}}
 const fqId=()=>{const m=/^#f-([A-Za-z0-9_\-]+)/.exec(location.hash||"");return m?m[1]:""};
@@ -6156,13 +6174,13 @@ function fqDiff(a,b){if(!a||!b)return [];const A=fqLines(a),B=fqLines(b),key=L=>
   const pa=A.filter(l=>l[0]==="•").map(l=>l[1]),pb=B.filter(l=>l[0]==="•").map(l=>l[1]);
   pb.filter(p=>!pa.includes(p)).forEach(p=>out.push({k:"Produkt",from:"",to:p}));pa.filter(p=>!pb.includes(p)).forEach(p=>out.push({k:"Produkt",from:p,to:""}));return out}
 async function fqImport(tok,open){if(!tok)return;if(!S.db){toast("Ingen anslutning till databasen än, försök igen om en stund");return}
-  let o;try{o=await pubDecode(tok)}catch(e){toast("Länken gick inte att läsa. Kopiera hela länken från mejlet.");return}
+  let o;try{o=await pubDecode(tok)}catch(e){console.log("[fq] decode fel",e&&e.message);toast("Länken gick inte att läsa. Kopiera hela länken från mejlet.");return}
   const id=String(o.id||("f"+Date.now().toString(36))).replace(/[^A-Za-z0-9_\-]/g,""),ref=S.db.doc("forfragningar/"+id);let ex=false;try{const g=await ref.get();ex=g.exists}catch(_){}
   if(!ex){const d=o.d,c=d.customer||{};try{await ref.set({id,createdAt:o.at||Date.now(),importedAt:Date.now(),importedBy:S.role,status:"ny",orig:d,cur:null,changes:[],notes:[],name:c.name||c.company||"Okänd kund",summary:fqSummary(d)});toast("Förfrågan är sparad under Från hemsidan")}catch(e){toast(e.code==="invalid_argument"?"Du saknar behörighet att spara, be Carl dela portalen som Contributor":"Kunde inte spara förfrågan");return}}
   if(open!==false)location.hash="#f-"+id}
 function fqBoot(){if(fqBoot.done||!S.db)return;fqBoot.done=true;
   S.db.collection("forfragningar").orderBy("createdAt","desc").onSnapshot(s=>{S.fq=s.docs.map(d=>({id:d.id,...d.data()}));if(view()==="forfragan"&&!document.activeElement?.closest?.(".fq-compose,.fqx-add"))render();else renderNav()},()=>{});
-  let h="";try{h=window.top.location.href}catch(_){}const tok=fqToken(location.hash)||fqToken(location.search)||fqToken(h);if(tok){try{history.replaceState(null,"",location.pathname+location.search)}catch(_){}fqImport(tok,true)}}
+  let h="";try{h=window.top.location.href}catch(_){}const tok=fqToken(location.hash)||fqToken(location.search)||fqToken(h);try{console.log("[fq] boot hash="+location.hash.length+" search="+location.search.length+" ref="+(document.referrer||"").length+" tok="+tok.length)}catch(_){}if(tok)toast("Hämtar förfrågan från hemsidan…");if(tok){try{history.replaceState(null,"",location.pathname+location.search)}catch(_){}fqImport(tok,true)}}
 {const t=setInterval(()=>{if(S.db){clearInterval(t);fqBoot()}},300);setTimeout(()=>clearInterval(t),60000)}
 
 function fqVer(f){return (S.fqView==="orig"||!f.cur)?f.orig:f.cur}
