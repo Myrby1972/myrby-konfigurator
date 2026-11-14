@@ -2334,7 +2334,7 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .vstep208 b{min-width:16px;text-align:center}
 
 /* v210: Från hemsidan (Säljportalen) */
-.fq-add{display:flex;gap:10px;align-items:end;background:var(--raised);border-radius:var(--r);box-shadow:var(--shadow-1);padding:14px 16px}
+.fqx-add{display:flex;gap:10px;align-items:end;background:var(--raised);border-radius:var(--r);box-shadow:var(--shadow-1);padding:14px 16px}
 .fqpage .li .fq-when{font-size:.84rem;color:var(--ink-3);white-space:nowrap}
 .fqone{max-width:1320px;gap:22px}
 .fq-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
@@ -2374,8 +2374,8 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 .fq-ci s{color:var(--ink-3)}
 .fq-av{width:30px;height:30px;border-radius:50%;background:var(--gold);color:#23412a;display:grid;place-items:center;font-weight:700}
 .fq-chg .btn{margin-top:8px}
-.fq-note{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
-.fq-note p{margin:0 0 2px;line-height:1.45}
+.fqx-note{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.fqx-note p{margin:0 0 2px;line-height:1.45}
 .fq-np{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.85rem}
 .fq-np.free{background:var(--sand);color:var(--green)}
 .fq-compose{display:grid;gap:8px;margin-top:8px}
@@ -3277,9 +3277,7 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
       if(/spol/.test(nm)){const T=`fill="#dfe8ea" stroke="#9fb3b8" stroke-width="${fx(2*k)}"`;s+=poly([[xs,0,zB],[x1,0,zB],[x1,H,zB],[xs,H,zB]],T);for(let y=300;y<H;y+=300)s+=ln([xs,y,zB],[x1,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);for(let xx=Math.ceil(xs/300)*300;xx<x1;xx+=300)s+=ln([xx,0,zB],[xx,H,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`);
         [x0,x1].forEach(xx=>{if(xx<=near+120)return;s+=poly([[xx,0,z],[xx,0,zB],[xx,H,zB],[xx,H,z]],T);for(let y=300;y<H;y+=300)s+=ln([xx,y,z],[xx,y,zB],`stroke="#b9c9cd" stroke-width="${fx(3*k)}"`)});
         const nearRoom=x0<camX+4500,hx=(x0+x1)/2,hz=zB;if(!nearRoom)s+=`<path d="M${pr(hx-500,1800,hz).map(fx).join(" ")} Q${pr(hx,1200,hz).map(fx).join(" ")} ${pr(hx+300,1900,hz).map(fx).join(" ")}" fill="none" stroke="#3f6f8f" stroke-width="${fx(28*k)}" stroke-linecap="round"/>`;const dc=pr(hx,0,(z+zB)/2);if(!nearRoom)s+=`<ellipse cx="${fx(dc[0])}" cy="${fx(dc[1])}" rx="${fx(220*k)}" ry="${fx(80*k)}" fill="#c9d3cf" stroke="${ink}" stroke-width="${fx(2*k)}"/>`;
-        if(!nearRoom){s+=poly([pt(0,0),pt(1,0),pt(1,1250),pt(0,1250)],`fill="${fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`);const np=Math.max(1,Math.round(len/140));for(let i=1;i<np;i++)s+=ln(pt(i/np,0),pt(i/np,1250),`stroke="${fc[1]}" stroke-width="${fx(8*k)}" opacity=".8"`);
-          const nb=Math.max(1,Math.round(len/105));for(let i=1;i<nb;i++)s+=ln(pt(i/nb,1300),pt(i/nb,2320),`stroke="${fr0.a}" stroke-width="${fx(24*k)}" stroke-linecap="round"`);s+=ln(pt(0,2320),pt(1,2320),`stroke="${fr0.a}" stroke-width="${fx(55*k)}"`)+ln(pt(0,0),pt(0,2320),`stroke="${fr0.a}" stroke-width="${fx(60*k)}"`)+ln(pt(1,0),pt(1,2320),`stroke="${fr0.a}" stroke-width="${fx(60*k)}"`)}
-        if(!nearRoom)s+=poly([pt(0,1250),pt(1,1250),pt(1,1300),pt(0,1300)],`fill="${fr0.a}"`)+poly([pt(0,0),pt(1,0),pt(1,60),pt(0,60)],`fill="${fr0.b}"`);
+        /* v211: spolspiltan är öppen mot stallgången, ingen front eller räcke (Carl 14/11) */
         const c=pr(...pt(.5,H-250));if(!nearRoom)s+=`<text x="${fx(c[0])}" y="${fx(c[1])}" text-anchor="middle" font-family="Carlito,sans-serif" font-weight="700" letter-spacing="${fx(2*k)}" font-size="${fx(Math.max(8,160*k))}" fill="${ink}" opacity=".7">SPOLSPILTA</text>`;G.push(s);return}
       s+=poly([pt(0,0),pt(1,0),pt(1,H),pt(0,H)],wall);const mid=(x0+x1)/2,dl=Math.max(xs,mid-500),dR=mid+500;
       if(dR>xs){s+=poly([[dl,0,z],[dR,0,z],[dR,2100,z],[dl,2100,z]],`fill="#8a5a33" stroke="${ink}" stroke-width="${fx(10*k)}"`);const nq=5;for(let i=1;i<nq;i++)s+=ln([dl+(dR-dl)*i/nq,0,z],[dl+(dR-dl)*i/nq,2100,z],`stroke="#6a4224" stroke-width="${fx(6*k)}"`);s+=ln([dR-170,1000,z],[dR-170,1140,z],`stroke="#c9a24e" stroke-width="${fx(26*k)}" stroke-linecap="round"`);
@@ -4444,8 +4442,8 @@ function planSVG(dr,{interactive=false,sel=null,lvl=9}={}){
       }else{
         g.push(txt(c[0],c[1]+60,esc(m.name||"Rum"),`text-anchor="middle" font-size="${190*F}" fill="${INK}" pointer-events="none"`));
         // dörr in till rummet från stallgången
-        const dw=Math.min(900,w-300),l=w/2-dw/2;g.push(line(l,d,l+dw,d,`stroke="#fff" stroke-width="40"`)+line(l,d,l,d+dw,`stroke="${INK}" stroke-width="14"`));
-        const a=tf(l,d+dw),b=tf(l+dw,d);const sweep=o.flip?1:0;g.push(`<path d="M ${a[0]} ${a[1]} A ${dw} ${dw} 0 0 ${k==="N"||k==="E"?0:1} ${b[0]} ${b[1]}" fill="none" stroke="${INK}" stroke-width="8"/>`);
+        if(openBay(m))g.push(line(60,d,w-60,d,`stroke="#fff" stroke-width="40"`));else{const dw=Math.min(900,w-300),l=w/2-dw/2;g.push(line(l,d,l+dw,d,`stroke="#fff" stroke-width="40"`)+line(l,d,l,d+dw,`stroke="${INK}" stroke-width="14"`));
+        const a=tf(l,d+dw),b=tf(l+dw,d);const sweep=o.flip?1:0;g.push(`<path d="M ${a[0]} ${a[1]} A ${dw} ${dw} 0 0 ${k==="N"||k==="E"?0:1} ${b[0]} ${b[1]}" fill="none" stroke="${INK}" stroke-width="8"/>`)}
         if(m.win)g.push(line(w*0.3,-WT/2,w*0.7,-WT/2,`stroke="${INK}" stroke-width="70"`));
       }
     }else if(m.t==="door"){
@@ -4547,8 +4545,8 @@ function planPretty(dr,{interactive=false,lvl=9,hl=false,paint=false,doors=false
       g.push(poly([[0,0],[w,0],[w,d],[0,d]],`fill="${C.room}" stroke="${C.roomLine}" stroke-width="12" ${hit} ${m.id&&m.id===D.ui?.snap?'class="snap"':""}`));
       g.push(poly([[0,0],[w,0],[w,d],[0,d]],`fill="url(#pp-room)" pointer-events="none"`));g.push(roomFixtures(m,tf,w,d,F));
       {const nm=m.name||"Rum",fs=Math.min(Math.max(250*F,Math.min(w,d)*.16),(w-160)/(nm.length*.56));g.push(T(c[0],c[1]+fs*.3,esc(nm),`text-anchor="middle" ${serif} font-size="${fs}" fill="${C.ink}" font-style="italic" pointer-events="none"`));g.push(T(c[0],c[1]+fs*.3+fs*.8,`${m2(w,d)} m²`,`text-anchor="middle" ${sans} font-size="${fs*.6}" font-weight="700" fill="${C.ink}" opacity=".7" pointer-events="none"`));}
-      const dw=Math.min(900,w-300),l=w/2-dw/2;g.push(line(l,d,l+dw,d,`stroke="${C.aisle}" stroke-width="40" pointer-events="none"`)+line(l,d,l,d+dw*.92,`stroke="${C.line}" stroke-width="12" stroke-linecap="round" pointer-events="none"`));
-      {const a=tf(l,d+dw*.92),b=tf(l+dw*.92,d);g.push(`<path d="M ${a[0]} ${a[1]} A ${dw*.92} ${dw*.92} 0 0 ${k==="N"||k==="E"?0:1} ${b[0]} ${b[1]}" fill="none" stroke="${C.line}" stroke-width="6" stroke-dasharray="28 22" opacity=".5" pointer-events="none"/>`)}
+      if(openBay(m))g.push(line(60,d,w-60,d,`stroke="${C.aisle}" stroke-width="40" pointer-events="none"`));else{const dw=Math.min(900,w-300),l=w/2-dw/2;g.push(line(l,d,l+dw,d,`stroke="${C.aisle}" stroke-width="40" pointer-events="none"`)+line(l,d,l,d+dw*.92,`stroke="${C.line}" stroke-width="12" stroke-linecap="round" pointer-events="none"`));
+      {const a=tf(l,d+dw*.92),b=tf(l+dw*.92,d);g.push(`<path d="M ${a[0]} ${a[1]} A ${dw*.92} ${dw*.92} 0 0 ${k==="N"||k==="E"?0:1} ${b[0]} ${b[1]}" fill="none" stroke="${C.line}" stroke-width="6" stroke-dasharray="28 22" opacity=".5" pointer-events="none"/>`)}}
       if(m.win)over.push(line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.glass}" stroke-width="${WT*.4}"`)+line(w*.3,-WT/2,w*.7,-WT/2,`stroke="${C.line}" stroke-width="6"`));
     }else if(m.t==="door"){
       over.push(line(0,-WT/2,w,-WT/2,`stroke="${C.aisle}" stroke-width="${WT+20}"`)+line(0,0,0,-WT,`stroke="${C.line}" stroke-width="14"`)+line(w,0,w,-WT,`stroke="${C.line}" stroke-width="14"`));
@@ -6163,7 +6161,7 @@ async function fqImport(tok,open){if(!tok)return;if(!S.db){toast("Ingen anslutni
   if(!ex){const d=o.d,c=d.customer||{};try{await ref.set({id,createdAt:o.at||Date.now(),importedAt:Date.now(),importedBy:S.role,status:"ny",orig:d,cur:null,changes:[],notes:[],name:c.name||c.company||"Okänd kund",summary:fqSummary(d)});toast("Förfrågan är sparad under Från hemsidan")}catch(e){toast(e.code==="invalid_argument"?"Du saknar behörighet att spara, be Carl dela portalen som Contributor":"Kunde inte spara förfrågan");return}}
   if(open!==false)location.hash="#f-"+id}
 function fqBoot(){if(fqBoot.done||!S.db)return;fqBoot.done=true;
-  S.db.collection("forfragningar").orderBy("createdAt","desc").onSnapshot(s=>{S.fq=s.docs.map(d=>({id:d.id,...d.data()}));if(view()==="forfragan"&&!document.activeElement?.closest?.(".fq-compose,.fq-add"))render();else renderNav()},()=>{});
+  S.db.collection("forfragningar").orderBy("createdAt","desc").onSnapshot(s=>{S.fq=s.docs.map(d=>({id:d.id,...d.data()}));if(view()==="forfragan"&&!document.activeElement?.closest?.(".fq-compose,.fqx-add"))render();else renderNav()},()=>{});
   let h="";try{h=window.top.location.href}catch(_){}const tok=fqToken(location.hash)||fqToken(location.search)||fqToken(h);if(tok){try{history.replaceState(null,"",location.pathname+location.search)}catch(_){}fqImport(tok,true)}}
 {const t=setInterval(()=>{if(S.db){clearInterval(t);fqBoot()}},300);setTimeout(()=>clearInterval(t),60000)}
 
@@ -6173,7 +6171,7 @@ function fqDraw(d,v){const sv=D;let h="";try{D=structuredClone(d);D.ui=D.ui||{};
 function vFq(){const id=fqId();if(id)return vFqOne(id);
   const L=S.fq,row=f=>{const st=FQ_ST[f.status]||FQ_ST.ny;return `<a class="li" href="#f-${esc(f.id)}"><span class="thumb round">${esc((f.name||"?")[0])}</span><span class="grow"><span class="t">${esc(f.name||"Okänd kund")}</span><span class="s">${esc((()=>{try{return fqSummary(f.cur||f.orig)}catch(_){return f.summary||""}})())}${f.cur?` · <b class="fq-nk">${esc(fqWhoOf(f.editedBy))} har ändrat</b>`:""}${(f.notes||[]).length?` · ${(f.notes||[]).length} ${(f.notes||[]).length===1?"anteckning":"anteckningar"}`:""}</span></span><span class="fq-when">${esc(fqWhen(f.createdAt))}</span><span class="chip ${st[1]}">${st[0]}</span><span class="chev">${svg("chev",18)}</span></a>`};
   return `<div class="page fqpage"><div class="page-head"><p class="eyebrow">Rita din stallinredning</p><h1>Från hemsidan</h1><p>Ritningar som kunder har skickat från hemsidan. De ligger här, skilda från affärsmöjligheterna, tills du gör om dem.</p></div>
-    <form class="fq-add" data-fqaddform><label class="field" style="flex:1"><span>Har du en länk från mejlet? Klistra in den här</span><input class="input" name="l" placeholder="https://claude.ai/artifact/…#forfragan=…" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
+    <form class="fqx-add" data-fqaddform><label class="field" style="flex:1"><span>Har du en länk från mejlet? Klistra in den här</span><input class="input" name="l" placeholder="https://claude.ai/artifact/…#forfragan=…" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
     ${L.length?`<div class="list">${L.map(row).join("")}</div>`:`<div class="empty">${svg("lead")}<b>Inga förfrågningar än</b><span>När en kund skickar sin ritning kommer ett mejl till info@myrby.com. Knappen i mejlet öppnar förfrågan här.</span></div>`}</div>`}
 function vFqOne(id){const f=S.fq.find(x=>x.id===id);
   if(!f)return `<div class="page"><a class="lback" href="#forfragan">${svg("chev",16)} Alla förfrågningar</a><div class="empty"><b>${S.dbReady&&fqBoot.done?"Hittar inte förfrågan":"Laddar…"}</b></div></div>`;
@@ -6198,7 +6196,7 @@ function vFqOne(id){const f=S.fq.find(x=>x.id===id);
      <div class="card-plain fq-facts">${secs.filter(s=>s.r.length).map(s=>`<div class="fq-sec"><h4>${esc(s.h||"Övrigt")}</h4><dl>${s.r.map(([k,v])=>`<dt>${k==="•"?"":esc(k)}</dt><dd class="${changedKeys.has(k)?"chg":""}">${esc(v)}</dd>`).join("")}</dl></div>`).join("")}</div>
      ${chg.length?`<div class="card-plain fq-chg"><div class="fq-ch"><b>Nikkis ändringar</b><span class="faint small">${esc(fqWhen(f.editedAt))}</span></div>${chg.map(x=>`<div class="fq-ci"><span class="fq-av">${esc((f.editedBy?((ROLES[f.editedBy]||{}).name||"N"):"N")[0])}</span><div><b>${esc(x.k)}</b><br><span class="small">${x.from?`<s>${esc(x.from)}</s> → `:"Tillagt: "}${esc(x.to||"borttaget")}</span></div></div>`).join("")}<button class="btn ghost sm" data-fqreset="${esc(f.id)}">Återställ till kundens original</button></div>`:""}
      <div class="card-plain fq-notes"><div class="fq-ch"><b>Anteckningar</b><span class="faint small">Bara för Myrby</span></div>
-      ${notes.map((n,i)=>`<div class="fq-note"><span class="fq-np${n.pin?"":" free"}">${n.pin?i+1:"✎"}</span><div><p>${esc(n.text)}</p><span class="faint small">${esc(n.who||"")} · ${esc(fqWhen(n.at))}</span></div><button class="icon-btn sm" data-fqdelnote="${esc(n.id)}" aria-label="Ta bort anteckning">${svg("close",14)}</button></div>`).join("")||`<p class="faint small" style="margin:6px 0 10px">Inga anteckningar än.</p>`}
+      ${notes.map((n,i)=>`<div class="fqx-note"><span class="fq-np${n.pin?"":" free"}">${n.pin?i+1:"✎"}</span><div><p>${esc(n.text)}</p><span class="faint small">${esc(n.who||"")} · ${esc(fqWhen(n.at))}</span></div><button class="icon-btn sm" data-fqdelnote="${esc(n.id)}" aria-label="Ta bort anteckning">${svg("close",14)}</button></div>`).join("")||`<p class="faint small" style="margin:6px 0 10px">Inga anteckningar än.</p>`}
       <form class="fq-compose" data-fqnote="${esc(f.id)}"><textarea class="input" name="t" rows="2" placeholder="Skriv en anteckning…"></textarea><div class="fq-cbar"><button type="button" class="linkbtn" data-fqpin>${S.fqPin||S.fqPinAt?"✓ Fäst på ritningen":"⌖ Fäst på ritningen"}</button><button class="btn sm" type="submit">Spara</button></div></form></div>
    </div></div></div>`}
 function fqPinsDraw(){}
