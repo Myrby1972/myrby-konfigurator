@@ -6149,7 +6149,7 @@ try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()
    Säljportalen: egen meny "Från hemsidan" och egen samling i databasen ("forfragningar"), helt skild från affärsmöjligheterna.
    Nikki ser kundens original, kan göra en egen version (allt i ritverktyget går att ändra), skriva anteckningar (fria eller fästa på ritningen)
    och med ett klick göra förfrågan till en affärsmöjlighet. */
-const FQ_PORTAL="https://claude.ai/artifact/BG2TxXDPM31SQhomFmoNSg";
+const FQ_PORTAL="https://claude.ai/artifact/BG2TxXDPM31SQhomFmoNSg";const FQ_RELAY215="https://myrby1972.github.io/myrby-konfigurator/fq.html";
 async function fqEncode(o){const raw=new TextEncoder().encode(JSON.stringify(o));
   if(window.CompressionStream){try{const buf=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer();return "z"+b64u.enc(new Uint8Array(buf))}catch(e){}}
   return "j"+b64u.enc(raw)}
@@ -6161,7 +6161,7 @@ function fqSummary(d){try{const dr=d&&d.drawing,bx=dr?layout(dr).filter(o=>o.m.t
 /* ---------- Hemsidan: kort mejl med länk ---------- */
 {const _ps210=publicSend;publicSend=async function(){try{if(isPublic()&&D&&D.ui&&D.ui.consent){const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
     const d=pubSlim({...structuredClone(D),items:quoteItems()});if(d.ui){delete d.ui.consent}
-    window.__fq={id,link:FQ_PORTAL+"#forfragan="+await fqEncode({v:1,id,at:Date.now(),d})}}}catch(e){window.__fq=null}
+    window.__fq={id,link:FQ_RELAY215+"#forfragan="+await fqEncode({v:1,id,at:Date.now(),d})}}}catch(e){window.__fq=null}
   try{return await _ps210.apply(this,arguments)}finally{window.__fq=null}}}
 {const _pt210=publicText;publicText=function(d){if(!isPublic()||!window.__fq)return _pt210.apply(this,arguments);try{const c=d.customer||{};
   const who=[c.name||c.company,c.phone,c.email,[c.zip,c.city].filter(Boolean).join(" ")].filter(Boolean).join(" · ");
@@ -6188,6 +6188,8 @@ async function fqImport(tok,open){if(!tok)return;if(!S.db){toast("Ingen anslutni
   const id=String(o.id||("f"+Date.now().toString(36))).replace(/[^A-Za-z0-9_\-]/g,""),ref=S.db.doc("forfragningar/"+id);let ex=false;try{const g=await ref.get();ex=g.exists}catch(_){}
   if(!ex){const d=o.d,c=d.customer||{};try{await ref.set({id,createdAt:o.at||Date.now(),importedAt:Date.now(),importedBy:S.role,status:"ny",orig:d,cur:null,changes:[],notes:[],name:c.name||c.company||"Okänd kund",summary:fqSummary(d)});toast("Förfrågan är sparad under Från hemsidan")}catch(e){toast(e.code==="invalid_argument"?"Du saknar behörighet att spara, be Carl dela portalen som Contributor":"Kunde inte spara förfrågan");return}}
   if(open!==false)location.hash="#f-"+id}
+/* v215: förfrågan läggs in direkt när Nikki klistrar in den (från sidan i mejlet), utan att trycka på något mer. */
+{document.addEventListener("paste",e=>{try{const t=(e.clipboardData||window.clipboardData).getData("text");const tok=fqToken(t);if(!tok)return;const tg=e.target&&e.target.closest?e.target:null,inForm=tg&&tg.closest("[data-fqaddform]");if(tg&&!inForm&&tg.closest("input,textarea,[contenteditable]"))return;e.preventDefault();if(inForm&&tg.tagName==="INPUT")tg.value="";toast("Lägger in förfrågan…");fqImport(tok,true)}catch(_){}})}
 function fqBoot(){if(fqBoot.done||!S.db)return;fqBoot.done=true;
   S.db.collection("forfragningar").orderBy("createdAt","desc").onSnapshot(s=>{S.fq=s.docs.map(d=>({id:d.id,...d.data()}));if(view()==="forfragan"&&!document.activeElement?.closest?.(".fq-compose,.fqx-add"))render();else renderNav()},()=>{});
   let h="";try{h=window.top.location.href}catch(_){}const tok=fqToken(location.hash)||fqToken(location.search)||fqToken(h);try{console.log("[fq] boot hash="+location.hash.length+" search="+location.search.length+" ref="+(document.referrer||"").length+" tok="+tok.length)}catch(_){}if(tok)toast("Hämtar förfrågan från hemsidan…");if(tok){try{history.replaceState(null,"",location.pathname+location.search)}catch(_){}fqImport(tok,true)}}
@@ -6199,7 +6201,7 @@ function fqDraw(d,v){const sv=D;let h="";try{D=structuredClone(d);D.ui=D.ui||{};
 function vFq(){const id=fqId();if(id)return vFqOne(id);
   const L=S.fq,row=f=>{const st=FQ_ST[f.status]||FQ_ST.ny;return `<a class="li" href="#f-${esc(f.id)}"><span class="thumb round">${esc((f.name||"?")[0])}</span><span class="grow"><span class="t">${esc(f.name||"Okänd kund")}</span><span class="s">${esc((()=>{try{return fqSummary(f.cur||f.orig)}catch(_){return f.summary||""}})())}${f.cur?` · <b class="fq-nk">${esc(fqWhoOf(f.editedBy))} har ändrat</b>`:""}${(f.notes||[]).length?` · ${(f.notes||[]).length} ${(f.notes||[]).length===1?"anteckning":"anteckningar"}`:""}</span></span><span class="fq-when">${esc(fqWhen(f.createdAt))}</span><span class="chip ${st[1]}">${st[0]}</span><span class="chev">${svg("chev",18)}</span></a>`};
   return `<div class="page fqpage"><div class="page-head"><p class="eyebrow">Rita din stallinredning</p><h1>Från hemsidan</h1><p>Ritningar som kunder har skickat från hemsidan. De ligger här, skilda från affärsmöjligheterna, tills du gör om dem.</p></div>
-    <form class="fqx-add" data-fqaddform><label class="field" style="flex:1"><span>Har du en länk från mejlet? Klistra in den här</span><input class="input" name="l" placeholder="https://claude.ai/artifact/…#forfragan=…" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
+    <form class="fqx-add" data-fqaddform><label class="field" style="flex:1"><span>Öppnade du förfrågan från mejlet? Klicka här och tryck ⌘ V (Mac) eller Ctrl V (PC)</span><input class="input" name="l" placeholder="Klistra in förfrågan här" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
     ${L.length?`<div class="list">${L.map(row).join("")}</div>`:`<div class="empty">${svg("lead")}<b>Inga förfrågningar än</b><span>När en kund skickar sin ritning kommer ett mejl till info@myrby.com. Knappen i mejlet öppnar förfrågan här.</span></div>`}</div>`}
 function vFqOne(id){const f=S.fq.find(x=>x.id===id);
   if(!f)return `<div class="page"><a class="lback" href="#forfragan">${svg("chev",16)} Alla förfrågningar</a><div class="empty"><b>${S.dbReady&&fqBoot.done?"Hittar inte förfrågan":"Laddar…"}</b></div></div>`;
@@ -6328,6 +6330,8 @@ function toastOff214(){const t=document.getElementById("toast");if(t&&t.classLis
   const h=w.onclick;w.onclick=e=>{const rt=e.target.closest("[data-pubretry]");if(rt){e.stopPropagation();if(rt.disabled)return;rt.disabled=true;rt.innerHTML=`${svg("chev",18)} Skickar…`;Promise.resolve(publicSend()).catch(()=>{}).finally(()=>{const b=document.querySelector("[data-pubretry]");if(b){b.disabled=false;b.innerHTML=`${svg("chev",18)} Försök igen`}});return}
     if(e.target.closest("[data-pubback214]")){e.stopPropagation();w.onclick=null;S.pubDone=false;const P=wizPages();S.wizStep=Math.max(0,P.findIndex(x=>x.key==="kund"));renderWiz.dir=-1;renderWiz();return}
     if(h)h.call(w,e)}}catch(_){}return r}}
+/* v215: första steget får också en plats i historiken, så att bakåt från steg 2 landar på steg 1 och inte lämnar sidan. */
+if(isPublic()){try{if(!(history.state&&history.state.wiz214!=null))history.replaceState(Object.assign({},history.state||{},{wiz214:S.wizStep||0}),"")}catch(_){}NAV214.last=S.wizStep||0}
 
 </script>
 

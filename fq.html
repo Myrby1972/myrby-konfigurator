@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Förfrågan från Rita din stallinredning · Myrby</title>
+<style>
+:root{--g:#23412a;--g2:#1b3321;--gold:#c9a24e;--bg:#f3ede1;--card:#fffdf8;--ink:#26352e;--mut:#6b6f66;--line:#e2d9c6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Lato,Arial,sans-serif}
+header{background:var(--g);color:#f3ead5;padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+header b{font-family:Georgia,"Times New Roman",serif;font-size:22px;letter-spacing:.5px}
+header span{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+main{max-width:720px;margin:32px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:32px;line-height:1.2;margin:0 0 6px}
+.lead{color:var(--mut);margin:0 0 22px}
+dl{display:grid;grid-template-columns:150px 1fr;gap:8px 16px;margin:0 0 24px}
+dt{color:var(--mut)}dd{margin:0;font-weight:600}
+.note{background:#f6f1e6;border-radius:12px;padding:14px 16px;margin:0 0 24px;white-space:pre-wrap}
+ol{padding-left:22px;margin:0 0 22px}ol li{margin:0 0 8px}
+kbd{background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 7px;font-family:inherit;font-size:15px;font-weight:600}
+button{appearance:none;border:0;border-radius:999px;background:var(--g);color:#fff;font-family:inherit;font-size:18px;font-weight:700;line-height:1;padding:18px 28px;cursor:pointer;width:100%}
+button:hover{background:var(--g2)}
+.ok{display:none;margin-top:16px;background:#e8f1e4;border-radius:12px;padding:14px 16px;font-weight:600}
+.ok.on{display:block}
+.err{color:#9b2c2c;font-weight:600}
+textarea{position:fixed;left:-9999px;top:0}
+</style>
+</head>
+<body>
+<header><b>MYRBY</b><span>Rita din stallinredning</span></header>
+<main><div class="card" id="c"><h1>Förfrågan från hemsidan</h1><p class="lead">Läser in…</p></div></main>
+<script>
+(async function(){
+  var c=document.getElementById("c");
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(x){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]})}
+  var PORTAL="https://claude.ai/artifact/BG2TxXDPM31SQhomFmoNSg";
+  var m=/forfragan=([A-Za-z0-9_\-]+)/.exec(location.hash||"");
+  if(!m){c.innerHTML='<h1>Förfrågan från hemsidan</h1><p class="err">Länken är inte hel. Öppna länken direkt från mejlet igen.</p>';return}
+  var tok=m[1],o=null;
+  try{var t=tok.slice(1).replace(/-/g,"+").replace(/_/g,"/");var s=atob(t);var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);
+    var txt=tok[0]==="z"?await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text():new TextDecoder().decode(u);o=JSON.parse(txt)}catch(e){o=null}
+  var d=(o&&o.d)||{},k=d.customer||{},dr=d.drawing||null,sp=d.spec||{};
+  var boxes=0;try{Object.keys((dr&&dr.walls)||{}).forEach(function(w){(dr.walls[w]||[]).forEach(function(x){if(x&&x.t==="box")boxes++})})}catch(e){}
+  var nf=function(v){return Math.round(+v||0).toLocaleString("sv-SE")};
+  var FN={optimal:"Optimal",baryard:"Baryard",fagelbro:"Fågelbro",janslund:"Janslund",faro:"Fårö",stromsholm:"Strömsholm",emmaboda:"Emmaboda",dala:"Dala",rotbrunna:"Rotbrunna"};var cap=function(s){s=String(s||"");return FN[s]||(s?s.charAt(0).toUpperCase()+s.slice(1):"")};
+  var when=o&&o.at?new Date(o.at).toLocaleString("sv-SE",{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"}):"";
+  var rows=[["Kund",k.name||k.company||"Okänd kund"],["Telefon",k.phone],["E-post",k.email],["Ort",[k.zip,k.city].filter(Boolean).join(" ")],
+    ["Stallet",dr?nf(dr.L)+" × "+nf(dr.W)+" mm":""],["Boxar",boxes?boxes+" st":""],["Front",cap(sp.front)],["Skickad",when]].filter(function(r){return r[1]});
+  c.innerHTML='<h1>Ny ritning från hemsidan</h1><p class="lead">'+(o?"Kunden har ritat sitt stall i Rita din stallinredning.":"Förfrågan kunde inte läsas här, men den går ändå att lägga in i säljportalen.")+'</p>'+
+    (rows.length?'<dl>'+rows.map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>'}).join("")+'</dl>':"")+
+    (d.notes?'<p class="note">'+esc(d.notes)+'</p>':"")+
+    '<ol><li>Tryck på knappen. Förfrågan kopieras och säljportalen öppnas.</li><li>I säljportalen: klicka i rutan under <b>Från hemsidan</b> och tryck <kbd>⌘ V</kbd> på Mac eller <kbd>Ctrl V</kbd> på PC.</li></ol>'+
+    '<button type="button" id="go">Lägg in i säljportalen</button><p class="ok" id="ok">Kopierad. Klicka i rutan i säljportalen och tryck ⌘ V (Mac) eller Ctrl V (PC).</p>';
+  document.getElementById("go").onclick=async function(){var link=location.href,ok=false;
+    try{await navigator.clipboard.writeText(link);ok=true}catch(e){}
+    if(!ok){try{var ta=document.createElement("textarea");ta.value=link;document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");ta.remove()}catch(e){}}
+    document.getElementById("ok").classList.add("on");
+    if(!ok)document.getElementById("ok").textContent="Kopiera hela adressen i adressfältet och klistra in den i säljportalen under Från hemsidan.";
+    window.open(PORTAL+"#forfragan","_blank")};
+})();
+</script>
+</body>
+</html>
