@@ -2300,6 +2300,20 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .ichips194 .cchip.prod{padding-right:6px}
 #wiz .ichips194 .cchip.prod .cx{color:#fffdf8;opacity:.8;background-color:transparent}
 #wiz .ichips194 .cchip.prod .cx:hover{opacity:1;background-color:rgba(255,255,255,.14)}
+/* v200 (Carl 14/11): korten ovanför ritningen vita, pilen Myrby-grön, så det syns att man kan byta */
+#wiz .ichips194 .cchip.pick{background:#fff;color:#1e3932;box-shadow:inset 0 0 0 1.5px #d9ceb8,0 2px 8px rgba(30,57,50,.07)}
+#wiz .ichips194 .cchip.pick small{color:#6b7a70}
+#wiz .ichips194 .cchip.pick b{color:#1e3932}
+#wiz .ichips194 .cchip.pick .cth{box-shadow:0 0 0 1px #d9ceb8}
+#wiz .ichips194 .cchip.pick:hover{background:#fff;box-shadow:inset 0 0 0 2px #23412a,0 4px 12px rgba(30,57,50,.12)}
+#wiz .ichips194 .cchip.pick[aria-expanded="true"]{box-shadow:inset 0 0 0 2px #23412a,0 4px 12px rgba(30,57,50,.12)}
+#wiz .ichips194 .cchip .vm-car{position:relative;flex:none;width:26px;height:26px;margin-left:6px;border:0;border-radius:50%;background:#e5eedf;opacity:1;transform:none;transition:background .15s}
+#wiz .ichips194 .cchip .vm-car::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;border-right:2.5px solid #23412a;border-bottom:2.5px solid #23412a;transform:translate(-50%,-70%) rotate(45deg);transition:transform .15s}
+#wiz .ichips194 .cchip.pick[aria-expanded="true"] .vm-car,#wiz .ichips194 .cchip.pick[aria-expanded="true"]:hover .vm-car{transform:none;background:#23412a}
+#wiz .ichips194 .cchip[aria-expanded="true"] .vm-car::after{border-color:#fff;transform:translate(-50%,-30%) rotate(225deg)}
+#wiz .ichips194 .cchip.pick:hover .vm-car{background:#d6e4cf}
+#wiz .ichips194 .cchip.prod .cx{color:#1e3932;opacity:.6}
+#wiz .ichips194 .cchip.prod .cx:hover{opacity:1;background-color:#f1ece1}
 </style>
 
 <div class="app">
