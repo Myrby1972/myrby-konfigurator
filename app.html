@@ -2332,6 +2332,66 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .vstep208 button{width:32px;height:32px;border:0;border-radius:50%;background:#23412a;color:#fff;font-size:1.1rem;cursor:pointer}
 #wiz .vstep208 button:disabled{opacity:.35;cursor:default}
 #wiz .vstep208 b{min-width:16px;text-align:center}
+
+/* v210: Från hemsidan (Säljportalen) */
+.fq-add{display:flex;gap:10px;align-items:end;background:var(--raised);border-radius:var(--r);box-shadow:var(--shadow-1);padding:14px 16px}
+.fqpage .li .fq-when{font-size:.84rem;color:var(--ink-3);white-space:nowrap}
+.fqone{max-width:1320px;gap:22px}
+.fq-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.fq-head h1{font-size:clamp(2.1rem,4vw,2.8rem)}
+.fq-head .muted{margin-top:4px;font-size:1.05rem}
+.fq-acts{display:flex;gap:10px;flex-wrap:wrap}
+.fq-acts .btn svg{width:18px;height:18px}
+.fq-tog,.fq-views{display:inline-flex;gap:4px;padding:4px;border-radius:999px;background:var(--raised);box-shadow:inset 0 0 0 1.5px var(--line);align-items:center;justify-self:start}
+.fq-tog button,.fq-views button{border:0;background:none;padding:9px 18px;border-radius:999px;font-weight:700;font-size:.95rem;color:var(--green)}
+.fq-tog button[aria-pressed="true"]{background:var(--gold);color:#23412a}
+.fq-views button[aria-pressed="true"]{background:var(--green);color:#fff}
+.fq-views span{padding:0 12px 0 8px}
+.fq-grid{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:22px;align-items:start}
+@media (max-width:1100px){.fq-grid{grid-template-columns:1fr}}
+.fq-left{display:grid;gap:12px;min-width:0}
+.fq-draw{position:relative;background:#fbf9f4;border-radius:var(--r);box-shadow:var(--shadow-1);padding:10px;overflow:hidden}
+.fq-draw svg{display:block;width:100%;height:auto;max-height:70vh;pointer-events:none}
+.fq-draw.pinning{cursor:crosshair;box-shadow:0 0 0 3px var(--gold),var(--shadow-1)}
+.fq-pins{position:absolute;inset:0;pointer-events:none}
+.fq-pin{position:absolute;width:32px;height:32px;margin:-30px 0 0 -16px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--green);box-shadow:0 4px 10px rgba(30,57,50,.35);display:grid;place-items:center;pointer-events:auto}
+.fq-pin b{transform:rotate(45deg);color:#fff;font-size:.9rem}
+.fq-pin.new{background:var(--gold)}.fq-pin.new b{color:#23412a}
+.fq-pinhint{margin:0;font-weight:700;color:var(--green)}
+.fq-quote{display:flex;gap:14px;background:#f6f1e6;border-radius:var(--r);padding:16px 18px}
+.fq-quote>span{font-family:var(--f-display);font-size:3rem;line-height:.8;color:#c9a95f}
+.fq-quote p+p{font-size:1.05rem;line-height:1.5;margin-top:4px}
+.fq-right{display:grid;gap:14px;min-width:0}
+.fq-facts{padding:6px 0}
+.fq-sec{padding:12px 18px;border-top:1px solid var(--line)}.fq-sec:first-child{border-top:0}
+.fq-sec h4{font-family:var(--f-body);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin:0 0 8px}
+.fq-sec dl{display:grid;grid-template-columns:minmax(110px,max-content) minmax(0,1fr);gap:6px 14px;margin:0;font-size:.94rem}
+.fq-sec dt{color:var(--ink-3)}.fq-sec dd{margin:0;font-weight:700}
+.fq-sec dd.chg{background:#f3e6c4;border-radius:6px;padding:0 6px;justify-self:start}
+.fq-ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fq-ch b{font-size:1.05rem}
+.fq-ci{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.fq-ci s{color:var(--ink-3)}
+.fq-av{width:30px;height:30px;border-radius:50%;background:var(--gold);color:#23412a;display:grid;place-items:center;font-weight:700}
+.fq-chg .btn{margin-top:8px}
+.fq-note{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.fq-note p{margin:0 0 2px;line-height:1.45}
+.fq-np{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.fq-np.free{background:var(--sand);color:var(--green)}
+.fq-compose{display:grid;gap:8px;margin-top:8px}
+.fq-compose textarea{min-height:64px}
+.fq-cbar{display:flex;justify-content:space-between;align-items:center}
+.fq-cbar .linkbtn{background:none;border:0;font-weight:700;color:var(--green);padding:0}
+.fq-editbar{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--gold);color:#23412a;font-size:.98rem;flex:none}
+.fq-editbar span{flex:1}
+.fq-editbar .btn.ghost{box-shadow:inset 0 0 0 1.5px rgba(35,65,42,.5);color:#23412a}
+.fq-editbar .btn.gold{background:#23412a;color:#fff}
+
+.fq-left{position:sticky;top:14px}@media (max-width:1100px){.fq-left{position:static}}.fq-nk{color:#8a6a1f;font-weight:600}
+.fq-homebar{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:14px 18px;border-radius:16px;background:#fffdf8;border:1px solid #e3cf95;box-shadow:0 1px 0 rgba(0,0,0,.03);color:inherit;text-decoration:none}
+.fq-homebar:hover{border-color:#c9a64a}.fq-hb-dot{flex:none;width:30px;height:30px;border-radius:50%;background:#e5c97d;color:#1f3328;display:grid;place-items:center;font-weight:700}
+.fq-homebar>span:nth-child(2){flex:1}.fq-hb-go{font-weight:600;color:#1f3328}
+
 </style>
 
 <div class="app">
@@ -6057,6 +6117,150 @@ const MONTTXT209={"Ja":"Ja, Myrby monterar","Nej":"Nej, vi monterar själva","Ve
   let left=over+2;img.forEach(el=>{if(left<=0)return;const h=el.getBoundingClientRect().height,cut=Math.min(left,h-150);if(cut>0){el.style.maxHeight=Math.floor((h-cut)/z)+"px";el.style.objectFit="contain";left-=cut}})}catch(_){}}}
 try{ventGuard209()}catch(_){}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v210 (Carl 14/11): förfrågningar från hemsidan till Nikki.
+   Hemsidan: mejlet blir kort och får en länk som bär hela förfrågan (id + kundens stall).
+   Säljportalen: egen meny "Från hemsidan" och egen samling i databasen ("forfragningar"), helt skild från affärsmöjligheterna.
+   Nikki ser kundens original, kan göra en egen version (allt i ritverktyget går att ändra), skriva anteckningar (fria eller fästa på ritningen)
+   och med ett klick göra förfrågan till en affärsmöjlighet. */
+const FQ_PORTAL="https://claude.ai/artifact/BG2TxXDPM31SQhomFmoNSg";
+async function fqEncode(o){const raw=new TextEncoder().encode(JSON.stringify(o));
+  if(window.CompressionStream){try{const buf=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer();return "z"+b64u.enc(new Uint8Array(buf))}catch(e){}}
+  return "j"+b64u.enc(raw)}
+function fqToken(s){const m=/forfragan=([A-Za-z0-9_\-]+)/.exec(s||"");return m?m[1]:""}
+function fqMountTxt(v){return {"Ja":"Myrby monterar","Nej":"Monterar själva","Vet ej":"Montering: vet inte än"}[v]||""}
+function fqSummary(d){try{const dr=d&&d.drawing,bx=dr?layout(dr).filter(o=>o.m.t==="box").length:0,f=prod((d.spec||{}).front)?.name||"",pr=d.project||{};
+  return [bx?bx+" boxar"+(f?" "+f:""):f,dr?`${(dr.L/1000).toLocaleString("sv-SE")} × ${(dr.W/1000).toLocaleString("sv-SE")} m`:"",fqMountTxt(pr.mount),pr.when?"klart "+String(pr.when).toLowerCase():""].filter(Boolean).join(" · ")}catch(_){return ""}}
+
+/* ---------- Hemsidan: kort mejl med länk ---------- */
+{const _ps210=publicSend;publicSend=async function(){try{if(isPublic()&&D&&D.ui&&D.ui.consent){const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const d=pubSlim({...structuredClone(D),items:quoteItems()});if(d.ui){delete d.ui.consent}
+    window.__fq={id,link:FQ_PORTAL+"#forfragan="+await fqEncode({v:1,id,at:Date.now(),d})}}}catch(e){window.__fq=null}
+  try{return await _ps210.apply(this,arguments)}finally{window.__fq=null}}}
+{const _pt210=publicText;publicText=function(d){if(!isPublic()||!window.__fq)return _pt210.apply(this,arguments);try{const c=d.customer||{};
+  const who=[c.name||c.company,c.phone,c.email,[c.zip,c.city].filter(Boolean).join(" ")].filter(Boolean).join(" · ");
+  return `NY RITNING FRÅN RITA DIN STALLINREDNING — ${who} — ${fqSummary(d)}${d.notes?` — Kundens tankar: ”${String(d.notes).replace(/\s+/g," ").slice(0,240)}”`:""} — ÖPPNA FÖRFRÅGAN I SÄLJPORTALEN: ${window.__fq.link} — Allt kunden valt finns också i bifogad PDF.`}catch(_){return _pt210.apply(this,arguments)}}}
+
+/* ---------- Säljportalen: Från hemsidan ---------- */
+if(!isPublic()){
+S.fq=[];S.fqView="cur";
+NAV.push(["forfragan","Från hemsidan","lead"]);
+{const _v210=view;view=function(){const h=location.hash||"";if(h.startsWith("#f-")||h==="#forfragan")return "forfragan";return _v210.apply(this,arguments)}}
+{const _rn210=renderNav;renderNav=function(){_rn210.apply(this,arguments);try{const n=S.fq.filter(f=>f.status==="ny").length,a=$('#sidenav a[href="#forfragan"]');if(a&&n)a.insertAdjacentHTML("beforeend",`<span class="count num">${n}</span>`)}catch(_){}}}
+{const _r210=render;render=function(){if(view()!=="forfragan")return _r210.apply(this,arguments);renderNav();$("#app").innerHTML=vFq();try{renderResume()}catch(_){}try{syncRoom()}catch(_){}fqPinsDraw()}}
+const fqId=()=>{const m=/^#f-([A-Za-z0-9_\-]+)/.exec(location.hash||"");return m?m[1]:""};
+const fqWho=()=>(ROLES[S.role]||{}).name||"Myrby";
+const fqWhen=t=>t?new Date(t).toLocaleString("sv-SE",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+const FQ_ST={ny:["Ny","info"],oppnad:["Öppnad","plain"],nikki:["Nikkis version","gold"],affar:["Affärsmöjlighet","ok"]};
+function fqLines(d){try{return publicLines(d)}catch(_){return []}}
+function fqDiff(a,b){if(!a||!b)return [];const A=fqLines(a),B=fqLines(b),key=L=>{const m=new Map();L.forEach(([k,v])=>{if(k==="#"||k==="•")return;m.set(k,v)});return m};
+  const ma=key(A),mb=key(B),out=[];new Set([...ma.keys(),...mb.keys()]).forEach(k=>{if(["Namn","Telefon","E-post","Meddelande"].includes(k))return;const x=ma.get(k)||"",y=mb.get(k)||"";if(x!==y)out.push({k,from:x,to:y})});
+  const pa=A.filter(l=>l[0]==="•").map(l=>l[1]),pb=B.filter(l=>l[0]==="•").map(l=>l[1]);
+  pb.filter(p=>!pa.includes(p)).forEach(p=>out.push({k:"Produkt",from:"",to:p}));pa.filter(p=>!pb.includes(p)).forEach(p=>out.push({k:"Produkt",from:p,to:""}));return out}
+async function fqImport(tok,open){if(!tok)return;if(!S.db){toast("Ingen anslutning till databasen än, försök igen om en stund");return}
+  let o;try{o=await pubDecode(tok)}catch(e){toast("Länken gick inte att läsa. Kopiera hela länken från mejlet.");return}
+  const id=String(o.id||("f"+Date.now().toString(36))).replace(/[^A-Za-z0-9_\-]/g,""),ref=S.db.doc("forfragningar/"+id);let ex=false;try{const g=await ref.get();ex=g.exists}catch(_){}
+  if(!ex){const d=o.d,c=d.customer||{};try{await ref.set({id,createdAt:o.at||Date.now(),importedAt:Date.now(),importedBy:S.role,status:"ny",orig:d,cur:null,changes:[],notes:[],name:c.name||c.company||"Okänd kund",summary:fqSummary(d)});toast("Förfrågan är sparad under Från hemsidan")}catch(e){toast(e.code==="invalid_argument"?"Du saknar behörighet att spara, be Carl dela portalen som Contributor":"Kunde inte spara förfrågan");return}}
+  if(open!==false)location.hash="#f-"+id}
+function fqBoot(){if(fqBoot.done||!S.db)return;fqBoot.done=true;
+  S.db.collection("forfragningar").orderBy("createdAt","desc").onSnapshot(s=>{S.fq=s.docs.map(d=>({id:d.id,...d.data()}));if(view()==="forfragan"&&!document.activeElement?.closest?.(".fq-compose,.fq-add"))render();else renderNav()},()=>{});
+  let h="";try{h=window.top.location.href}catch(_){}const tok=fqToken(location.hash)||fqToken(location.search)||fqToken(h);if(tok){try{history.replaceState(null,"",location.pathname+location.search)}catch(_){}fqImport(tok,true)}}
+{const t=setInterval(()=>{if(S.db){clearInterval(t);fqBoot()}},300);setTimeout(()=>clearInterval(t),60000)}
+
+function fqVer(f){return (S.fqView==="orig"||!f.cur)?f.orig:f.cur}
+function fqDraw(d,v){const sv=D;let h="";try{D=structuredClone(d);D.ui=D.ui||{};D.ui.view=v;D.ui.views181=true;h=canvasInner(D.drawing,6,{})}catch(e){h=""}finally{D=sv}
+  if(!h){try{h=planSVG(d.drawing)}catch(_){h=""}}return h}
+function vFq(){const id=fqId();if(id)return vFqOne(id);
+  const L=S.fq,row=f=>{const st=FQ_ST[f.status]||FQ_ST.ny;return `<a class="li" href="#f-${esc(f.id)}"><span class="thumb round">${esc((f.name||"?")[0])}</span><span class="grow"><span class="t">${esc(f.name||"Okänd kund")}</span><span class="s">${esc((()=>{try{return fqSummary(f.cur||f.orig)}catch(_){return f.summary||""}})())}${f.cur?` · <b class="fq-nk">${esc(fqWhoOf(f.editedBy))} har ändrat</b>`:""}${(f.notes||[]).length?` · ${(f.notes||[]).length} ${(f.notes||[]).length===1?"anteckning":"anteckningar"}`:""}</span></span><span class="fq-when">${esc(fqWhen(f.createdAt))}</span><span class="chip ${st[1]}">${st[0]}</span><span class="chev">${svg("chev",18)}</span></a>`};
+  return `<div class="page fqpage"><div class="page-head"><p class="eyebrow">Rita din stallinredning</p><h1>Från hemsidan</h1><p>Ritningar som kunder har skickat från hemsidan. De ligger här, skilda från affärsmöjligheterna, tills du gör om dem.</p></div>
+    <form class="fq-add" data-fqaddform><label class="field" style="flex:1"><span>Har du en länk från mejlet? Klistra in den här</span><input class="input" name="l" placeholder="https://claude.ai/artifact/…#forfragan=…" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
+    ${L.length?`<div class="list">${L.map(row).join("")}</div>`:`<div class="empty">${svg("lead")}<b>Inga förfrågningar än</b><span>När en kund skickar sin ritning kommer ett mejl till info@myrby.com. Knappen i mejlet öppnar förfrågan här.</span></div>`}</div>`}
+function vFqOne(id){const f=S.fq.find(x=>x.id===id);
+  if(!f)return `<div class="page"><a class="lback" href="#forfragan">${svg("chev",16)} Alla förfrågningar</a><div class="empty"><b>${S.dbReady&&fqBoot.done?"Hittar inte förfrågan":"Laddar…"}</b></div></div>`;
+  if(f.status==="ny"&&S.db){S.db.doc("forfragningar/"+f.id).update({status:"oppnad",openedAt:Date.now(),openedBy:S.role}).catch(()=>{})}
+  const d=fqVer(f),o=f.orig,c=o.customer||{},chg=f.cur?fqDiff(o,f.cur):[],showCur=f.cur&&S.fqView!=="orig",vw=S.fqDv||"plan";
+  const changedKeys=new Set(showCur?chg.map(x=>x.k):[]),A=fqLines(d);
+  const secs=[];let cur=null;A.forEach(([k,v])=>{if(k==="#"){cur={h:v,r:[]};secs.push(cur);return}if(!cur){cur={h:"",r:[]};secs.push(cur)}cur.r.push([k,v])});
+  const notes=(f.notes||[]).slice().sort((a,b)=>a.at-b.at),pins=notes.filter(n=>n.pin);
+  const quote=f.quoteId?S.quotes.find(q=>q.id===f.quoteId):null;
+  return `<div class="page fqone"><a class="lback" href="#forfragan">${svg("chev",16)} Alla förfrågningar</a>
+   <div class="fq-head"><div><p class="eyebrow">Förfrågan · inkom ${esc(fqWhen(f.createdAt))} · via Rita din stallinredning</p><h1>${esc(f.name||"Okänd kund")}</h1><p class="muted">${esc(fqSummary(d))}</p></div>
+    <div class="fq-acts">${c.phone?`<a class="btn" href="tel:${esc(String(c.phone).replace(/[^\d+]/g,""))}">${svg("phone",18)} Ring ${esc(c.phone)}</a>`:""}${c.email?`<a class="btn ghost" href="mailto:${esc(c.email)}?subject=${encodeURIComponent("Din stallinredning från Myrby")}">Svara via mejl</a>`:""}
+     <button class="btn ghost" data-fqedit="${esc(f.id)}">✎ ${f.cur?"Ändra Nikkis version":"Redigera stallet"}</button>
+     ${f.status==="affar"&&f.quoteId?`<a class="btn gold" href="#a-${esc(f.quoteId)}">Öppna affärsmöjligheten</a>`:`<button class="btn gold" data-fqquote="${esc(f.id)}">Gör till affärsmöjlighet</button>`}</div></div>
+   ${f.cur?`<div class="fq-tog" role="group" aria-label="Version"><button type="button" data-fqview="orig" aria-pressed="${!showCur}">Kundens original</button><button type="button" data-fqview="cur" aria-pressed="${!!showCur}">Nikkis version · ${chg.length} ${chg.length===1?"ändring":"ändringar"}</button></div>`:""}
+   <div class="fq-grid"><div class="fq-left">
+     <div class="fq-views" role="group">${[["plan","Ritning"],["iso","3D"],["walk","Stallgången"]].map(([k,l])=>`<button type="button" data-fqdv="${k}" aria-pressed="${vw===k}">${l}</button>`).join("")}<span class="faint small">${showCur?esc(fqWhoOf(f.editedBy))+"s version":"Exakt det kunden skickade"}</span></div>
+     <div class="fq-draw${S.fqPin?" pinning":""}" data-fqdraw>${d.drawing?fqDraw(d,vw):`<div class="empty"><b>Ingen ritning</b></div>`}<div class="fq-pins">${vw==="plan"?pins.map(n=>`<span class="fq-pin" style="left:${n.pin.x}%;top:${n.pin.y}%" title="${esc(n.text)}"><b>${notes.indexOf(n)+1}</b></span>`).join("")+(S.fqPinAt?`<span class="fq-pin new" style="left:${S.fqPinAt.x}%;top:${S.fqPinAt.y}%"><b>+</b></span>`:""):""}</div></div>
+     ${S.fqPin?`<p class="fq-pinhint">Tryck på ritningen där anteckningen ska sitta.</p>`:""}
+     ${o.notes?`<div class="fq-quote"><span>”</span><div><p class="eyebrow">Kundens tankar</p><p>${esc(o.notes)}</p></div></div>`:""}
+   </div><div class="fq-right">
+     <div class="card-plain fq-facts">${secs.filter(s=>s.r.length).map(s=>`<div class="fq-sec"><h4>${esc(s.h||"Övrigt")}</h4><dl>${s.r.map(([k,v])=>`<dt>${k==="•"?"":esc(k)}</dt><dd class="${changedKeys.has(k)?"chg":""}">${esc(v)}</dd>`).join("")}</dl></div>`).join("")}</div>
+     ${chg.length?`<div class="card-plain fq-chg"><div class="fq-ch"><b>Nikkis ändringar</b><span class="faint small">${esc(fqWhen(f.editedAt))}</span></div>${chg.map(x=>`<div class="fq-ci"><span class="fq-av">${esc((f.editedBy?((ROLES[f.editedBy]||{}).name||"N"):"N")[0])}</span><div><b>${esc(x.k)}</b><br><span class="small">${x.from?`<s>${esc(x.from)}</s> → `:"Tillagt: "}${esc(x.to||"borttaget")}</span></div></div>`).join("")}<button class="btn ghost sm" data-fqreset="${esc(f.id)}">Återställ till kundens original</button></div>`:""}
+     <div class="card-plain fq-notes"><div class="fq-ch"><b>Anteckningar</b><span class="faint small">Bara för Myrby</span></div>
+      ${notes.map((n,i)=>`<div class="fq-note"><span class="fq-np${n.pin?"":" free"}">${n.pin?i+1:"✎"}</span><div><p>${esc(n.text)}</p><span class="faint small">${esc(n.who||"")} · ${esc(fqWhen(n.at))}</span></div><button class="icon-btn sm" data-fqdelnote="${esc(n.id)}" aria-label="Ta bort anteckning">${svg("close",14)}</button></div>`).join("")||`<p class="faint small" style="margin:6px 0 10px">Inga anteckningar än.</p>`}
+      <form class="fq-compose" data-fqnote="${esc(f.id)}"><textarea class="input" name="t" rows="2" placeholder="Skriv en anteckning…"></textarea><div class="fq-cbar"><button type="button" class="linkbtn" data-fqpin>${S.fqPin||S.fqPinAt?"✓ Fäst på ritningen":"⌖ Fäst på ritningen"}</button><button class="btn sm" type="submit">Spara</button></div></form></div>
+   </div></div></div>`}
+function fqPinsDraw(){}
+function fqWhoOf(r){return r==="christian"?"Christian":r==="carl"?"Carl":"Nikki"}
+async function fqUpd(id,patch){if(!S.db)return;try{await S.db.doc("forfragningar/"+id).update(patch)}catch(e){toast("Kunde inte spara")}}
+document.addEventListener("submit",async e=>{const a=e.target.closest&&e.target.closest("[data-fqaddform]");if(a){e.preventDefault();const tok=fqToken(a.l.value);if(!tok){toast("Det ser inte ut som en förfrågningslänk");return}fqImport(tok,true);return}
+  const n=e.target.closest&&e.target.closest("[data-fqnote]");if(n){e.preventDefault();const t=n.t.value.trim();if(!t)return;const f=S.fq.find(x=>x.id===n.dataset.fqnote);if(!f)return;
+    const note={id:"n"+Date.now().toString(36),text:t,who:fqWho(),by:S.role,at:Date.now(),...(S.fqPinAt?{pin:S.fqPinAt}:{})};S.fqPin=false;S.fqPinAt=null;f.notes=[...(f.notes||[]),note];render();fqUpd(f.id,{notes:f.notes})}},true);
+document.addEventListener("click",async e=>{const t=e.target.closest&&e.target.closest("[data-fqview],[data-fqdv],[data-fqpin],[data-fqdraw],[data-fqdelnote],[data-fqedit],[data-fqquote],[data-fqreset],[data-fqcancel],[data-fqsave]");if(!t)return;const d=t.dataset;
+  if(d.fqview){S.fqView=d.fqview;render();return}
+  if(d.fqdv){S.fqDv=d.fqdv;if(d.fqdv!=="plan"){S.fqPin=false;S.fqPinAt=null}render();return}
+  if(d.fqpin!==undefined){e.preventDefault();const keep=$(".fq-compose textarea")?.value||"";if(S.fqPinAt){S.fqPinAt=null;S.fqPin=false}else{S.fqPin=!S.fqPin;S.fqDv="plan"}render();const ta=$(".fq-compose textarea");if(ta)ta.value=keep;if(S.fqPin){const dr=$("[data-fqdraw]");if(dr){const r=dr.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)dr.scrollIntoView({block:"center",behavior:"smooth"})}}return}
+  if(d.fqdraw!==undefined){if(!S.fqPin){e.stopPropagation();return}const r=t.getBoundingClientRect();S.fqPinAt={x:Math.round((e.clientX-r.left)/r.width*1000)/10,y:Math.round((e.clientY-r.top)/r.height*1000)/10};S.fqPin=false;const keep=$(".fq-compose textarea")?.value||"";render();const ta=$(".fq-compose textarea");if(ta){ta.value=keep;ta.focus()}return}
+  if(d.fqdelnote){const f=S.fq.find(x=>x.id===fqId());if(!f)return;f.notes=(f.notes||[]).filter(n=>n.id!==d.fqdelnote);render();fqUpd(f.id,{notes:f.notes});return}
+  if(d.fqreset){const f=S.fq.find(x=>x.id===d.fqreset);if(!f)return;if(!t.dataset.armed){t.dataset.armed="1";t.textContent="Tryck igen för att återställa";setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent="Återställ till kundens original"}},3000);return}
+    f.cur=null;S.fqView="cur";render();fqUpd(f.id,{cur:null,changes:[],status:"oppnad"});toast("Kundens original gäller igen");return}
+  if(d.fqedit){const f=S.fq.find(x=>x.id===d.fqedit);if(!f)return;fqEditStart(f);return}
+  if(d.fqquote){const f=S.fq.find(x=>x.id===d.fqquote);if(!f)return;fqToQuote(f,t);return}
+  if(d.fqcancel!==undefined){e.preventDefault();e.stopImmediatePropagation();fqEditEnd(false);return}
+  if(d.fqsave!==undefined){e.preventDefault();e.stopImmediatePropagation();fqEditEnd(true);return}},true);
+
+/* Redigera: kundens stall (eller Nikkis version) i ritverktyget. Säljarens eget utkast sparas undan och kommer tillbaka efteråt. */
+function fqEditStart(f){if(S.fqEdit)return;S.fqPrevD=D;D=structuredClone(f.cur||f.orig);D.ui=D.ui||{};D.ui.fromSum=false;S.fqEdit=f.id;
+  const PG=wizPages(),si=PG.findIndex(p=>p.key==="sum");openWiz(si>=0?si:0)}
+function fqCleanItems(){const sp=D.spec||{},keep=new Set([sp.front,sp.wall]);try{if(D.ui?.fmixOn)Object.keys(fmixCounts()).forEach(k=>keep.add(k));if(D.ui?.wmixOn)Object.keys(wmixCounts()).forEach(k=>keep.add(k))}catch(_){}D.items=(D.items||[]).filter(i=>{const c=prod(i.product)?.cat;return !(c==='fronter'||c==='mellan')||keep.has(i.product)})}
+async function fqEditEnd(save){const id=S.fqEdit;if(!id)return;const f=S.fq.find(x=>x.id===id);
+  if(save&&f){try{fqCleanItems()}catch(_){}const cur=pubSlim(structuredClone(D));const chg=fqDiff(f.orig,cur);
+    if(!chg.length){toast("Inga ändringar mot kundens original")}else{f.cur=cur;f.editedAt=Date.now();f.editedBy=S.role;f.status=f.status==="affar"?"affar":"nikki";S.fqView="cur";await fqUpd(id,{cur,changes:chg,editedAt:f.editedAt,editedBy:S.role,status:f.status});toast("Nikkis version är sparad")}}
+  S.fqEdit=null;D=S.fqPrevD||emptyDraft();S.fqPrevD=null;try{saveD()}catch(_){}
+  const w=$("#wiz");w.classList.remove("on");setTimeout(()=>{w.hidden=true;try{renderResume()}catch(_){}},350);location.hash="#f-"+id;render()}
+{const _cw210=closeWiz;closeWiz=function(){if(S.fqEdit){fqEditEnd(false);return}return _cw210.apply(this,arguments)}}
+{const _rwz210=renderWiz;renderWiz=function(){const r=_rwz210.apply(this,arguments);try{fqEditChrome()}catch(_){}return r};Object.keys(_rwz210).forEach(k=>{try{renderWiz[k]=_rwz210[k]}catch(_){}})}
+{const _wf210=wizFoot;wizFoot=function(){const r=_wf210.apply(this,arguments);try{fqEditChrome()}catch(_){}return r}}
+function fqEditChrome(){const w=$("#wiz");if(!w)return;let b=w.querySelector(".fq-editbar");
+  if(!S.fqEdit){if(b)b.remove();return}const f=S.fq.find(x=>x.id===S.fqEdit);
+  if(!b){b=document.createElement("div");b.className="fq-editbar";w.insertBefore(b,w.firstChild)}
+  b.innerHTML=`<span>✎ Du ändrar stallet för <b>${esc(f?.name||"kunden")}</b>. Kundens original finns kvar orört.</span><button type="button" class="btn ghost sm" data-fqcancel>Avbryt</button><button type="button" class="btn gold sm" data-fqsave>Spara ${S.role==="nikki"?"Nikkis":"min"} version</button>`;
+  const s=w.querySelector("[data-wsend]");if(s){s.removeAttribute("data-wsend");s.setAttribute("data-fqsave","");s.textContent="Spara "+(S.role==="nikki"?"Nikkis":"min")+" version"}}
+
+/* Gör till affärsmöjlighet: samma väg som när Christian skickar till Nikki. Anteckningarna följer med i rummet. */
+async function fqToQuote(f,btn){if(!S.db){toast("Ingen anslutning");return}if(fqToQuote.busy)return;fqToQuote.busy=true;if(btn){btn.disabled=true;btn.textContent="Skapar…"}
+  const prev=D,dummy=document.createElement("button");dummy.setAttribute("data-wsend","");dummy.hidden=true;document.body.appendChild(dummy);
+  D=structuredClone(f.cur||f.orig);D.ui=D.ui||{};D.fqId=f.id;D.source="myrby.com";try{fqCleanItems()}catch(_){}
+  const before=new Set(S.quotes.map(q=>q.id));
+  try{await sendQuote()}catch(e){}
+  dummy.remove();D=prev;try{saveD()}catch(_){}
+  let qid=null;for(let i=0;i<40&&!qid;i++){const q=S.quotes.find(q=>!before.has(q.id)&&q.fqId===f.id);if(q)qid=q.id;else await new Promise(r=>setTimeout(r,150))}
+  fqToQuote.busy=false;if(qid){f.status="affar";f.quoteId=qid;await fqUpd(f.id,{status:"affar",quoteId:qid,quoteAt:Date.now()});const now=Date.now(),M=S.db.collection(`quotes/${qid}/messages`);const chg=f.cur?fqDiff(f.orig,f.cur):[];try{await M.add({at:now+1,by:S.role,uid:S.uid||null,sys:true,text:"Kom in via Rita din stallinredning på hemsidan"});if(chg.length)await M.add({at:now+2,by:f.editedBy||S.role,uid:null,text:"Ändrat mot kundens ritning:\n"+chg.map(c=>"• "+c.k+": "+(c.from||"–")+" → "+(c.to||"–")).join("\n")});let k=3;for(const n of (f.notes||[]).slice().sort((a,b)=>a.at-b.at))await M.add({at:now+(k++),by:n.by||S.role,uid:null,text:(n.pin?"📌 ":"")+n.text})}catch(_){}}else if(btn){btn.disabled=false;btn.textContent="Gör till affärsmöjlighet"}}
+try{if(typeof render==="function"&&!$("#wiz")?.classList.contains("on"))render()}catch(_){}
+}
+
+/* v210b: säljportalen – ritverktyget talar till säljaren, inte till kunden. Förfrågningar syns för Nikki (inte Christian). */
+if(!isPublic()){
+const FQ_COPY=[["Bygg din stallinredning","Rita kundens stall"],["Din stallinredning börjar här","Kundens stallinredning börjar här"],["Skicka din ritning","Skicka till Nikki"],["Nikki återkommer inom en arbetsdag med ett skräddarsytt förslag. Inget är bindande.","Nikki får ritningen och allt du valt, och räknar fram offerten."],["Börja rita ditt stall","Börja rita stallet"],["Vart skickar vi förslaget?","Vem är kunden?"],["Nikki tittar på din stallinredning och återkopplar med ett skräddarsytt förslag.","Fyll i det du vet om kunden. Resten kan Nikki komplettera."],["Vem skickar vi till?","Kunden"],["Så här blir ditt stall","Så här blir stallet"],["Gå igenom dina val i lugn och ro. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit.","Gå igenom valen. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit."],["Berätta om dina tankar","Kundens tankar och önskemål"],["Dina tankar och idéer","Kundens tankar och idéer"]];
+const FQ_COPYM=new Map(FQ_COPY);
+function fqCopy(){const w=$("#wiz");if(!w)return;const tw=document.createTreeWalker(w,NodeFilter.SHOW_TEXT);let n;while(n=tw.nextNode()){const t=n.nodeValue.trim();if(t&&FQ_COPYM.has(t))n.nodeValue=n.nodeValue.replace(t,FQ_COPYM.get(t))}}
+{let q=0;const mo=new MutationObserver(()=>{if(q)return;q=1;queueMicrotask(()=>{q=0;try{fqCopy()}catch(_){}})});const at=()=>{const w=$("#wiz");if(w){mo.observe(w,{childList:true,subtree:true});fqCopy()}else setTimeout(at,300)};at()}
+{const _rn=renderNav;renderNav=function(){_rn.apply(this,arguments);try{if(S.role==="christian"){const a=$('#sidenav a[href="#forfragan"]');if(a)a.remove()}}catch(_){}}}
+{const _r=render;render=function(){const r=_r.apply(this,arguments);try{if(view()==="hem"&&S.role!=="christian"){const n=(S.fq||[]).filter(f=>f.status==="ny").length,pg=$("#app .page")||$("#app");if(n&&pg&&!pg.querySelector(".fq-homebar"))pg.insertAdjacentHTML("afterbegin",`<a class="fq-homebar" href="#forfragan"><span class="fq-hb-dot">${n}</span><span><b>${n===1?"Ny ritning från hemsidan":n+" nya ritningar från hemsidan"}</b><span class="muted"> · ${esc((S.fq.find(f=>f.status==="ny")||{}).name||"")}${n>1?" m.fl.":""}</span></span><span class="fq-hb-go">Öppna ›</span></a>`)}}catch(_){}return r}}
+try{if(typeof render==="function"&&!$("#wiz")?.classList.contains("on"))render()}catch(_){}
+}
+
 </script>
 
 </html>
