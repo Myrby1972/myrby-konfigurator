@@ -3125,7 +3125,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
       else{const nm=(m.name||"").toLowerCase(),spol=openBay(m),ms=dr.walls[o.k]||[],len0=o.k==="N"||o.k==="S"?dr.L:null;
         const sides=[[0,ms[o.i-1]],[w,ms[o.i+1]]].filter(([x,nb])=>!(spol&&nb&&(nb.t==="box"||openBay(nb)))&&!(!nb&&len0&&(o.start+x<=60||o.start+x>=len0-60))).map(([x])=>{const a=tf(x,0),b=tf(x,d),mm2=tf(x,d/2);return {d:dep(mm2[0],mm2[1])+1,s:panel([a[0],a[1]],[b[0],b[1]],{solid:2600,solidC:"#e6ece2"})}});
         sides.forEach(x=>F.push(x));
-        const s=spol?panel(p0,p1,{fr:frameCol(dr,dr.front),door:"c"}):panel(p0,p1,{solid:2600,solidC:"#e6ece2"})+(()=>{const q0=tf(w/2-500,d),q1=tf(w/2+500,d);return poly([[q0[0],0,q0[1]],[q1[0],0,q1[1]],[q1[0],2100,q1[1]],[q0[0],2100,q0[1]]],`fill="#8a5a33" stroke="${ink}" stroke-width="1"`)})();F.push({d:dep(c[0],c[1]),s})}}});
+        const s=spol?"":panel(p0,p1,{solid:2600,solidC:"#e6ece2"})+(()=>{const q0=tf(w/2-500,d),q1=tf(w/2+500,d);return poly([[q0[0],0,q0[1]],[q1[0],0,q1[1]],[q1[0],2100,q1[1]],[q0[0],2100,q0[1]]],`fill="#8a5a33" stroke="${ink}" stroke-width="1"`)})();if(s)F.push({d:dep(c[0],c[1]),s}) /* v201: aldrig en front framför spolspiltan */}}});
   if(lvl>=4)partList(dr).forEach(p=>{const a0=p.o.tf(p.x,0),a1=p.o.tf(p.x,p.d),mid=p.o.tf(p.x,p.d/2),w=p.w;let o;
     if(w==="mv-tat")o={solid:2320,mid:1160,frame:true};else if(w==="egen")o={solid:2400,solidC:"#d9d2c2"};else if(w==="mv-dala")o={h:1560,ph:1300,bar:75};else if(w==="mv-kg2"||w==="mv-kg1"){const g=galSpan188(w,p.d);o={gal:[1-g[1]/p.d,1-g[0]/p.d]}}else if(w==="mv-faro")o={fh:(t,len,ph,H)=>faroH(t*len,len,ph,H)};else o={};
     o.fr=frameCol(dr,dr.front);F.push({d:dep(mid[0],mid[1]),s:panel([a0[0],a0[1]],[a1[0],a1[1]],o)})});
