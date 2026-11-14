@@ -2318,6 +2318,7 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 #wiz .vm-yta204 .vm-h:first-child{margin-top:6px}
 #wiz .vm-yta204 .vm-hint204{margin:-2px 10px 6px;font-size:.78rem;color:var(--ink-3)}
 #wiz .vm-yta204 .vm-it .vm-ck:first-child{width:18px;flex:none}
+#cfgplan.matfit205 details.cfg-mat>*:not(summary){display:none!important}
 </style>
 
 <div class="app">
@@ -5976,6 +5977,19 @@ function ytaPop204(){const sp=D.spec||{},lack=/ulverlack/.test(sp.finish||""),cu
 {const _tc204=topChips194;topChips194=function(lvl){let h=_tc204.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;const c=t.content.querySelector('.cchip[data-vm="color"]');if(!c)return h;
   const b=c.querySelector("b");if(b)b.textContent=ytaTxt204();const v=c.closest(".vm");if(v){const p=v.querySelector(".vm-pop");if(p)p.remove();if(S.vmenu==="color")v.insertAdjacentHTML("beforeend",ytaPop204())}h=t.innerHTML}catch(_){}return h}}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v205 (Carl 14/11): Montering får ett eget kort efter Rum, med samma lista (visas först efter Nästa från Montering-sidan). */
+const MONT205=[["Ja","Myrby monterar","Våra montörer bygger allt färdigt"],["Nej","Vi monterar själva","Monteringsanvisning och support"],["Vet ej","Vet inte än","Vi pratar om det i offerten"]];
+{const _tc205=topChips194;topChips194=function(lvl){let h=_tc205.apply(this,arguments);try{const v=(D.project||{}).mount;if(!v||!passed202("mont"))return h;const m=MONT205.find(x=>x[0]===v);if(!m)return h;
+  const open=S.vmenu==="mont205";const chip=`<span class="vm"><button type="button" class="cchip pick ichip194" data-vm="mont205" aria-haspopup="listbox" aria-expanded="${open}"><span><small>Montering</small><b>${esc(m[1])}</b></span><i class="vm-car"></i></button>${open?`<div class="vm-pop" role="listbox">${MONT205.map(x=>`<button type="button" class="vm-it" role="option" data-pick1="project.mount" data-v="${esc(x[0])}" aria-selected="${x[0]===v}"><span class="vm-ck">${x[0]===v?"✓":""}</span><span class="vm-tx"><b>${esc(x[1])}</b><small>${esc(x[2])}</small></span></button>`).join("")}</div>`:""}</span>`;
+  if(!h)return `<span class="ichips194">${chip}</span>`;const t=document.createElement("template");t.innerHTML=h;const box=t.content.querySelector(".ichips194");if(!box)return h;
+  const rum=box.querySelector('.cchip[data-wjump="s-extra"]'),after=rum?rum.closest(".vm"):[...box.querySelectorAll(":scope>.vm")].filter(x=>x.querySelector(".cchip:not(.prod)")).pop();
+  if(after)after.insertAdjacentHTML("afterend",chip);else box.insertAdjacentHTML("beforeend",chip);h=t.innerHTML}catch(_){}return h}}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+/* v205: Materiallista rullar fram när den öppnas. Ritningen räknas som om listan vore stängd, så inget krymper. */
+{const _f198=fit198;fit198=function(){const a=document.getElementById("cfgplan");if(a)a.classList.add("matfit205");try{_f198()}finally{if(a)a.classList.remove("matfit205")}}}
+{const _f197=fit197;fit197=function(){const a=document.getElementById("cfgplan");if(a)a.classList.add("matfit205");try{_f197()}finally{if(a)a.classList.remove("matfit205")}}}
+document.addEventListener("toggle",e=>{const d=e.target;if(!d||!d.matches||!d.matches("#cfgplan details.cfg-mat")||!d.open)return;setTimeout(()=>{try{d.scrollIntoView({behavior:"smooth",block:"start"})}catch(_){}},30)},true);
 </script>
 
 </html>
