@@ -5944,6 +5944,24 @@ function passed202(pg){try{const i=pageIdx182(pg);if(i<0)return true;return reac
     if(j&&LAG202[j]){if(!passed202(LAG202[j]))c.remove()}else if(!j&&c.classList.contains("prod")){const mi=pageIdx182("mer");if(mi>=0&&(S.wizStep||0)===mi&&!passed202("mer"))c.remove()}});
   return t.innerHTML}catch(_){return h}}}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v203 (Carl 14/11): ett exempel är ett färdigt stall. Fönster ligger redan i varje box, och Nästa på exempelsidan går direkt till Front.
+   Ingångar, Boxar och Fönster räknas som klara (går att öppna via stegraden, Stallet/Boxar och Lägg till). Bakåt från Front leder till exemplen. */
+{const _tb203=tplBuild178;tplBuild178=function(){const dr=_tb203.apply(this,arguments);try{if(dr&&!wins(dr).length)applyBoxWins(dr)}catch(_){}return dr}}
+function exMode203(){try{return isPublic()&&D.ui&&D.ui.kind==="stall"&&startEx178()&&D.ui.tplAuto&&!!D.ui.tpl&&!!D.drawing}catch(_){return false}}
+function exStart203(){try{const pg=wizPages()[S.wizStep||0];return !!pg&&pg.key==="matt"}catch(_){return false}}
+function fixLbl203(){try{if(!exMode203()||!exStart203())return;const b=document.querySelector("#wiz [data-wnext]");if(b&&!b.classList.contains("skip"))b.innerHTML=`Nästa: Front ${svg("chev",20)}`}catch(_){}}
+{const _wf203=wizFoot;wizFoot=function(){const r=_wf203.apply(this,arguments);fixLbl203();return r}}
+{const _rw203=renderWiz;renderWiz=function(){const r=_rw203.apply(this,arguments);fixLbl203();return r};Object.keys(_rw203).forEach(k=>{try{renderWiz[k]=_rw203[k]}catch(_){}})}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("#wiz [data-wnext],#wiz [data-wprev]");if(!t||!exMode203())return;
+  const PG=wizPages(),fi=PG.findIndex(p=>p.key==="front"),mi=PG.findIndex(p=>p.key==="matt");if(fi<0||mi<0)return;
+  if(t.hasAttribute("data-wnext")&&(S.wizStep||0)===mi){e.preventDefault();e.stopImmediatePropagation();
+    try{if(!wins(D.drawing).length)applyBoxWins(D.drawing)}catch(_){}D.ui.reach=Math.max(D.ui.reach||0,fi);renderWiz.dir=1;S.wizStep=fi;saveD();renderWiz();const ws=document.getElementById("wizscroll");if(ws)ws.scrollTop=0}
+  else if(t.hasAttribute("data-wprev")&&(S.wizStep||0)===fi){e.preventDefault();e.stopImmediatePropagation();renderWiz.dir=-1;S.wizStep=mi;saveD();renderWiz();const ws=document.getElementById("wizscroll");if(ws)ws.scrollTop=0}},true);
+{const _sp203=startPick178;startPick178=function(){let h=_sp203.apply(this,arguments);try{if(!exMode203()||h.indexOf("tpl-lead")<0)return h;const t=document.createElement("template");t.innerHTML=h;const p=t.content.querySelector(".tpl-lead");
+  if(p)p.innerHTML=`Ritningen visar nu exemplet <b>${esc(D.ui.tpl)}</b>, med ingångar, boxar och ett fönster i varje box. Välj ett annat om det liknar ditt stall mer. Sedan väljer du front. Vill du ändra något gör du det under ritningen.`;h=t.innerHTML}catch(_){}return h}}
+try{if(D&&D.drawing&&exMode203()&&!wins(D.drawing).length){applyBoxWins(D.drawing);saveD()}}catch(_){}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
 </html>
