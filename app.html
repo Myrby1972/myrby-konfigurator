@@ -2322,6 +2322,16 @@ html body #wiz .fgal .fgi>.ibtn{top:12px!important;left:12px!important;right:aut
 
 /* v206 (Carl 14/11): Dina tankar som egen sida efter Montering */
 #wiz .tankar206 textarea{min-height:220px;font-size:1.05rem;line-height:1.5}
+#wiz .vm-rum208 .vm-box208,#wiz .vm-vent208 .vm-box208{flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:6px;box-shadow:inset 0 0 0 1.5px #b9c4b1;color:#fff;font-size:.8rem;font-weight:700}
+#wiz .vm-rum208 .vm-it[aria-selected="true"] .vm-box208,#wiz .vm-vent208 .vm-it[aria-selected="true"] .vm-box208{background:#23412a;box-shadow:none}
+#wiz .vm-rum208 .vm-foot208{margin:6px 10px 4px;font-size:.76rem;color:var(--ink-3)}
+#wiz .vm-vent208{min-width:280px}
+#wiz .vm-vent208 .vm-row208{cursor:default;padding-left:42px}
+#wiz .vm-vent208 .vm-row208:hover{background:none}
+#wiz .vstep208{display:flex;align-items:center;gap:8px;flex:none}
+#wiz .vstep208 button{width:32px;height:32px;border:0;border-radius:50%;background:#23412a;color:#fff;font-size:1.1rem;cursor:pointer}
+#wiz .vstep208 button:disabled{opacity:.35;cursor:default}
+#wiz .vstep208 b{min-width:16px;text-align:center}
 </style>
 
 <div class="app">
@@ -5999,6 +6009,24 @@ document.addEventListener("toggle",e=>{const d=e.target;if(!d||!d.matches||!d.ma
 {const _tc207=topChips194;topChips194=function(lvl){let h=_tc207.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;
   if(t.content.querySelector('.cchip[data-wjump="s-vent"]')){const x=t.content.querySelector('.cchip.prod .cx[data-wpick="ventilation"]');if(x){const v=x.closest(".vm")||x.closest(".cchip");if(v)v.remove()}}
   h=t.innerHTML}catch(_){}return h}}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v208 (Carl 14/11): Rum och Ventilation får listor ovanför ritningen. Produkter behåller krysset.
+   Rum: bocka i och ur, rummet läggs till eller tas bort i ritningen direkt. Kortet visar "Spolspilta + 2 till".
+   Ventilation: friskluftsintag på/av och antal frånluftsfläktar. */
+function roomOpts208(){try{const pg=wizPages().find(p=>p.key==="rum");if(!pg)return [];const t=document.createElement("template");t.innerHTML=pg.list.map(x=>{try{return x.html()}catch(_){return ""}}).join("");
+  const seen={};return [...t.content.querySelectorAll("[data-sx]")].map(b=>b.getAttribute("data-sx")).filter(n=>n&&!seen[n]&&(seen[n]=1))}catch(_){return []}}
+function roomsNow208(){const dr=D.drawing;if(!dr)return [];return ["N","S","W","E"].flatMap(k=>(dr.walls[k]||[]).filter(m=>m.t==="room").map(m=>m.name))}
+function rumPop208(){const now=roomsNow208(),ops=roomOpts208();const extra=now.filter(n=>!ops.includes(n));const all=[...ops,...extra.filter((n,i)=>extra.indexOf(n)===i)];
+  return `<div class="vm-pop vm-rum208" role="listbox" aria-multiselectable="true"><p class="vm-h">Rum i stallet</p>${all.map(n=>{const c=now.filter(x=>x===n).length;return `<button type="button" class="vm-it" role="option" data-sx="${esc(n)}" aria-selected="${c>0}"><span class="vm-box208">${c?"✓":""}</span><span class="vm-tx"><b>${esc(n)}</b>${c>1?`<small>${c} st</small>`:""}</span></button>`}).join("")}<p class="vm-foot208">Mått och fler av samma rum ändrar du på sidan Rum.</p></div>`}
+function ventPop208(){const dr=D.drawing||{},n=+dr.fans||0,on=!!dr.intag;
+  return `<div class="vm-pop vm-vent208" role="dialog"><p class="vm-h">Ventilation</p><button type="button" class="vm-it" data-vint="1" aria-selected="${on}"><span class="vm-box208">${on?"✓":""}</span><span class="vm-tx"><b>Friskluftsintag</b><small>Ett i varje box</small></span></button>
+    <div class="vm-it vm-row208"><span class="vm-tx"><b>Frånluftsfläktar</b><small>${n?n+" st":"Inga"}</small></span><span class="vstep208"><button type="button" data-vfan="-1" aria-label="Färre fläktar" ${n<=0?"disabled":""}>−</button><b>${n}</b><button type="button" data-vfan="1" aria-label="Fler fläktar" ${n>=8?"disabled":""}>+</button></span></div></div>`}
+{const _tc208=topChips194;topChips194=function(lvl){let h=_tc208.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;
+  const conv=(sel,vm,pop)=>{const c=t.content.querySelector(sel);if(!c)return null;c.removeAttribute("data-wjump");c.setAttribute("data-vm",vm);c.setAttribute("aria-haspopup","listbox");c.setAttribute("aria-expanded",S.vmenu===vm?"true":"false");
+    if(!c.querySelector(".vm-car"))c.insertAdjacentHTML("beforeend",'<i class="vm-car"></i>');const v=c.closest(".vm");if(v&&S.vmenu===vm)v.insertAdjacentHTML("beforeend",pop());return c};
+  const r=conv('.cchip[data-wjump="s-extra"]',"rum208",rumPop208);if(r){const b=r.querySelector("b"),L=roomsNow208();if(b&&L.length>1)b.textContent=L[0]+" + "+(L.length-1)+" till"}
+  conv('.cchip[data-wjump="s-vent"]',"vent208",ventPop208);h=t.innerHTML}catch(_){}return h}}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
