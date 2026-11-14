@@ -6028,6 +6028,35 @@ function ventPop208(){const dr=D.drawing||{},n=+dr.fans||0,on=!!dr.intag;
   const r=conv('.cchip[data-wjump="s-extra"]',"rum208",rumPop208);if(r){const b=r.querySelector("b"),L=roomsNow208();if(b&&L.length>1)b.textContent=L[0]+" + "+(L.length-1)+" till"}
   conv('.cchip[data-wjump="s-vent"]',"vent208",ventPop208);h=t.innerHTML}catch(_){}return h}}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v209 (Carl 14/11): rättelser efter genomgången.
+   1) Ventilation finns bara med när kunden själv har valt den (inga förvalda intag och fläktar).
+   2) Montering skrivs ut i klartext, och alla monteringssvar följer med i förfrågan.
+   3) Hästarnas namn fanns redan med (Hästnamn), oförändrat.
+   4) Tar man bort ett rum behåller boxarna sin bredd, ytan blir ledig.
+   5) Kund-sidan: raden under ritningen ryms. */
+function ventGuard209(){try{if(!isPublic()||!D||!D.drawing||(D.ui&&D.ui.ventSet))return;const dr=D.drawing;if(dr.intag||+dr.fans){dr.intag=false;dr.fans=0;try{saveD()}catch(_){}}}catch(_){}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-vint],[data-vfan],[data-vgapply],[data-vftype],[data-d2fan]");if(t&&D&&D.ui)D.ui.ventSet=true},true);
+{const _tb209=tplBuild178;tplBuild178=function(){const dr=_tb209.apply(this,arguments);try{if(dr&&isPublic()&&!(D.ui&&D.ui.ventSet)){dr.intag=false;dr.fans=0}}catch(_){}return dr}}
+{const _rw209=renderWiz;renderWiz=function(){ventGuard209();return _rw209.apply(this,arguments)};Object.keys(_rw209).forEach(k=>{try{renderWiz[k]=_rw209[k]}catch(_){}})}
+const MONTTXT209={"Ja":"Ja, Myrby monterar","Nej":"Nej, vi monterar själva","Vet ej":"Vet inte än"};
+{const _pl209=publicLines;publicLines=function(d){const L=_pl209.apply(this,arguments);try{const pr=d.project||{};
+  const mi=L.findIndex(x=>x[0]==="Montering");if(mi>=0&&MONTTXT209[L[mi][1]])L[mi]=["Montering",MONTTXT209[L[mi][1]]];
+  const fi=L.findIndex(x=>x[0]==="Golv");if(fi>=0)L.splice(fi,1);
+  const extra=[["Bygget",pr.build],["Golv i boxarna",pr.floor],["Ytterväggar",pr.walls],["Takbalkar för stolparna",pr.ceiling],["Lastbil ända fram",pr.access],["Till montören",pr.mountNote],["Hjälp vid egen montering",pr.selfhelp]].filter(x=>x[1]&&String(x[1]).trim());
+  const at=L.findIndex(x=>x[0]==="Montering");if(extra.length){if(at>=0)L.splice(at+1,0,...extra);else{const p=L.findIndex(x=>x[0]==="#"&&x[1]==="Projektet");if(p>=0)L.splice(p+1,0,...extra);else{L.push(["#","Projektet"]);L.push(...extra)}}}
+  if(!(d.ui&&d.ui.ventSet)&&isPublic()){for(let i=L.length-1;i>=0;i--)if(L[i][0]==="Frånluftsfläktar"||L[i][0]==="Friskluftsintag")L.splice(i,1)}
+  }catch(_){}return L}}
+{const _tx209=toggleExtra;toggleExtra=function(dr,key){let before=null;try{if(isPublic()&&dr&&dr.cfg){before={};["N","S","W","E"].forEach(k=>{const ms=dr.walls[k]||[];before[k]={rooms:ms.filter(m=>m.t==="room").length,ws:ms.filter(m=>m.t==="box").map(m=>+m.w)}})}}catch(_){}
+  const r=_tx209.apply(this,arguments);
+  try{if(before){["N","S","W","E"].forEach(k=>{const c=dr.cfg[k],ms=dr.walls[k]||[],b=before[k];if(!c||!c.auto||!b)return;const nowRooms=ms.filter(m=>m.t==="room").length;
+    if(nowRooms<b.rooms&&!["fast","per","sista"].includes(c.mode)&&b.ws.length&&b.ws.length===c.n){const same=b.ws.every(w=>w===b.ws[0]);if(same){c.mode="fast";c.std=b.ws[0]}else{c.mode="per";c.ws=b.ws.slice()}autoFill(dr,k)}})}}catch(_){}
+  return r}}
+{const _f197b=fit197;fit197=function(){_f197b();try{const a=document.getElementById("cfgplan");if(!a||innerWidth<=900)return;const over=a.scrollHeight-a.clientHeight;if(over<=0)return;const sh=a.querySelector(":scope>.fsheet");if(!sh)return;
+  const img=[...sh.querySelectorAll("svg,img")].filter(x=>x.getBoundingClientRect().height>120).sort((x,y)=>y.getBoundingClientRect().height-x.getBoundingClientRect().height);const z=parseFloat(getComputedStyle(sh).zoom)||1;
+  let left=over+2;img.forEach(el=>{if(left<=0)return;const h=el.getBoundingClientRect().height,cut=Math.min(left,h-150);if(cut>0){el.style.maxHeight=Math.floor((h-cut)/z)+"px";el.style.objectFit="contain";left-=cut}})}catch(_){}}}
+try{ventGuard209()}catch(_){}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
 </html>
