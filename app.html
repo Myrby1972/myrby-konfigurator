@@ -5923,6 +5923,27 @@ function ral199(){try{const q=document.getElementById("q-p-yta");if(!q||q.queryS
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest('[data-pick1="spec.ral"]');if(!t)return;try{D.spec=D.spec||{};if(!/ulverlack/.test(D.spec.finish||""))D.spec.finish="Pulverlack (RAL)"}catch(_){}},true);
 try{new MutationObserver(()=>ral199()).observe(document.body,{childList:true,subtree:true})}catch(_){}
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
+
+/* v202 (Carl 14/11):
+   1) Ett exempel byter bara ritningen. Man stannar på sidan och går vidare själv med Nästa. Korten byter inte plats.
+   2) Ett kort (ovanför och under ritningen) visas först när man har gått vidare från sidan där valet görs. */
+tplUse178=function(id){const t=tplList178().find(x=>x.id===id&&x.ok);if(!t)return;const prev=JSON.stringify({dr:D.drawing,ui:{tpl:D.ui.tpl,tplAuto:D.ui.tplAuto,startEx:D.ui.startEx,touchedN:D.ui.touchedN,door0:D.ui.door0,measured:D.ui.measured}});
+  const ws0=document.getElementById("wizscroll"),st0=ws0?ws0.scrollTop:0;
+  D.drawing=tplBuild178(t);D.ui.kind="stall";D.ui.measured=true;D.ui.door0=true;D.ui.touchedN=true;D.ui.tpl=t.title;D.ui.tplAuto=true;D.ui.startEx=true;try{syncSpec(true)}catch(_){}autoAll(D.drawing);
+  saveD();renderWiz();const ws=document.getElementById("wizscroll");if(ws)ws.scrollTop=st0;
+  toastAct174(`Exemplet ”${t.title}” visas i ritningen. Tryck Nästa när du är nöjd.`,"Ångra",()=>{const p=JSON.parse(prev);D.drawing=p.dr;Object.assign(D.ui,p.ui);saveD();renderWiz()})};
+{const _sp202=startPick178;startPick178=function(){let h=_sp202.apply(this,arguments);try{if(h.indexOf("tplgrid")<0)return h;
+  if(D.ui.tplAuto&&D.ui.tpl&&!D.ui.tplFirst)D.ui.tplFirst=D.ui.tpl;const first=D.ui.tplFirst||null;
+  const order=tplList178().filter(t=>t.ok).slice().sort((a,b)=>(b.title===first)-(a.title===first)).map(t=>t.id);
+  const t=document.createElement("template");t.innerHTML=h;const g=t.content.querySelector(".tplgrid");if(!g)return h;
+  [...g.children].sort((a,b)=>order.indexOf(a.getAttribute("data-tpl"))-order.indexOf(b.getAttribute("data-tpl"))).forEach(c=>g.appendChild(c));h=t.innerHTML}catch(_){}return h}}
+const LAG202={"s-matt":"matt","s-boxA":"boxA","s-front":"front","p-vagg":"vagg","p-fyll":"fyll","p-yta":"yta","p-stolpe":"stolp","p-dekor":"dekor","s-extra":"rum"};
+function passed202(pg){try{const i=pageIdx182(pg);if(i<0)return true;return reach182()>i}catch(_){return true}}
+{const _cc202=cfgChips;cfgChips=function(lvl,part){const h=_cc202.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;
+  [...t.content.children].forEach(c=>{if(!c.classList||!c.classList.contains("cchip"))return;const j=c.getAttribute("data-wjump");
+    if(j&&LAG202[j]){if(!passed202(LAG202[j]))c.remove()}else if(!j&&c.classList.contains("prod")){const mi=pageIdx182("mer");if(mi>=0&&(S.wizStep||0)===mi&&!passed202("mer"))c.remove()}});
+  return t.innerHTML}catch(_){return h}}}
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function")renderWiz()}catch(_){}
 </script>
 
 </html>
