@@ -6534,7 +6534,10 @@ function doorsInView218(){try{const sc=document.getElementById("wizscroll"),bx=d
 /* 4) Etiketten "Stallgången · Baryard" ligger i rutans övre vänstra hörn, oavsett rutans form. */
 function walkLabel218(){try{const sv=document.querySelector("#cfgcanvas svg.vwalk");if(!sv)return;const t=[...sv.querySelectorAll("text")].find(x=>/^STALLGÅNGEN/.test(x.textContent||""));if(!t)return;
   const r=sv.getBoundingClientRect();if(!r.width||!r.height)return;const sc=Math.min(r.width/1000,r.height/560),ox=(r.width/sc-1000)/2,oy=(r.height/sc-560)/2;
-  t.setAttribute("x",(20-ox).toFixed(1));t.setAttribute("y",(34-oy).toFixed(1))}catch(_){}}
+  t.setAttribute("x",(20-ox).toFixed(1));t.setAttribute("y",(34-oy).toFixed(1));
+  /* ljus platta bakom texten, så att taklampor och linjer bakom inte ser ut som överstrykningar */
+  try{const wc=(typeof WALLC!=="undefined"&&(WALLC[(D.drawing||{}).wallC]||WALLC["Ljus"]))||["#eee8db"];const old=sv.querySelector("rect.wlab218");if(old)old.remove();const bb=t.getBBox(),r2=document.createElementNS("http://www.w3.org/2000/svg","rect");
+    r2.setAttribute("class","wlab218");r2.setAttribute("x",(bb.x-9).toFixed(1));r2.setAttribute("y",(bb.y-5).toFixed(1));r2.setAttribute("width",(bb.width+18).toFixed(1));r2.setAttribute("height",(bb.height+10).toFixed(1));r2.setAttribute("rx","7");r2.setAttribute("fill",wc[0]);r2.setAttribute("fill-opacity",".94");r2.setAttribute("pointer-events","none");t.parentNode.insertBefore(r2,t)}catch(_){}}catch(_){}}
 
 /* 5) Hjälpraden. Tecken på att kunden kört fast: går bakåt flera gånger, ångrar flera gånger, går vidare trots en varning,
       trycker flera gånger utan att något händer, sitter stilla länge, eller trycker Börja om. Två olika tecken inom fem minuter visar raden.
