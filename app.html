@@ -6548,14 +6548,15 @@ function walkLabel218(){try{const sv=document.querySelector("#cfgcanvas svg.vwal
 /* 5) Hjälpraden. Tecken på att kunden kört fast: går bakåt flera gånger, ångrar flera gånger, går vidare trots en varning,
       trycker flera gånger utan att något händer, sitter stilla länge, eller trycker Börja om. Två olika tecken inom fem minuter visar raden.
       Trycker hon Stäng med en påbörjad ritning ställs frågan en gång i en ruta. Raden eller rutan visas en gång per besök. */
-const HELP218={signs:{},shown:false,off:false,fresh:false,step:null,back:[],undo:[],dead:[],last:Date.now(),mut:false};
+const HELP218={log:[],max:null,idled:false,shown:false,off:false,fresh:false,step:null,back:[],undo:[],dead:[],last:Date.now(),mut:false};
 try{if(sessionStorage.getItem("myrby.help218")==="x")HELP218.off=true}catch(_){}
 function helpOk218(){try{return isPublic()&&!S.pubDone&&!!D&&!!D.ui&&D.ui.kind==="stall"&&!!D.drawing&&!!document.querySelector("#wiz .wiz-foot")}catch(_){return false}}
 function helpBegun218(){try{return !!((D.spec||{}).front)||(D.ui.reach||0)>=2||(S.wizStep||0)>=2}catch(_){return false}}
 function helpOff218(){HELP218.off=true;try{sessionStorage.setItem("myrby.help218","x")}catch(_){}helpRow218()}
-function helpSign218(k,w){if(HELP218.off||HELP218.shown)return;try{if(!isPublic())return}catch(_){return}HELP218.signs[k]={at:Date.now(),w:w||1};helpCheck218()}
-function helpCheck218(){if(HELP218.off||HELP218.shown||!helpOk218()||cfgPgKey()==="kund")return;const now=Date.now();let n=0;for(const k in HELP218.signs){const s=HELP218.signs[k];if(now-s.at<3e5)n+=s.w}
-  if(n>=2){HELP218.shown=true;HELP218.fresh=true;helpRow218()}}
+function helpSign218(k){if(HELP218.off||HELP218.shown)return;try{if(!isPublic())return}catch(_){return}HELP218.log.push({k,at:Date.now()});const g={nav:"back",undo:"undo",dead:"dead"}[k];if(g)HELP218[g].length=0;helpCheck218()}
+function helpCount218(){const now=Date.now(),one={};let n=0;HELP218.log=HELP218.log.filter(x=>now-x.at<3e5);for(const x of HELP218.log){if(x.k==="idle"||x.k==="warn"){if(one[x.k])continue;one[x.k]=1}n++}return n}
+function helpCheck218(){if(HELP218.off||HELP218.shown||!helpOk218()||cfgPgKey()==="kund")return;
+  if(helpCount218()>=3){HELP218.shown=true;HELP218.fresh=true;helpRow218()}}
 function helpRecent218(a,ms,n){const now=Date.now();a.push(now);while(a.length&&now-a[0]>ms)a.shift();return a.length>=n}
 function helpRow218(){try{const f=document.querySelector("#wiz .wiz-foot");if(!f)return;const old=f.querySelector(".sn218"),want=HELP218.shown&&!HELP218.off&&helpOk218()&&cfgPgKey()!=="kund";
   if(!want){if(old)old.remove();f.classList.remove("has-sn218");return}if(old)return;f.classList.add("has-sn218");
@@ -6598,8 +6599,8 @@ function helpModal218(why){try{const c=D.customer||{},dr=D.drawing,sp=D.spec||{}
   setTimeout(()=>{try{(nI.value?(kI.value?go:kI):nI).focus()}catch(_){}},60)}catch(e){console.warn("help218",e)}}
 
 /* Börjar kunden om, eller har skickat, börjar också räkningen om. Börja om räknas som ett tecken i nästa försök. */
-{const _pr218=pubReset;pubReset=function(){const r=_pr218.apply(this,arguments);try{HELP218.shown=false;HELP218.signs=HELP218.off?{}:{reset:{at:Date.now(),w:1}};HELP218.back=[];HELP218.undo=[];HELP218.dead=[];HELP218.step=S.wizStep||0;helpRow218()}catch(_){}return r}}
-{const _th218=publicThanks;publicThanks=function(o){const r=_th218.apply(this,arguments);try{if(o&&o.sent){HELP218.shown=false;HELP218.signs={};HELP218.back=[];HELP218.undo=[];HELP218.dead=[]}}catch(_){}return r}}
+{const _pr218=pubReset;pubReset=function(){const r=_pr218.apply(this,arguments);try{HELP218.shown=false;HELP218.log=HELP218.off?[]:[{k:"reset",at:Date.now()}];HELP218.back=[];HELP218.undo=[];HELP218.dead=[];HELP218.step=S.wizStep||0;helpRow218()}catch(_){}return r}}
+{const _th218=publicThanks;publicThanks=function(o){const r=_th218.apply(this,arguments);try{if(o&&o.sent){HELP218.shown=false;HELP218.log=[];HELP218.back=[];HELP218.undo=[];HELP218.dead=[]}}catch(_){}return r}}
 
 /* Säljaren ser i mejlet att kunden skickade i förtid och vill ha hjälp. */
 {const _pt218=publicText;publicText=function(d){let t=_pt218.apply(this,arguments);try{const e=d&&d.ui&&d.ui.early218;if(e&&typeof t==="string"){
@@ -6609,7 +6610,7 @@ function helpModal218(why){try{const c=D.customer||{},dr=D.drawing,sp=D.spec||{}
 /* Efter varje omritning: text i dörr-rutan, etiketten, hjälpraden. Före: en automatiskt vald Stallgång släpper när kunden lämnar utseendestegen. */
 function after218(){doorText218();walkLabel218();helpRow218()}
 {const _rw218=renderWiz;renderWiz=function(){try{if(D&&D.ui&&D.ui.viewAuto218&&!LOOK218.includes(cfgPgKey())){D.ui.viewAuto218=false;if(viewMode()==="walk")D.ui.view="plan"}}catch(_){}
-  const r=_rw218.apply(this,arguments);try{const st=S.wizStep||0;if(HELP218.step!=null&&st<HELP218.step&&!S.pubDone&&helpRecent218(HELP218.back,18e4,2))helpSign218("nav");HELP218.step=st}catch(_){}
+  const r=_rw218.apply(this,arguments);try{const st=S.wizStep||0;if(HELP218.step!=null&&st<HELP218.step&&!S.pubDone&&helpRecent218(HELP218.back,18e4,2))helpSign218("nav");HELP218.step=st;if(HELP218.max==null)HELP218.max=st;else if(st>HELP218.max){HELP218.max=st;if(!(D&&D.drawing&&drwWarnings(D.drawing).length))HELP218.log=[]}}catch(_){}
   after218();requestAnimationFrame(after218);return r};Object.keys(_rw218).forEach(k=>{try{renderWiz[k]=_rw218[k]}catch(_){}})}
 {const _cp218=cfgPanelRefresh;cfgPanelRefresh=function(){const r=_cp218.apply(this,arguments);after218();requestAnimationFrame(walkLabel218);setTimeout(walkLabel218,200);return r}}
 window.addEventListener("resize",()=>{clearTimeout(walkLabel218.t);walkLabel218.t=setTimeout(walkLabel218,140)});
@@ -6619,7 +6620,7 @@ document.addEventListener("click",e=>{const t=e.target&&e.target.closest?e.targe
   try{
     if(t.closest("[data-view]")&&D&&D.ui)D.ui.viewAuto218=false;
     if(t.closest("[data-pubclose]")&&isPublic()&&!S.pubDone&&!HELP218.off&&!HELP218.shown&&helpOk218()&&helpBegun218()&&cfgPgKey()!=="kund"&&!document.getElementById("pubmodal")){e.preventDefault();e.stopPropagation();helpOff218();helpModal218("close");return}
-    const rs=t.closest("[data-pubreset]");if(rs&&!rs.dataset.armed&&helpBegun218())helpSign218("reset",2);
+    const rs=t.closest("[data-pubreset]");if(rs&&!rs.dataset.armed&&helpBegun218())helpSign218("reset");
     if(t.closest("[data-hundo]")&&helpRecent218(HELP218.undo,9e4,3))helpSign218("undo");
     if(t.closest("[data-wnext]")&&D&&D.drawing&&drwWarnings(D.drawing).length)helpSign218("warn");
   }catch(_){}},true);
@@ -6636,8 +6637,8 @@ document.addEventListener("click",e=>{const t=e.target&&e.target.closest?e.targe
     setTimeout(()=>{if(!HELP218.mut&&helpRecent218(HELP218.dead,3e4,4))helpSign218("dead")},450)}catch(_){}});
 window.addEventListener("pointerdown",()=>{HELP218.mut=false},true);
 try{new MutationObserver(()=>{HELP218.mut=true}).observe(document.body,{subtree:true,childList:true,attributes:true,characterData:true})}catch(_){}
-["pointerdown","keydown","wheel","touchstart","input"].forEach(ev=>document.addEventListener(ev,()=>{HELP218.last=Date.now()},{capture:true,passive:true}));
-setInterval(()=>{try{if(document.visibilityState==="visible"&&helpOk218()&&Date.now()-HELP218.last>=9e4)helpSign218("idle")}catch(_){}},10000);
+["pointerdown","keydown","wheel","touchstart","input"].forEach(ev=>document.addEventListener(ev,()=>{HELP218.last=Date.now();HELP218.idled=false},{capture:true,passive:true}));
+setInterval(()=>{try{if(document.visibilityState==="visible"&&helpOk218()&&Date.now()-HELP218.last>=9e4&&!HELP218.idled){HELP218.idled=true;helpSign218("idle")}}catch(_){}},10000);
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function"&&document.querySelector("#wiz .cfg-steps"))after218()}catch(_){}
 
 </script>
