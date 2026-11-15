@@ -2518,6 +2518,11 @@ html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
 #wiz .t223-tile .ph{height:70px}
 }
 
+
+/* v226: pulsen på vyväljaren fortsätter där den var när panelen ritas om */
+.vseg.vnew.vp226,.vseg.vnew.vp226 button:not([aria-pressed="true"]){animation-delay:var(--vd226,0s)}
+@media (prefers-reduced-motion:reduce){.vseg.vnew.vp226,.vseg.vnew.vp226 button{animation:none!important}}
+
 </style>
 
 <div class="app">
@@ -6599,7 +6604,7 @@ const LOOK218=["front","vagg","fyll","yta","stolp","dekor"];
 function autoWalk218(){try{if(!isPublic()||!D.ui||D.ui.walkAuto218||!(D.spec||{}).front||viewMode()!=="plan"||cfgPgKey()!=="front"||drawLvl(wizPages())<3)return;
   /* Bara där vyväljaren syns (inte i mobilläget), så att kunden alltid kan gå tillbaka till ritningen. */
   const vb=document.querySelector('#wiz [data-view="walk"]');if(!vb||vb.offsetParent===null)return;
-  D.ui.view="walk";D.ui.viewSeen=true;D.ui.walkAuto218=true;D.ui.viewAuto218=true;ls.set("myrby.draft2",D);cfgPanelRefresh()}catch(_){}}
+  D.ui.view="walk";D.ui.viewSeen=true;D.ui.walkAuto218=true;D.ui.viewAuto218=true;ls.set("myrby.draft2",D);vp226Start();cfgPanelRefresh()}catch(_){}}
 
 /* Rutan om dörrarna: i Stallgången och 3D går det inte att trycka på en dörr, så texten säger var man gör det. */
 const DT218_PLAN='Välj hängning för alla, eller <b>tryck på en dörr i ritningen</b> för att vända just den.',DT218_VIEW='Välj hängning för alla här. Vill du vända en enskild dörr trycker du på den i <b>Ritning</b>.';
@@ -6822,6 +6827,15 @@ function pubPath225(){try{return (window.frameElement?parent.location.pathname:l
 function pubUrl225(u,path){if(!u||!/^\/sv(\/|$)/.test(u))return u;return /^\/sv(\/|$)/.test(path==null?pubPath225():path)?u:(u.replace(/^\/sv/,"")||"/")}
 function pubPlace225(d){const c=(d&&d.customer)||{},t=[c.zip,c.city].map(x=>String(x||"").trim()).filter(Boolean).join(" ");return t||String(c.street||"").trim()||"Inte angivet i ritverktyget"}
 try{const c225=window.MYRBY_PUBLIC;if(c225){c225.formPage=pubUrl225(c225.formPage);c225.closeUrl=pubUrl225(c225.closeUrl)}}catch(_){}
+
+
+/* v226 (Carl 15/11): när Stallgången öppnas av sig själv efter frontvalet pulserar vyväljaren (Ritning, 3D, Stallgången) tre gånger ändå,
+   så att kunden ser att de andra bilderna finns. Ritas panelen om under tiden fortsätter pulsen där den var, den börjar inte om.
+   Väljer kunden själv en vy slutar den. */
+const VP226=4800;
+function vp226On(){try{return !!(S.vp226&&Date.now()-S.vp226<VP226&&viewMode()==="walk")}catch(_){return false}}
+function vp226Start(){try{S.vp226=Date.now();setTimeout(()=>{try{document.querySelectorAll(".vseg.vp226").forEach(e=>{e.classList.remove("vnew","vp226");e.style.removeProperty("--vd226")})}catch(_){}},VP226+60)}catch(_){}}
+{const _vb226=viewBar;viewBar=function(lvl){let h=_vb226.apply(this,arguments);try{if(vp226On()&&h.indexOf("vseg vnew")<0){const d=((Date.now()-S.vp226)/1000).toFixed(2);h=h.replace('class="vseg ',`style="--vd226:-${d}s" class="vseg vnew vp226 `)}}catch(_){}return h}}
 
 </script>
 
