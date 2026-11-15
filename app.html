@@ -2402,6 +2402,11 @@ body{margin:0}
 .hn-g label span{font-size:12px}
 .hn-h small{font-size:13px}
 
+
+/* v217 (Carl 15/11): Läs mer nere i kortets högra hörn, på egen rad under texten, så att hela produkten syns på bilden */
+html body #wiz .fgal .fgi>.ibtn{top:auto!important;left:auto!important;right:10px!important;bottom:10px!important}
+html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
+
 </style>
 
 <div class="app">
@@ -3112,60 +3117,187 @@ function frameCol(dr,f){const fin=dr.finish||"";
   if(/ulverlack/.test(fin)){const c=(RALC[dr.ral]||RALC["RAL 9005"])[1];return {a:c,b:shade(c,-.3),c:shade(c,.3),lack:true}}
   if(f==="baryard")return {a:"#2f4b35",b:"#1c2f22",c:"#5a7a60",lack:true};
   return {a:"#b4b9ba",b:"#7f8788",c:"#e4e7e7",lack:false}}
-/* Profil: segment (sida/dörr) med egen överkantskurva, stolpar med kapsel, fyllningshöjd, dekorbräda, skjutdörrsskena */
+/* ===== v217 (Carl 15/11): fronterna ritas efter första produktbilden på hemsidan =====
+   FRONT217 beskriver varje modell i millimeter: stolpar, dekorband, lås, fotregel, gångjärn, öron och bultar.
+   frontProfile räknar ut geometrin för en given längd, frontSVG ritar den i valfri projektion.
+   Stallgången och 3D anropar samma två funktioner, så en detalj som ändras här syns i båda vyerna. */
+const FRONT217={
+  optimal:   {slide:true,band:"stadium",pitch:84,plank:145,ear:{y:712,s:"tab"},bolts:1},
+  janslund:  {inner:{w:80,cap:"flat"},band:"notch",lock:"ring",strike:1,foot:{y:160},hinge:{s:"block",y:[2215,1510,1200,220]},ear:{y:670,s:"disc"},split:1,pitch:84,plank:148,bolts:1},
+  fagelbro:  {inner:{r:1,w:114,cap:"ring"},band:"stadium",lock:"ring",foot:{y:160,post:1},hinge:{s:"slim",y:[1530,245]},ear:{y:655,s:"tab"},sill:1,pitch:82,plank:145,bolts:1},
+  faro:      {inner:{w:80,cap:"plate"},outer:{cap:"plate"},band:"stadium",orn:"bracket",lock:"ring",strike:1,foot:{y:185},hinge:{s:"knob",y:[1290,240]},stile:"dark",pitch:86,plank:140,bolts:1},
+  baryard:   {inner:{r:1,w:114,cap:"lid"},outer:{r:1,w:114,cap:"lid"},band:"hex",orn:"bolt4",lock:"ring",foot:{y:185},hinge:{s:"slim",y:[2020,255]},ear:{y:675,s:"tab"},open:.47,pitch:91,plank:143},
+  stromsholm:{inner:{r:1,w:114,cap:"ring"},outer:{r:1,w:114,cap:"ring"},band:"stadium",bandBg:"fill",orn:"volute",lock:"box",foot:{y:171},hinge:{s:"slim",y:[1340,260]},ear:{y:686,s:"flag"},stileCap:1,pitch:84,plank:148,bolts:1},
+  emmaboda:  {inner:{r:1,w:120,cap:"black"},outer:{r:1,w:114,cap:"black"},band:"stadium",orn:"bolt4",lock:"ring",foot:{y:220,s:"L"},hinge:{s:"tall",y:[1330,255],catch:727},ear:{y:694,s:"flag"},stileCap:2,tube:1,pitch:84,plank:148,bolts:1},
+  dala:      {inner:{w:80,cap:"flat"},fill:1250,gap:13,lock:"ring",strike:1,foot:{y:200},hinge:{s:"strap",y:[1250,245]},feet:1,pitch:105,plank:110,bolts:2},
+  rotbrunna: {pair:true,hinge:{s:"strap",y:[2057,250]},ear:{y:692,s:"tab"},pitch:90,plank:150,gap:14,bolts:1,fillC:"#8d9398"},
+  std:       {pitch:105,plank:140}
+};
 function frontProfile(f,len,dir){
-  const dw=Math.min(1250,Math.max(600,len-500)),cen=f!=="optimal"&&f!=="rotbrunna",dl=cen?(len-dw)/2:(dir==="H"?len-250-dw:250),dR=dl+dw;
-  const seg=(x0,x1,top,door)=>({x0,x1,top,door:!!door}),flat=h=>()=>h;
-  const S={id:f,len,fill:1300,decor:[1300,1470],segs:[],posts:[],track:false,pitch:105,bar:24,frame:55,door:[dl,dR],dec:"#4a3222",decIn:"#241910"};
-  const sq=(x,h,cap)=>S.posts.push({x,h,r:false,cap:cap||"flat"}),rd=(x,h,cap)=>S.posts.push({x,h,r:true,cap:cap||"dome"});
-  const three=(side,doorT)=>{S.segs.push(seg(0,dl,side),seg(dl,dR,doorT,true),seg(dR,len,typeof side==="function"&&side.length?t=>side(1-t):side))};
+  const M=FRONT217[f]||FRONT217.std,dw=Math.min(1250,Math.max(600,len-500)),flat=h=>()=>h,sin=Math.sin,cos=Math.cos,PI=Math.PI;
+  const H=dir==="H",dl=M.slide?(H?len-dw:0):(len-dw)/2,dR=dl+dw;
+  const S={id:f,len,M,H,fill:M.fill||1300,decor:M.band?[1115,1300]:null,segs:[],posts:[],track:!!M.slide,pitch:M.pitch,plank:M.plank,bar:22,frame:50,door:[dl,dR]};
+  if(M.fillC)S.fillC=M.fillC;
+  const post=(x,h,inner)=>{const q=(inner?M.inner:M.outer)||{};S.posts.push({x,h,r:!!q.r,w:q.w||80,cap:q.cap||"flat"})};
+  /* tre delar: sida, slagdörr med egen karm (springa mot stolparna), sida */
+  const three=(side,doorTop,hOut,hIn)=>{const wi=((M.inner&&M.inner.w)||80)/2,wo=((M.outer&&M.outer.w)||80)/2,g=wi+14,e=27;
+    S.segs.push({x0:0,x1:dl,top:side,in0:wo+e,in1:wi+e},{x0:dl,x1:dR,top:doorTop,door:true,in0:g+e-10,in1:g+e-10,lift:M.tube?70:30,hinge:H?"R":"L"},{x0:dR,x1:len,top:t=>side(1-t),in0:wi+e,in1:wo+e});
+    post(0,hOut);post(dl,hIn,1);post(dR,hIn,1);post(len,hOut)};
   switch(f){
-    case "optimal":S.decor=[1300,1450];S.track=true;three(flat(2250),flat(2250));sq(0,2300);sq(dl,2300);sq(dR,2300);sq(len,2300);break;
-    case "janslund":three(flat(2200),t=>2200+280*Math.sin(Math.PI*t));sq(0,2260);sq(dl,2260);sq(dR,2260);sq(len,2260);break;
-    case "fagelbro":three(flat(2200),t=>2200+300*Math.sin(Math.PI*t));sq(0,2260);rd(dl,2500,"dome");rd(dR,2500,"dome");sq(len,2260);break;
-    case "faro":{const sw=t=>1650+670*Math.pow(1-t,2.4);three(sw,flat(1650));sq(0,2360,"cap");sq(dl,1720,"cap");sq(dR,1720,"cap");sq(len,2360,"cap");break}
-    case "baryard":{const ar=t=>2150+260*Math.sin(Math.PI*t);S.dec="#9a6a3c";S.decIn="#3b2a1e";three(ar,ar);rd(0,2380,"dome");rd(dl,2380,"dome");rd(dR,2380,"dome");rd(len,2380,"dome");break}
-    case "stromsholm":{const sw=t=>1750+570*Math.cos(Math.PI*t/2);S.decor=[1300,1440];three(sw,t=>1750-200*Math.sin(Math.PI*t));rd(0,2320,"ball");rd(dl,1800,"ball");rd(dR,1800,"ball");rd(len,2320,"ball");break}
-    case "emmaboda":{const sw=t=>1800+520*(.5+.5*Math.cos(Math.PI*t));S.decor=[1300,1440];three(sw,t=>1800-250*Math.sin(Math.PI*t));rd(0,2320,"ball");rd(dl,1850,"ball");rd(dR,1850,"ball");rd(len,2320,"ball");break}
-    case "dala":S.fill=1250;S.decor=null;three(flat(1470),flat(1470));sq(0,1530);sq(dl,1530);sq(dR,1530);sq(len,1530);break;
-    case "rotbrunna":{const R=Math.min(900,len*.3),c=len/2,cut=x=>Math.abs(x-c)<R?2250-Math.sqrt(R*R-(x-c)*(x-c)):2250;S.decor=null;S.door=[120,len-120];S.fillC="#8d9398";
-      S.segs.push({x0:120,x1:c,top:t=>cut(120+t*(c-120)),door:true,leaf:1},{x0:c,x1:len-120,top:t=>cut(c+t*(len-120-c)),door:true,leaf:2});sq(0,2320);sq(len,2320);break}
-    default:S.segs.push(seg(0,len,flat(2250)));sq(0,2320);sq(len,2320)}
+    case "optimal":{const d={x0:dl,x1:dR,top:flat(2250),door:true,slide:true,lift:25,in0:H?27:67,in1:H?67:27},fx={x0:H?0:dR,x1:H?dl:len,top:flat(2250),in0:H?67:32,in1:H?32:67};S.segs.push(...(H?[fx,d]:[d,fx]));post(0,2300);post(len,2300);break}
+    case "janslund":three(flat(2340),t=>2300+150*sin(PI*t),2400,2400);break;
+    case "fagelbro":three(flat(2260),t=>2250+150*sin(PI*t),2320,2370);break;
+    case "faro":three(t=>1510+790*Math.pow(1-t,2.4),flat(1505),2350,1600);break;
+    case "baryard":{const ar=t=>2255+170*sin(PI*t);three(ar,ar,2400,2400);break}
+    case "stromsholm":three(t=>1720+590*cos(PI*t/2),t=>1620-170*sin(PI*t),2410,1800);break;
+    case "emmaboda":three(t=>1552+698*(.5+.5*cos(PI*t)),t=>1510-140*sin(PI*t),2335,1650);break;
+    case "dala":three(flat(1450),flat(1450),1530,1530);S.segs.forEach(s=>{if(!s.door)s.lift=40});break;
+    case "rotbrunna":{const c=len/2,ax=Math.min(916,len*.27),cut=x=>Math.abs(x-c)<ax?2290-783*Math.sqrt(1-Math.pow((x-c)/ax,2)):2290;S.door=[49,len-49];
+      S.segs.push({x0:0,x1:c,top:t=>cut(76+t*(c-104)),door:true,leaf:1,in0:76,in1:28,lift:30,hinge:"L"},{x0:c,x1:len,top:t=>cut(c+28+t*(c-104)),door:true,leaf:2,in0:28,in1:76,lift:30,hinge:"R"});
+      S.posts.push({x:0,h:2366,r:false,w:70,cap:"flat"},{x:len,h:2366,r:false,w:70,cap:"flat"});break}
+    default:S.segs.push({x0:0,x1:len,top:flat(2250)});post(0,2320);post(len,2320)}
   S.segs=S.segs.filter(s=>s.x1-s.x0>40);return S}
-/* Ritar fronten i valfri projektion. P(x,y)->[u,v], kAt(x)->px per mm. o:{fc,fr,name,xmin,plast,dir,pre} */
-function frontSVG(S,P,kAt,o){if(o.balls==="med"||o.balls==="utan")S={...S,posts:S.posts.map(p=>({...p,cap:o.balls==="med"?"ball":(p.cap==="ball"?(p.r?"dome":"flat"):p.cap)}))};const xmin=o.xmin??-1e9,fx=v=>v.toFixed(1),cl=x=>Math.max(xmin,x),pt=(x,y)=>P(cl(x),y).map(fx).join(",");
-  const poly=(pts,att)=>`<polygon points="${pts.map(([x,y])=>pt(x,y)).join(" ")}" ${att}/>`;
-  const ln=(x1,y1,x2,y2,att)=>{if(x1<xmin&&x2<xmin)return "";const a=P(cl(x1),y1),b=P(cl(x2),y2);return `<line x1="${fx(a[0])}" y1="${fx(a[1])}" x2="${fx(b[0])}" y2="${fx(b[1])}" ${att}/>`};
-  const fr=o.fr,fc=S.fillC&&!o.fillSet?[S.fillC,shade(S.fillC,-.25),shade(S.fillC,.25)]:o.fc,out=[];if(S.decor&&!o.decor)S.decor=null;
-  const curve=(s,dy=0)=>{const n=16,pts=[];for(let i=0;i<=n;i++){const t=i/n;pts.push([s.x0+t*(s.x1-s.x0),s.top(t)+dy])}return pts};
-  S.segs.forEach(s=>{if(s.x1<=xmin)return;const k=kAt((cl(s.x0)+s.x1)/2),L=s.x1-s.x0;
-    out.push(poly([[s.x0,0],[s.x1,0],[s.x1,S.fill],[s.x0,S.fill]],`fill="${fc[0]}" stroke="${fc[1]}" stroke-width="${fx(2*k)}"`));
-    const np=Math.max(1,Math.round(L/140));for(let i=1;i<np;i++){const x=s.x0+i*L/np;out.push(ln(x,0,x,S.fill,`stroke="${fc[1]}" stroke-width="${fx(9*k)}" opacity=".85"`))}
-    if(!o.plast)for(let i=0;i<np;i+=2){const x=s.x0+(i+.5)*L/np;out.push(ln(x,S.fill*.12,x+L/np*.06,S.fill*.82,`stroke="${fc[2]}" stroke-width="${fx(6*k)}" opacity=".4"`))}
-    let bb=S.fill;
-    if(S.decor){const [y0,y1]=S.decor;bb=y1;out.push(poly([[s.x0,y0],[s.x1,y0],[s.x1,y1],[s.x0,y1]],`fill="${fr.a}" stroke="${fr.b}" stroke-width="${fx(10*k)}"`));out.push(poly(plate188(s.x0,s.x1,y0,y1),`fill="${fc?fc[1]:S.dec}" stroke="${fr.b}" stroke-width="${fx(8*k)}"`));
-      }
-    const nb=Math.max(1,Math.round(L/S.pitch));for(let i=1;i<nb;i++){const t=i/nb,x=s.x0+t*L;if(x<xmin)continue;out.push(ln(x,bb,x,s.top(t)-S.frame*.35,`stroke="${fr.a}" stroke-width="${fx(S.bar*k)}" stroke-linecap="round"`))}
-    const fw=fx(S.frame*k);
-    out.push(ln(s.x0,S.fill,s.x1,S.fill,`stroke="${fr.a}" stroke-width="${fw}"`),ln(s.x0,bb,s.x1,bb,`stroke="${fr.a}" stroke-width="${fx(S.frame*.8*k)}"`),ln(s.x0,28,s.x1,28,`stroke="${fr.b}" stroke-width="${fw}"`));
-    const cp=curve(s);out.push(`<polyline points="${cp.map(([x,y])=>pt(x,y)).join(" ")}" fill="none" stroke="${fr.a}" stroke-width="${fx(S.frame*1.15*k)}" stroke-linejoin="round" stroke-linecap="round"/>`);
-    out.push(`<polyline points="${curve(s,S.frame*.28).map(([x,y])=>pt(x,y)).join(" ")}" fill="none" stroke="${fr.c}" stroke-width="${fx(S.frame*.22*k)}" opacity=".75"/>`);
-    out.push(ln(s.x0,0,s.x0,s.top(0),`stroke="${fr.a}" stroke-width="${fw}"`),ln(s.x1,0,s.x1,s.top(1),`stroke="${fr.a}" stroke-width="${fw}"`));
-    if(s.door&&!o.noHw){const hx=s.leaf===1?s.x0:s.leaf===2?s.x1:(o.dir==="H"?s.x1:s.x0),ex=hx===s.x0?s.x1-110:s.x0+110;
-      if(!S.track)[380,1120,Math.min(1900,s.top(hx===s.x0?0:1)-250)].forEach(y=>out.push(ln(hx-48,y,hx+48,y,`stroke="${fr.b}" stroke-width="${fx(72*k)}" stroke-linecap="round"`)));
-      if(!S.track)out.push(ln(ex-70,1010,ex+70,1010,`stroke="${fr.b}" stroke-width="${fx(44*k)}" stroke-linecap="round"`));
-      if(S.track&&ex>=xmin){const c=P(ex,1220);out.push(`<circle cx="${fx(c[0])}" cy="${fx(c[1])}" r="${fx(40*k)}" fill="#b3261e" stroke="#5e130e" stroke-width="${fx(8*k)}"/><circle cx="${fx(c[0]-12*k)}" cy="${fx(c[1]-12*k)}" r="${fx(11*k)}" fill="#e8796e" opacity=".8"/>`)}}});
-  S.posts.forEach(p=>{if(p.x<xmin)return;const k=kAt(p.x),outer=p.x===0||p.x===S.len,pt=outer?o.post:null,PW={s50:50,s80:80,stal:114,tra:90},w=pt&&PW[pt]?PW[pt]:pt==="ingen"?55:(p.r?100:80),r=pt?pt==="stal":p.r,col=pt==="tra"?{a:"#b8925a",b:"#7d5e34",c:"#d9bb8a"}:fr;
-    out.push(ln(p.x,0,p.x,p.h,`stroke="${col.a}" stroke-width="${fx(w*k)}" stroke-linecap="${r?"round":"butt"}"`));
-    if(r)out.push(ln(p.x-w*.24,90,p.x-w*.24,p.h-40,`stroke="${col.c}" stroke-width="${fx(w*.18*k)}" opacity=".55"`));else out.push(ln(p.x-w*.35,0,p.x-w*.35,p.h,`stroke="${col.b}" stroke-width="${fx(w*.18*k)}" opacity=".5"`));
-    const c=P(p.x,p.h);
-    if(p.cap==="ball")out.push(`<circle cx="${fx(c[0])}" cy="${fx(c[1]-72*k)}" r="${fx(64*k)}" fill="url(#${o.pre}brass)" stroke="#8a6a2c" stroke-width="${fx(5*k)}"/>`);
-    else if(p.cap==="dome")out.push(`<circle cx="${fx(c[0])}" cy="${fx(c[1])}" r="${fx(54*k)}" fill="${fr.a}" stroke="${fr.b}" stroke-width="${fx(5*k)}"/>`);
-    else if(p.cap==="cap"&&p.x>=xmin){const cc=P(p.x,p.h+22);out.push(`<line x1="${fx(cc[0]-72*k)}" y1="${fx(cc[1])}" x2="${fx(cc[0]+72*k)}" y2="${fx(cc[1])}" stroke="${fr.b}" stroke-width="${fx(44*k)}"/>`)}});
-  if(S.track){const k=kAt(S.len/2);out.push(ln(0,2345,S.len,2345,`stroke="${fr.a}" stroke-width="${fx(50*k)}"`));
-    [S.door[0]+140,S.door[1]-140].forEach(x=>{if(x<xmin)return;const c=P(x,2330);out.push(`<circle cx="${fx(c[0])}" cy="${fx(c[1])}" r="${fx(30*k)}" fill="${fr.b}"/>`)})}
-  if(o.name){const [d0,d1]=S.door,m=(d0+d1)/2;if(m>xmin+200){const k=kAt(m),w=Math.min((d1-d0)*.86,o.name.length*66+220),y=S.fill-210,fsz=Math.min(92,(w-130)/(o.name.length*.66));
-    out.push(poly([[m-w/2,y-80],[m+w/2,y-80],[m+w/2,y+80],[m-w/2,y+80]],`fill="url(#${o.pre}brass)" stroke="#6e5420" stroke-width="${fx(5*k)}"`),poly([[m-w/2+40,y-50],[m+w/2-40,y-50],[m+w/2-40,y+50],[m-w/2+40,y+50]],`fill="none" stroke="#7a5f27" stroke-width="${fx(2.5*k)}" opacity=".8"`));[m-w/2+22,m+w/2-22].forEach(x=>{const q=P(x,y);out.push(`<circle cx="${fx(q[0])}" cy="${fx(q[1])}" r="${fx(9*k)}" fill="#6e5420" opacity=".8"/>`)});const by=y-fsz*.34,O=P(m,by),X1=P(m+1,by),X0=P(m-1,by),Y1=P(m,by-1),ex=[(X1[0]-X0[0])/2,(X1[1]-X0[1])/2],ey=[Y1[0]-O[0],Y1[1]-O[1]];
+/* Ritar fronten i valfri projektion. P(x,y)->[u,v], kAt(x)->px per mm. o:{fc,fr,name,xmin,plast,dir,pre,post,decor,balls,noHw,lock}
+   noHw döljer beslagen (3D), lock:true ritar ändå låset, i verklig storlek. */
+function frontSVG(S,P,kAt,o){
+  const M=S.M||FRONT217.std,xmin=o.xmin??-1e9,fx=v=>v.toFixed(1),cl=x=>Math.max(xmin,x),w=(mm,k)=>fx(Math.max(.35,mm*k));
+  const pts=a=>a.map(([x,y])=>P(cl(x),y).map(fx).join(",")).join(" ");
+  const poly=(a,att)=>`<polygon points="${pts(a)}" ${att}/>`,path=(a,att)=>`<polyline points="${pts(a)}" fill="none" ${att}/>`;
+  const ln=(x1,y1,x2,y2,att)=>x1<xmin&&x2<xmin?"":path([[x1,y1],[x2,y2]],att);
+  const arc=(cx,cy,rx,ry,a0,a1,n)=>{const r=[];for(let i=0;i<=n;i++){const a=a0+(a1-a0)*i/n;r.push([cx+rx*Math.cos(a),cy+ry*Math.sin(a)])}return r};
+  const oval=(x0,y0,x1,y1,r)=>{r=Math.min(r,(x1-x0)/2,(y1-y0)/2);const q=Math.PI/2;return [...arc(x1-r,y1-r,r,r,0,q,3),...arc(x0+r,y1-r,r,r,q,2*q,3),...arc(x0+r,y0+r,r,r,2*q,3*q,3),...arc(x1-r,y0+r,r,r,3*q,4*q,3)]};
+  const box=(xa,y0,xb,y1,att,r)=>{const x0=Math.min(xa,xb),x1=Math.max(xa,xb);return x1<xmin?"":poly(r?oval(x0,y0,x1,y1,r):[[x0,y0],[x1,y0],[x1,y1],[x0,y1]],att)};
+  const disc=(x,y,r,att)=>x-r<xmin?"":poly(arc(x,y,r,r,0,Math.PI*2,12),att);
+  const fr=o.fr,fc=S.fillC&&!o.fillSet?[S.fillC,shade(S.fillC,-.25),shade(S.fillC,.25)]:o.fc,band=S.decor&&o.decor?S.decor:null,pTop=band?band[0]:S.fill;
+  const st={a:"#c6cac9",b:"#6f7778",c:"#eef0ef"},ink="#1f2120",frD=shade(fr.a,-.16),out=[],late=[],holes=[];
+  const edge=k=>`stroke="${fr.b}" stroke-width="${w(4,k)}" stroke-linejoin="round"`;
+  const bolt=(x,y,k,r)=>k<.035?"":disc(x,y,r||10,`fill="${shade(fr.a,-.3)}" stroke="${fr.b}" stroke-width="${w(3,k)}"`)+(k<.12?"":disc(x-(r||10)*.25,y+(r||10)*.25,(r||10)*.35,`fill="${fr.c}" opacity=".7"`));
+  /* rör: mörk kant, grundfärg och ljus glans, så att varje del av karmen syns för sig */
+  const tube=(pp,t,k,col,cap)=>{const lc=cap?` stroke-linecap="${cap}"`:"";return (k<.035?"":path(pp,`stroke="${fr.b}" stroke-width="${w(t+5,k)}" stroke-linejoin="round"${lc} opacity=".75"`))+path(pp,`stroke="${col||fr.a}" stroke-width="${w(t,k)}" stroke-linejoin="round"${lc}`)};
+  const rail=(x0,x1,y,t,k,col)=>x0<xmin&&x1<xmin?"":tube([[x0,y],[x1,y]],t,k,col)+(k<.035?"":ln(x0,y+t*.24,x1,y+t*.24,`stroke="${fr.c}" stroke-width="${w(t*.2,k)}" opacity=".7"`));
+  const stile=(x,ya,yb,t,k,col)=>x<xmin?"":tube([[x,ya],[x,yb]],t,k,col)+(k<.035?"":ln(x-t*.24,ya,x-t*.24,yb,`stroke="${fr.c}" stroke-width="${w(t*.16,k)}" opacity=".6"`));
+  const hwc=fr.lack?{a:fr.a,b:fr.b,c:fr.c}:null;
+  const posts=o.balls==="med"?S.posts.map(p=>({...p,cap:"ball"})):S.posts;
+
+  S.segs.forEach(s=>{if(s.x1<=xmin)return;
+    const a=s.x0+(s.in0||0),b=s.x1-(s.in1||0),L=b-a,y0=s.lift||0,k=kAt((cl(a)+b)/2),X=t=>a+t*L,fw=S.frame,fine=k>=.035;
+    const hr=s.hinge==="R",lx=s.slide?(S.H?b:a):(hr?a:b),sg=lx===a?1:-1,at=d=>lx+sg*d;   /* at(d): d mm in från dörrens låskant */
+    const hw=s.door&&!o.noHw,mark=s.door&&!!o.lock,lockW=(hw||mark)&&M.lock?(M.lock==="box"?215:178):0;
+    /* plankor */
+    out.push(poly([[a,y0],[b,y0],[b,pTop],[a,pTop]],`fill="${fc[0]}"`));
+    const np=Math.max(1,Math.round(L/S.plank));for(let i=1;i<np;i++)out.push(ln(X(i/np),y0,X(i/np),pTop,`stroke="${shade(fc[1],-.3)}" stroke-width="${w(M.gap||8,k)}" opacity=".9"`));
+    if(fine)for(let i=1;i<np;i++)out.push(ln(X(i/np)+(M.gap||8)*.9,y0,X(i/np)+(M.gap||8)*.9,pTop,`stroke="${fc[2]}" stroke-width="${w(4,k)}" opacity=".28"`));
+    if(fine)out.push(ln(a,pTop-16,b,pTop-16,`stroke="#000" stroke-width="${w(26,k)}" opacity=".13"`));
+    if(!o.plast&&fine)for(let i=0;i<np;i+=2){const x=X((i+.5)/np);out.push(ln(x,y0+pTop*.1,x+L/np*.06,pTop*.84,`stroke="${fc[2]}" stroke-width="${w(6,k)}" opacity=".35"`))}
+    /* dekorband: bakstycke, bricka, ornament och två skenor */
+    if(band){const [d0,d1]=band,py0=d0+34,py1=d1-34,yc=(d0+d1)/2,ph=py1-py0,p0=a+42+(lx===a?lockW:0),p1=b-42-(lx===b?lockW:0);
+      out.push(box(a,d0,b,d1,`fill="${M.bandBg==="fill"?shade(fc[0],-.3):fr.a}"`));
+      const hex=()=>{const cw=Math.min(70,(p1-p0)*.12),ch=ph*.32;return [[p0,py0+ch],[p0+cw,py0],[p1-cw,py0],[p1,py0+ch],[p1,py1-ch],[p1-cw,py1],[p0+cw,py1],[p0,py1-ch]]};
+      const notch=()=>{const r=Math.min(26,ph*.3),q=Math.PI/2;return [...arc(p1,py0,r,r,2*q,q,3),...arc(p1,py1,r,r,3*q,2*q,3),...arc(p0,py1,r,r,4*q,3*q,3),...arc(p0,py0,r,r,q,0,3)]};
+      const shape=M.band==="hex"?hex():M.band==="notch"?notch():oval(p0,py0,p1,py1,ph/2);
+      if(fine&&p1-p0>120&&M.orn==="bracket")[[p0-18,1],[p1+18,-1]].forEach(([x,d])=>[[py0-10,1],[py1+10,-1]].forEach(([y,e])=>{out.push(poly([[x,y],[x+d*74,y],[x,y+e*ph*.62]],`fill="${st.c}" stroke="${st.b}" stroke-width="${w(3,k)}" stroke-linejoin="round"`),bolt(x+d*13,y+e*13,k,6))}));
+      if(p1-p0>120)out.push(poly(shape,`fill="${M.bandBg==="fill"?shade(fc[0],.08):fc[0]}" stroke="${M.band==="notch"?fr.c:fc[1]}" stroke-width="${w(M.band==="notch"?5:4,k)}" stroke-linejoin="round"`));
+      if(fine&&p1-p0>120){
+        if(M.orn==="bolt4")[[a+26,d0+40],[a+26,d1-40],[b-26,d0+40],[b-26,d1-40]].forEach(([x,y])=>{if(!(lockW&&Math.abs(x-lx)<60))out.push(bolt(x,y,k,9))});
+        if(M.orn==="volute")[[p0,1],[p1,-1]].forEach(([x,d])=>{if(lockW&&Math.abs(x-(lx+sg*lockW))<90)return;const r=ph*.27,sw=`stroke="${st.c}" stroke-width="${w(7,k)}" stroke-linecap="round" stroke-linejoin="round"`;
+          out.push(path(arc(x-d*4,yc+r,r,r,-Math.PI/2,Math.PI*.9,8).map(([px,py])=>[x-d*4+d*(px-(x-d*4)),py]),sw),path(arc(x-d*4,yc-r,r,r,Math.PI/2,-Math.PI*.9,8).map(([px,py])=>[x-d*4+d*(px-(x-d*4)),py]),sw))})}
+      out.push(rail(a,b,d0+13,26,k),rail(a,b,d1-13,26,k))}
+    else out.push(rail(a,b,S.fill,fw,k));
+    /* galler, med huvudöppning där modellen har en */
+    const gy=S.fill+(band?0:fw*.4),oe=s.door&&M.open?at(L*M.open):null,nb=Math.max(1,Math.round(L/S.pitch));
+    for(let i=1;i<nb;i++){const t=i/nb,x=X(t);if(x<xmin||s.top(t)-gy<60)continue;if(oe!==null&&(x-oe)*sg>-20)continue;out.push(ln(x,gy,x,s.top(t)-fw*.3,`stroke="${fr.a}" stroke-width="${w(S.bar,k)}" stroke-linecap="round"`))}
+    if(oe!==null){const t=(oe-a)/L;out.push(stile(oe,gy,s.top(t)-fw*.3,30,k),rail(lx,oe+sg*16,gy+26,26,k))}
+    /* karm: bottenskena, överkant och stående rör */
+    const dTube=s.door&&M.tube;
+    if(dTube)out.push(box(s.x0+40,0,s.x1-40,24,`fill="${ink}"`),ln(a,y0+16,b,y0+16,`stroke="${fr.a}" stroke-width="${w(38,k)}" stroke-linecap="round"`),ln(a,y0+26,b,y0+26,`stroke="${fr.c}" stroke-width="${w(8,k)}" opacity=".8"`));
+    else out.push(rail(a,b,y0+fw/2,fw,k,s.door&&M.stile==="dark"?frD:fr.a));
+    if(M.feet&&!s.door&&fine)[a+70,b-70].forEach(x=>out.push(box(x-13,0,x+13,y0,`fill="${fr.a}" ${edge(k)}`)));
+    if(M.split&&s.door)out.push(rail(a,b,S.fill+62,30,k),ln(a,S.fill+38,b,S.fill+38,`stroke="${fr.b}" stroke-width="${w(7,k)}"`));
+    if(M.sill&&s.door)out.push(rail(a,b,S.fill+52,34,k),ln(s.x0+40,S.fill+20,s.x1-40,S.fill+20,`stroke="${fr.c}" stroke-width="${w(9,k)}"`));
+    const cp=[];for(let i=0;i<=16;i++)cp.push([X(i/16),s.top(i/16)]);
+    out.push(tube(cp,fw*1.05,k,fr.a,"round"));
+    if(fine)out.push(path(cp.map(([x,y])=>[x,y+fw*.26]),`stroke="${fr.c}" stroke-width="${w(fw*.2,k)}" opacity=".75"`));
+    const sc=s.door&&M.stile==="dark"?frD:fr.a,ex=s.door&&M.stileCap?45:0;
+    [[a,0],[b,1]].forEach(([x,t])=>{out.push(stile(x,y0,s.top(t)+ex,fw,k,sc));
+      if(ex)out.push(box(x-fw/2-3,s.top(t)+ex-6,x+fw/2+3,s.top(t)+ex+22,`fill="${M.stileCap===2?ink:fr.a}" ${edge(k)}`,8))});
+    /* bultar i skenornas ändar och i bottenskenan */
+    if(M.bolts&&fine){const dbl=M.bolts===2,e=fw/2+22,B=(x,y)=>{out.push(bolt(x,y,k,8));if(dbl)out.push(bolt(x+(x<(a+b)/2?28:-28),y,k,8))};
+      if(!dTube)[a+e+18,(a+b)/2,b-e-18].forEach((x,i)=>{if(i!==1||!dbl)out.push(bolt(x,y0+fw/2,k,8))});
+      if(!s.door||dbl||s.slide){const yT=s.top(0);if(Math.abs(s.top(1)-yT)<1&&Math.abs(s.top(.5)-yT)<1)[a+e,b-e].forEach(x=>B(x,yT));[a+e,b-e].forEach(x=>B(x,band?band[1]-13:S.fill))}}
+    /* öron: små beslag mitt på nederdelen, på var sida */
+    if(M.ear&&fine&&!o.noHw){const E=M.ear,i0=fw/2;[[a,1],[b,-1]].forEach(([x,d])=>{const x0=x+d*i0,att=`fill="${E.s==="flag"&&!hwc?st.c:fr.a}" stroke="${E.s==="flag"&&!hwc?st.b:fr.b}" stroke-width="${w(3.5,k)}"`;
+      if(E.s==="disc")out.push(disc(x0+d*42,E.y,21,att),disc(x0+d*42,E.y,7,`fill="${fr.b}"`));
+      else{const l=E.s==="flag"?70:62,h=E.s==="flag"?21:20;out.push(box(x0-d*4,E.y-h,x0+d*l,E.y+h,att,h),disc(x0+d*(l-h-2),E.y,6.5,`fill="${E.s==="flag"?st.b:fr.b}"`))}})}
+    /* lås: Myrbys lås är ett hål i dörren med förkromad ring och svart regel. Strömsholm: svart platta med ett urtag och en smal metallhake
+       längst in. Genom hålet ser man in i boxen: hålen samlas i holes och skärs ur allt som ritats under (se masken sist). */
+    if(M.lock&&(hw||mark)){const by0=band?band[0]+30:S.fill-fw*.5-150,by1=band?band[1]-30:S.fill-fw*.5-12,yc=(by0+by1)/2,h=(by1-by0)/2,x0=at(fw/2+12),
+        U=d=>x0+sg*d,V=v=>yc+v*h,rect=(d0,v0,d1,v1,r)=>oval(Math.min(U(d0),U(d1)),V(v0),Math.max(U(d0),U(d1)),V(v1),r);
+      if(Math.max(U(0),U(190))>=xmin){
+      if(M.lock==="box"){const cut=rect(24,-.64,108,.64,9);holes.push(cut);
+        late.push(`<path d="M${pts(rect(0,-1.1,190,1.1,10)).split(" ").join("L")}ZM${pts(cut).split(" ").join("L")}Z" fill-rule="evenodd" fill="${ink}" stroke="#000" stroke-width="${w(3.5,k)}" stroke-linejoin="round"/>`,
+          box(U(76),V(-.5),U(106),V(.5),`fill="${st.c}" stroke="${st.b}" stroke-width="${w(2.5,k)}"`,5));
+        if(fine)late.push(ln(U(86),V(-.3),U(86),V(.3),`stroke="${st.b}" stroke-width="${w(4,k)}" stroke-linecap="round"`),ln(U(96),V(-.3),U(96),V(.3),`stroke="${st.b}" stroke-width="${w(4,k)}" stroke-linecap="round"`),
+          disc(U(205),V(.66),8,`fill="${st.c}" stroke="${st.b}" stroke-width="${w(2.5,k)}"`),disc(U(205),V(-.66),8,`fill="${st.c}" stroke="${st.b}" stroke-width="${w(2.5,k)}"`))}
+      else{const r=h*.62,cx=U(82),ring=arc(0,yc,r,r,-Math.PI*.62,Math.PI*.62,10).map(([px,py])=>[cx+sg*px,py]),cut=rect(0,-1,150,1,12);holes.push(cut);
+        late.push(poly(cut,`fill="none" stroke="${fr.b}" stroke-width="${w(4,k)}" stroke-linejoin="round"`),
+          path(ring,`stroke="#7f8688" stroke-width="${w(17,k)}" stroke-linecap="round"`),path(ring,`stroke="#e9ecec" stroke-width="${w(8,k)}" stroke-linecap="round"`),
+          box(U(4),V(-.19),U(86),V(.19),`fill="${ink}"`,8),disc(U(38),yc,19,`fill="${ink}"`));
+        if(fine)late.push(disc(U(20),V(.6),9,`fill="${ink}"`),disc(U(20),V(-.6),9,`fill="${ink}"`),disc(U(34),yc+5,5,`fill="#6d7272"`))}}
+      if(M.strike)late.push(box(at(-20),yc-30,at(-62),yc+30,`fill="${st.c}" stroke="${st.b}" stroke-width="${w(3,k)}"`,8))}
+    /* skjutdörrens spärr */
+    if(s.slide&&(hw||mark)){const cx=S.H?a:b,d=S.H?1:-1;late.push(box(cx+d*6,1710,cx+d*42,1800,`fill="#4b4f4f" stroke="${ink}" stroke-width="${w(3,k)}"`,7))}
+    if(!hw)return;
+    /* fotregel nere på låssidan, med handtaget ut mot stolpen */
+    if(M.foot){const y=M.foot.y,F=`fill="${hwc?hwc.c:st.c}" stroke="${hwc?hwc.b:st.b}" stroke-width="${w(3,k)}"`;
+      if(M.foot.s==="L")late.push(box(at(-12),y-26,at(22),y+150,`fill="${fr.a}" ${edge(k)}`,8),box(at(-44),y-13,at(64),y+13,F,12));
+      else late.push(box(at(-6),y-27,at(58),y+27,`fill="${fr.a}" ${edge(k)}`,5),box(at(M.foot.post?-150:-124),y-13,at(40),y+13,F,11));
+      if(fine)out.push(disc(at(fw/2+82),y+72,9,`fill="${ink}" opacity=".75"`))}
+    /* skjutdörr: spärr på stängningskanten, märkskylt och golvstyrningar */
+    if(s.slide){const cx=S.H?a:b,ox=S.H?b:a,d=S.H?1:-1;
+      out.push(box(ox-d*150,S.fill-15,ox-d*262,S.fill+15,`fill="${ink}"`,6));
+      if(fine)out.push(ln(ox-d*172,S.fill,ox-d*240,S.fill,`stroke="#d9d9d4" stroke-width="${w(5,k)}" opacity=".8"`));
+      [a-8,b-34].forEach(x=>out.push(box(x,0,x+42,26,`fill="${ink}"`,4)))}
+    /* gångjärn mellan dörrkarm och stolpe */
+    if(M.hinge&&s.hinge){const d=hr?1:-1,gx=(hr?b:a)+d*7,Hs=M.hinge.s,dk=`fill="${shade(fr.a,-.28)}" stroke="${fr.b}" stroke-width="${w(3,k)}"`,lt=`fill="${hwc?hwc.c:st.c}" stroke="${hwc?hwc.b:st.b}" stroke-width="${w(3,k)}"`;
+      M.hinge.y.forEach(y=>{
+        if(Hs==="slim")late.push(box(gx-13,y-72,gx+13,y+72,dk,9),fine?ln(gx-4,y-58,gx-4,y+58,`stroke="${fr.c}" stroke-width="${w(4,k)}" opacity=".6"`):"");
+        else if(Hs==="tall")late.push(box(gx-17,y-92,gx+17,y+92,lt,7),fine?ln(gx-17,y,gx+17,y,`stroke="${st.b}" stroke-width="${w(3,k)}"`):"");
+        else if(Hs==="block")late.push(box(gx-d*6,y-36,gx+d*58,y+36,`fill="${fr.a}" ${edge(k)}`,5),box(gx-12,y-62,gx+12,y+22,dk,7),bolt(gx+d*40,y,k,7));
+        else if(Hs==="knob")late.push(box(gx-d*34,y-44,gx+d*14,y+44,lt,6),disc(gx+d*26,y,23,lt),bolt(gx-d*18,y+26,k,6),bolt(gx-d*18,y-26,k,6));
+        else late.push(box(gx-d*82,y-15,gx+d*10,y+15,lt,13),box(gx+d*2,y-30,gx+d*56,y+30,lt,6),disc(gx+d*30,y,12,`fill="${st.b}"`),bolt(gx-d*32,y+62,k,7),bolt(gx-d*32,y-62,k,7))});
+      if(M.hinge.catch)late.push(box(gx-11,M.hinge.catch-20,gx+11,M.hinge.catch+20,lt,5))}
+  });
+  /* stolpar med modellens lock */
+  posts.forEach(p=>{if(p.x<xmin)return;const k=kAt(p.x),outer=p.x===0||p.x===S.len,pt=outer?o.post:null,PW={s50:50,s80:80,stal:114,tra:90},wd=pt&&PW[pt]?PW[pt]:pt==="ingen"?55:p.w,r=pt?pt==="stal":p.r,col=pt==="tra"?{a:"#b8925a",b:"#7d5e34",c:"#d9bb8a"}:fr;
+    let cap=p.cap;if(!r&&(cap==="lid"||cap==="ring"))cap="flat";if(pt==="tra")cap="flat";
+    if(k>=.035)out.push(ln(p.x,0,p.x,p.h,`stroke="${col.b}" stroke-width="${w(wd+6,k)}" opacity=".8"`));
+    out.push(ln(p.x,0,p.x,p.h,`stroke="${col.a}" stroke-width="${w(wd,k)}"`));
+    if(r)out.push(ln(p.x-wd*.22,0,p.x-wd*.22,p.h,`stroke="${col.c}" stroke-width="${w(wd*.2,k)}" opacity=".6"`),ln(p.x+wd*.38,0,p.x+wd*.38,p.h,`stroke="${col.b}" stroke-width="${w(wd*.14,k)}" opacity=".4"`));
+    else out.push(ln(p.x-wd*.35,0,p.x-wd*.35,p.h,`stroke="${col.b}" stroke-width="${w(wd*.18,k)}" opacity=".45"`));
+    const E=`stroke="${col.b}" stroke-width="${w(3.5,k)}" stroke-linejoin="round"`;
+    if(cap==="ball"){const c=P(p.x,p.h);out.push(`<circle cx="${fx(c[0])}" cy="${fx(c[1]-72*k)}" r="${fx(64*k)}" fill="url(#${o.pre}brass)" stroke="#8a6a2c" stroke-width="${fx(5*k)}"/>`)}
+    else if(cap==="lid"||cap==="ring"){out.push(box(p.x-wd/2-4,p.h-10,p.x+wd/2+4,p.h+40,`fill="${col.a}" ${E}`,22));if(cap==="ring")out.push(ln(p.x-wd/2,p.h-52,p.x+wd/2,p.h-52,`stroke="${col.b}" stroke-width="${w(5,k)}" opacity=".7"`),ln(p.x-wd/2+10,p.h+22,p.x+wd/2-10,p.h+22,`stroke="${col.c}" stroke-width="${w(6,k)}" opacity=".8"`))}
+    else if(cap==="black")out.push(box(p.x-wd/2-3,p.h-10,p.x+wd/2+3,p.h+36,`fill="${ink}"`,r?10:3));
+    else if(cap==="plate")out.push(box(p.x-wd/2-12,p.h,p.x+wd/2+12,p.h+26,`fill="${col.a}" ${E}`));
+    else out.push(ln(p.x-wd/2,p.h,p.x+wd/2,p.h,`stroke="${col.b}" stroke-width="${w(8,k)}"`))});
+  /* hålen i låsen: allt som ritats hittills skärs ur där, så att boxen bakom syns igenom. Beslagen ritas ovanpå. */
+  if(holes.length){const id=o.pre+"h"+(frontSVG.n=(frontSVG.n||0)+1),body=out.splice(0).join("");
+    out.push(`<mask id="${id}" maskUnits="userSpaceOnUse" x="-30000" y="-30000" width="60000" height="60000"><rect x="-30000" y="-30000" width="60000" height="60000" fill="#fff"/>${holes.map(hh=>`<polygon points="${pts(hh)}" fill="#000"/>`).join("")}</mask><g mask="url(#${id})">${body}</g>`)}
+  out.push(...late);
+  /* Rotbrunna: stående kolvregel med rött vred, golvregel och liggande skjutregel med rött grepp */
+  if(M.pair&&(!o.noHw||o.lock)){const c=S.len/2,m=S.H?-1:1,x=d=>c+m*d,k=kAt(c),F=`fill="${st.c}" stroke="${st.b}" stroke-width="${w(3,k)}"`,red=`fill="#c0392b" stroke="#7d2018" stroke-width="${w(3,k)}"`;
+    if(c>=xmin+80)out.push(box(x(-36),0,x(-14),560,F,9),box(x(-44),575,x(-4),628,red,10),box(x(-30),188,x(74),222,F,8),box(x(26),176,x(78),234,`fill="${fr.a}" ${edge(k)}`,5),disc(x(112),262,12,`fill="${ink}" opacity=".8"`),
+      box(x(96),S.fill-4,x(430),S.fill+26,F,13),box(x(236),S.fill-9,x(284),S.fill+31,red,6))}
+  /* Optimal: rund skena med ändstopp, fästen och svarta hjulvagnar */
+  if(S.track){const k=kAt(S.len/2),[d0,d1]=S.door,ry=2322,dw=d1-d0;
+    [40,S.H?d0:d1,S.len-40].forEach(x=>out.push(ln(x,2250,x,ry,`stroke="${fr.a}" stroke-width="${w(26,k)}"`)));
+    out.push(ln(0,ry,S.len,ry,`stroke="${fr.a}" stroke-width="${w(46,k)}" stroke-linecap="round"`),ln(0,ry+11,S.len,ry+11,`stroke="${fr.c}" stroke-width="${w(10,k)}" opacity=".8"`));
+    [d0+dw*.13,d1-dw*.13,S.H?d0-dw*.55:d1+dw*.55].forEach((x,i)=>{if(x<xmin||x<60||x>S.len-60)return;out.push(box(x-25,ry-36,x+25,ry+34,`fill="${ink}"`,22),ln(x,ry+30,x,ry+56,`stroke="${ink}" stroke-width="${w(9,k)}" stroke-linecap="round"`))})}
+  /* namnskylt, bara när hästen har ett namn */
+  if(o.name){const [d0,d1]=S.door,m=(d0+d1)/2;if(m>xmin+200){const k=kAt(m),wN=Math.min((d1-d0)*.8,o.name.length*66+220),y=pTop-210,fsz=Math.min(92,(wN-130)/(o.name.length*.66));
+    out.push(poly([[m-wN/2,y-80],[m+wN/2,y-80],[m+wN/2,y+80],[m-wN/2,y+80]],`fill="url(#${o.pre}brass)" stroke="#6e5420" stroke-width="${fx(5*k)}"`),poly([[m-wN/2+40,y-50],[m+wN/2-40,y-50],[m+wN/2-40,y+50],[m-wN/2+40,y+50]],`fill="none" stroke="#7a5f27" stroke-width="${fx(2.5*k)}" opacity=".8"`));
+    [m-wN/2+22,m+wN/2-22].forEach(x=>{const q=P(x,y);out.push(`<circle cx="${fx(q[0])}" cy="${fx(q[1])}" r="${fx(9*k)}" fill="#6e5420" opacity=".8"/>`)});
+    const by=y-fsz*.34,O=P(m,by),X1=P(m+1,by),X0=P(m-1,by),Y1=P(m,by-1),ex=[(X1[0]-X0[0])/2,(X1[1]-X0[1])/2],ey=[Y1[0]-O[0],Y1[1]-O[1]];
     out.push(`<text transform="matrix(${[ex[0],ex[1],ey[0],ey[1],O[0],O[1]].map(v=>v.toFixed(4)).join(" ")})" x="0" y="0" text-anchor="middle" font-family="EB Garamond,serif" font-weight="600" font-size="${fx(fsz)}" letter-spacing="${fx(fsz*.06)}" fill="#2e2108" style="font-variant:small-caps">${esc(o.name)}</text>`)}}
   return out.join("")}
 const LVL_TOAST={1:"Väggarna på plats",2:"Boxarna på plats",3:"Fronterna på plats",4:"Mellanväggar och stolpar på plats",5:"Rummen på plats"};
@@ -3209,7 +3341,7 @@ function iso3d(dr,lvl){const rot=(D.ui.rot||0),a=rot*Math.PI/2,ca=Math.cos(a),sa
   const lay=layout(dr);
   lay.forEach(o=>{const {m,tf}=o,w=+m.w,d=+m.d||0;if(m.t!=="box"&&m.t!=="room")return;if(lvl<2)return;if(m.t==="room"&&lvl<5&&!rooms178())return;const q=[tf(-(o.cx0||0),0),tf(w+(o.cx1||0),0),tf(w+(o.cx1||0),d),tf(-(o.cx0||0),d)];
     F.push({d:-1e11,s:poly(q.map(p=>[p[0],0,p[1]]),`fill="${m.t==="room"?"#dfe6da":m.t==="box"&&bedOn(lvl)?"#ead7a1":"#e7ebe1"}" stroke="${m.t==="box"&&bedOn(lvl)?"#c8ac6c":"#b9c4b1"}" stroke-width="1.2"`)+(m.t==="box"&&bedOn(lvl)?bedSVG(w+(o.cx0||0)+(o.cx1||0),d,o.nr+(o.k==="S"?50:0),(x,y,h)=>{const q=tf(x-(o.cx0||0),y);return pr(q[0],h,q[1])},[1.5,1.35,1.25,1.15,1.05]):"")+(()=>{const c=tf(w/2,d/2),p=pr(c[0],0,c[1]);return m.t==="box"?`<text x="${fx(p[0])}" y="${fx(p[1]+6)}" text-anchor="middle" font-family="EB Garamond,serif" font-size="40" font-weight="600" fill="${ink}" opacity=".9" ${bedOn(lvl)?`stroke="#fbf3dc" stroke-width="6" paint-order="stroke"`:""}>${o.nr}</text>`:`<text x="${fx(p[0])}" y="${fx(p[1]+5)}" text-anchor="middle" font-family="EB Garamond,serif" font-style="italic" font-size="14" fill="${ink}">${esc(m.name||"Rum")}</text>`})()});
-    if(lvl>=3){const p0=tf(0,d),p1=tf(w,d),c=tf(w/2,d+10);if(m.t==="box"){const f=o.f||dr.front,S=frontProfile(f,w,m.dir),P=(x,y)=>{const q=tf(x,d);return pr(q[0],y,q[1])};F.push({d:dep(c[0],c[1]),s:frontSVG(S,P,()=>K*.95,{balls:dr.balls,fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:m.dir,pre:"i3",post:dr.post,noHw:true,decor:hasDecor(dr,f)})})}
+    if(lvl>=3){const p0=tf(0,d),p1=tf(w,d),c=tf(w/2,d+10);if(m.t==="box"){const f=o.f||dr.front,S=frontProfile(f,w,m.dir),P=(x,y)=>{const q=tf(x,d);return pr(q[0],y,q[1])};F.push({d:dep(c[0],c[1]),s:frontSVG(S,P,()=>K*.95,{balls:dr.balls,fc,fr:frameCol(dr,f),name:hName(o.nr),plast:/Plast/.test(dr.fill||""),fillSet:!!dr.fill,dir:m.dir,pre:"i3",lock:true,post:dr.post,noHw:true,decor:hasDecor(dr,f)})})}
       else{const nm=(m.name||"").toLowerCase(),spol=openBay(m),ms=dr.walls[o.k]||[],len0=o.k==="N"||o.k==="S"?dr.L:null;
         const sides=[[0,ms[o.i-1]],[w,ms[o.i+1]]].filter(([x,nb])=>!(spol&&nb&&(nb.t==="box"||openBay(nb)))&&!(!nb&&len0&&(o.start+x<=60||o.start+x>=len0-60))).map(([x])=>{const a=tf(x,0),b=tf(x,d),mm2=tf(x,d/2);return {d:dep(mm2[0],mm2[1])+1,s:panel([a[0],a[1]],[b[0],b[1]],{solid:2600,solidC:"#e6ece2"})}});
         sides.forEach(x=>F.push(x));
