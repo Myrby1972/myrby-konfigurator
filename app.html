@@ -3240,12 +3240,12 @@ function frameCol(dr,f){const fin=dr.finish||"";
 const FRONT217={
   optimal:   {slide:true,band:"stadium",pitch:84,plank:145,ear:{y:712,s:"tab"},bolts:1},
   janslund:  {inner:{w:80,cap:"flat"},band:"notch",lock:"ring",strike:1,foot:{y:160},hinge:{s:"block",y:[2215,1510,1200,220]},ear:{y:670,s:"disc"},split:1,pitch:84,plank:148,bolts:1},
-  fagelbro:  {inner:{r:1,w:114,cap:"ring"},band:"stadium",lock:"ring",foot:{y:160,post:1},hinge:{s:"slim",y:[1530,245]},ear:{y:655,s:"tab"},sill:1,pitch:82,plank:145,bolts:1},
+  fagelbro:  {inner:{r:1,w:114,cap:"ringD"},band:"stadium",lock:"ring",foot:{y:160,post:1},hinge:{s:"slim",y:[1530,245]},ear:{y:655,s:"tab"},sill:1,pitch:82,plank:145,bolts:1},
   faro:      {inner:{w:80,cap:"plate"},outer:{cap:"plate"},band:"stadium",orn:"bracket",lock:"ring",strike:1,foot:{y:185},hinge:{s:"knob",y:[1290,240]},stile:"dark",pitch:86,plank:140,bolts:1},
   baryard:   {inner:{r:1,w:114,cap:"lid"},outer:{r:1,w:114,cap:"lid"},band:"hex",orn:"bolt4",lock:"ring",foot:{y:185},hinge:{s:"slim",y:[2020,255]},ear:{y:675,s:"tab"},open:.47,pitch:91,plank:143},
   stromsholm:{inner:{r:1,w:114,cap:"ring"},outer:{r:1,w:114,cap:"ring"},band:"stadium",bandBg:"fill",orn:"volute",lock:"box",foot:{y:171},hinge:{s:"slim",y:[1340,260]},ear:{y:686,s:"flag"},stileCap:1,pitch:84,plank:148,bolts:1},
-  emmaboda:  {inner:{r:1,w:120,cap:"black"},outer:{r:1,w:114,cap:"black"},band:"stadium",orn:"bolt4",lock:"ring",foot:{y:220,s:"L"},hinge:{s:"tall",y:[1330,255],catch:727},ear:{y:694,s:"flag"},stileCap:2,tube:1,pitch:84,plank:148,bolts:1},
-  dala:      {inner:{w:80,cap:"flat"},fill:1250,gap:13,lock:"ring",strike:1,foot:{y:200},hinge:{s:"strap",y:[1250,245]},feet:1,pitch:105,plank:110,bolts:2},
+  emmaboda:  {inner:{r:1,w:120,cap:"black"},outer:{r:1,w:114,cap:"flat"},band:"stadium",orn:"bolt4",lock:"ring",foot:{y:220,s:"L"},hinge:{s:"tall",y:[1330,255],catch:727},ear:{y:694,s:"flag"},stileCap:2,tube:1,pitch:84,plank:148,bolts:1},
+  dala:      {inner:{w:80,cap:"dark"},outer:{cap:"dark"},fill:1250,gap:13,lock:"ring",strike:1,foot:{y:200},hinge:{s:"strap",y:[1250,245]},feet:1,pitch:105,plank:110,bolts:2},
   rotbrunna: {pair:true,hinge:{s:"strap",y:[2057,250]},ear:{y:692,s:"tab"},pitch:90,plank:150,gap:14,bolts:1,fillC:"#8d9398"},
   std:       {pitch:105,plank:140}
 };
@@ -3294,6 +3294,12 @@ function frontSVG(S,P,kAt,o){
   const stile=(x,ya,yb,t,k,col)=>x<xmin?"":tube([[x,ya],[x,yb]],t,k,col)+(k<.035?"":ln(x-t*.24,ya,x-t*.24,yb,`stroke="${fr.c}" stroke-width="${w(t*.16,k)}" opacity=".6"`));
   const hwc=fr.lack?{a:fr.a,b:fr.b,c:fr.c}:null;
   const posts=o.balls==="med"?S.posts.map(p=>({...p,cap:"ball"})):S.posts;
+  /* v228: lock och toppar ritas upprätt i skärmens plan, som de ser ut rakt framifrån på produktbilden */
+  const bb=(x,y,k)=>{const c=P(x,y),m=(dx,dy)=>[fx(c[0]+dx*k),fx(c[1]-dy*k)],q=Math.PI/2;
+    return {shp:(a,att)=>`<polygon points="${a.map(v=>m(v[0],v[1]).join(",")).join(" ")}" ${att}/>`,
+      l:(xa,ya,xb,yb,att)=>{const a=m(xa,ya),b=m(xb,yb);return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ${att}/>`},
+      rr:(x0,y0,x1,y1,r)=>{r=Math.min(r,(x1-x0)/2,y1-y0);const A=[[x0,y0]];for(let i=0;i<=5;i++){const t=q*i/5;A.push([x0+r-r*Math.cos(t),y1-r+r*Math.sin(t)])}for(let i=0;i<=5;i++){const t=q*i/5;A.push([x1-r+r*Math.sin(t),y1-r+r*Math.cos(t)])}A.push([x1,y0]);return A},
+      ell:(cx,cy,rx,ry)=>{const A=[];for(let i=0;i<16;i++){const t=Math.PI*2*i/16;A.push([cx+rx*Math.cos(t),cy+ry*Math.sin(t)])}return A}}};
 
   S.segs.forEach(s=>{if(s.x1<=xmin)return;
     const a=s.x0+(s.in0||0),b=s.x1-(s.in1||0),L=b-a,y0=s.lift||0,k=kAt((cl(a)+b)/2),X=t=>a+t*L,fw=S.frame,fine=k>=.035;
@@ -3335,7 +3341,7 @@ function frontSVG(S,P,kAt,o){
     if(fine)out.push(path(cp.map(([x,y])=>[x,y+fw*.26]),`stroke="${fr.c}" stroke-width="${w(fw*.2,k)}" opacity=".75"`));
     const sc=s.door&&M.stile==="dark"?frD:fr.a,ex=s.door&&M.stileCap?45:0;
     [[a,0],[b,1]].forEach(([x,t])=>{out.push(stile(x,y0,s.top(t)+ex,fw,k,sc));
-      if(ex)out.push(box(x-fw/2-3,s.top(t)+ex-6,x+fw/2+3,s.top(t)+ex+22,`fill="${M.stileCap===2?ink:fr.a}" ${edge(k)}`,8))});
+      if(ex&&x>=xmin){const B=bb(x,s.top(t)+ex,k);out.push(B.shp(B.rr(-fw/2-3,-6,fw/2+3,M.stileCap===2?15:19,8),`fill="${M.stileCap===2?ink:fr.a}" ${edge(k)}`))}});
     /* bultar i skenornas ändar och i bottenskenan */
     if(M.bolts&&fine){const dbl=M.bolts===2,e=fw/2+22,B=(x,y)=>{out.push(bolt(x,y,k,8));if(dbl)out.push(bolt(x+(x<(a+b)/2?28:-28),y,k,8))};
       if(!dTube)[a+e+18,(a+b)/2,b-e-18].forEach((x,i)=>{if(i!==1||!dbl)out.push(bolt(x,y0+fw/2,k,8))});
@@ -3385,17 +3391,29 @@ function frontSVG(S,P,kAt,o){
   });
   /* stolpar med modellens lock */
   posts.forEach(p=>{if(p.x<xmin)return;const k=kAt(p.x),outer=p.x===0||p.x===S.len,pt=outer?o.post:null,PW={s50:50,s80:80,stal:114,tra:90},wd=pt&&PW[pt]?PW[pt]:pt==="ingen"?55:p.w,r=pt?pt==="stal":p.r,col=pt==="tra"?{a:"#b8925a",b:"#7d5e34",c:"#d9bb8a"}:fr;
-    let cap=p.cap;if(!r&&(cap==="lid"||cap==="ring"))cap="flat";if(pt==="tra")cap="flat";
+    let cap=p.cap;if(!r&&(cap==="lid"||cap==="ring"||cap==="ringD"))cap="flat";if(pt==="tra")cap="flat";
     if(k>=.035)out.push(ln(p.x,0,p.x,p.h,`stroke="${col.b}" stroke-width="${w(wd+6,k)}" opacity=".8"`));
     out.push(ln(p.x,0,p.x,p.h,`stroke="${col.a}" stroke-width="${w(wd,k)}"`));
     if(r)out.push(ln(p.x-wd*.22,0,p.x-wd*.22,p.h,`stroke="${col.c}" stroke-width="${w(wd*.2,k)}" opacity=".6"`),ln(p.x+wd*.38,0,p.x+wd*.38,p.h,`stroke="${col.b}" stroke-width="${w(wd*.14,k)}" opacity=".4"`));
     else out.push(ln(p.x-wd*.35,0,p.x-wd*.35,p.h,`stroke="${col.b}" stroke-width="${w(wd*.18,k)}" opacity=".45"`));
     const E=`stroke="${col.b}" stroke-width="${w(3.5,k)}" stroke-linejoin="round"`;
+    const B=bb(p.x,p.h,k),h2=wd/2,fine=k>=.035,glans=(y0,y1)=>fine?B.l(-h2*.44,y0,-h2*.44,y1,`stroke="${col.c}" stroke-width="${w(wd*.18,k)}" stroke-linecap="round" opacity=".6"`):"";
     if(cap==="ball"){const c=P(p.x,p.h);out.push(`<circle cx="${fx(c[0])}" cy="${fx(c[1]-72*k)}" r="${fx(64*k)}" fill="url(#${o.pre}brass)" stroke="#8a6a2c" stroke-width="${fx(5*k)}"/>`)}
-    else if(cap==="lid"||cap==="ring"){out.push(box(p.x-wd/2-4,p.h-10,p.x+wd/2+4,p.h+40,`fill="${col.a}" ${E}`,22));if(cap==="ring")out.push(ln(p.x-wd/2,p.h-52,p.x+wd/2,p.h-52,`stroke="${col.b}" stroke-width="${w(5,k)}" opacity=".7"`),ln(p.x-wd/2+10,p.h+22,p.x+wd/2-10,p.h+22,`stroke="${col.c}" stroke-width="${w(6,k)}" opacity=".8"`))}
-    else if(cap==="black")out.push(box(p.x-wd/2-3,p.h-10,p.x+wd/2+3,p.h+36,`fill="${ink}"`,r?10:3));
-    else if(cap==="plate")out.push(box(p.x-wd/2-12,p.h,p.x+wd/2+12,p.h+26,`fill="${col.a}" ${E}`));
-    else out.push(ln(p.x-wd/2,p.h,p.x+wd/2,p.h,`stroke="${col.b}" stroke-width="${w(8,k)}"`))});
+    /* Baryard: rundat lock i stolpens färg */
+    else if(cap==="lid")out.push(B.shp(B.rr(-h2-2,-8,h2+2,30,30),`fill="${col.a}" ${E}`),glans(-2,10));
+    /* Strömsholm och Fågelbro: kupat lock med en skarv en bit ner på stolpen. Fågelbros lock är mörkare än stolpen. */
+    else if(cap==="ring"||cap==="ringD"){const cc=cap==="ringD"?shade(col.a,-.2):col.a;
+      out.push(B.shp(B.rr(-h2,-50,h2,17,34),`fill="${cc}" ${E}`),glans(-42,-4));
+      if(fine&&cap==="ring")out.push(B.l(-h2*.5,9,h2*.5,9,`stroke="${col.c}" stroke-width="${w(7,k)}" stroke-linecap="round" opacity=".7"`));
+      if(fine)out.push(B.l(-h2,-60,h2,-60,`stroke="${col.b}" stroke-width="${w(3,k)}" opacity=".45"`))}
+    /* Emmaboda: svart plastlock med en liten knopp */
+    else if(cap==="black")out.push(B.shp(B.rr(-h2-2,0,h2+2,30,9),`fill="${ink}"`),fine?B.shp(B.rr(-15,29,15,38,5),`fill="#7d8384"`):"");
+    /* Fårö: tunn täckplåt, lite bredare än stolpen */
+    else if(cap==="plate")out.push(B.shp(B.rr(-h2-6,0,h2+6,16,4),`fill="${col.a}" ${E}`));
+    /* Dala: lågt mörkt lock, lite smalare än stolpen */
+    else if(cap==="dark")out.push(B.shp(B.rr(-h2+5,0,h2-5,14,5),`fill="#474c4e"`),B.l(-h2,0,h2,0,`stroke="${col.b}" stroke-width="${w(4,k)}"`));
+    /* plan topp: rak kant. Runda rör har en tunn skarv strax under kanten. */
+    else out.push(B.l(-h2,0,h2,0,`stroke="${col.b}" stroke-width="${w(6,k)}"`),r&&fine?B.l(-h2,-11,h2,-11,`stroke="${col.b}" stroke-width="${w(3,k)}" opacity=".5"`):"")});
   /* hålen i låsen: allt som ritats hittills skärs ur där, så att boxen bakom syns igenom. Beslagen ritas ovanpå. */
   if(holes.length){const id=o.pre+"h"+(frontSVG.n=(frontSVG.n||0)+1),body=out.splice(0).join("");
     out.push(`<mask id="${id}" maskUnits="userSpaceOnUse" x="-30000" y="-30000" width="60000" height="60000"><rect x="-30000" y="-30000" width="60000" height="60000" fill="#fff"/>${holes.map(hh=>`<polygon points="${pts(hh)}" fill="#000"/>`).join("")}</mask><g mask="url(#${id})">${body}</g>`)}
@@ -3408,7 +3426,7 @@ function frontSVG(S,P,kAt,o){
   if(S.track){const k=kAt(S.len/2),[d0,d1]=S.door,ry=2322,dw=d1-d0;
     [40,S.H?d0:d1,S.len-40].forEach(x=>out.push(ln(x,2250,x,ry,`stroke="${fr.a}" stroke-width="${w(26,k)}"`)));
     out.push(ln(0,ry,S.len,ry,`stroke="${fr.a}" stroke-width="${w(46,k)}" stroke-linecap="round"`),ln(0,ry+11,S.len,ry+11,`stroke="${fr.c}" stroke-width="${w(10,k)}" opacity=".8"`));
-    [d0+dw*.13,d1-dw*.13,S.H?d0-dw*.55:d1+dw*.55].forEach((x,i)=>{if(x<xmin||x<60||x>S.len-60)return;out.push(box(x-25,ry-36,x+25,ry+34,`fill="${ink}"`,22),ln(x,ry+30,x,ry+56,`stroke="${ink}" stroke-width="${w(9,k)}" stroke-linecap="round"`))})}
+    [d0+dw*.13,d1-dw*.13,S.H?d0-dw*.55:d1+dw*.55].forEach((x,i)=>{if(x<xmin||x<60||x>S.len-60)return;const B=bb(x,ry,kAt(x));out.push(B.shp(B.ell(0,-2,23,40),`fill="${ink}"`),B.l(0,30,0,56,`stroke="${ink}" stroke-width="${w(9,kAt(x))}" stroke-linecap="round"`))})}
   /* namnskylt, bara när hästen har ett namn */
   if(o.name){const [d0,d1]=S.door,m=(d0+d1)/2;if(m>xmin+200){const k=kAt(m),wN=Math.min((d1-d0)*.8,o.name.length*66+220),y=pTop-210,fsz=Math.min(92,(wN-130)/(o.name.length*.66));
     out.push(poly([[m-wN/2,y-80],[m+wN/2,y-80],[m+wN/2,y+80],[m-wN/2,y+80]],`fill="url(#${o.pre}brass)" stroke="#6e5420" stroke-width="${fx(5*k)}"`),poly([[m-wN/2+40,y-50],[m+wN/2-40,y-50],[m+wN/2-40,y+50],[m-wN/2+40,y+50]],`fill="none" stroke="#7a5f27" stroke-width="${fx(2.5*k)}" opacity=".8"`));
