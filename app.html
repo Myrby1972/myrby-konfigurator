@@ -2447,6 +2447,77 @@ html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
 #wiz .ichips194 .cchip.prod .cx{flex:none;width:26px;height:26px;margin:0 0 0 6px;padding:0;border-radius:50%;display:grid;place-items:center;color:#1e3932;opacity:.75;background-color:transparent;cursor:pointer;transition:background-color .15s,color .15s,opacity .15s}
 #wiz .ichips194 .cchip.prod .cx:hover,#wiz .ichips194 .cchip.prod .cx:focus-visible{opacity:1;background-color:#23412a;color:#fff}
 
+
+/* v223 (Carl 15/11): tillvalen som produktkort, ett tema per sida. Allt ryms utan att bläddra på bärbar dator och iPad liggande. */
+#wiz #q-m-mer:has(>.t223-top),#wiz #q-m-mer:has(>.t223-back){padding-top:6px;padding-bottom:0;gap:8px}
+#wiz .wiz-step:has(>#q-m-mer>.t223-top),#wiz .wiz-step:has(>#q-m-mer>.t223-back){padding-bottom:0}
+#wiz .wiz-scroll:has(#q-m-mer>.t223-top),#wiz .wiz-scroll:has(#q-m-mer>.t223-back){padding-top:28px;padding-bottom:20px}
+#wiz #q-m-mer:has(>.t223-top)>h2,#wiz #q-m-mer:has(>.t223-back)>h2{font-size:2.15rem;line-height:1.1;margin:0 0 2px}
+#wiz .t223-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 -2px}
+#wiz .t223-eye{display:inline-flex;align-items:center;gap:10px;font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7a5f1e}
+#wiz .t223-dots{display:inline-flex;gap:1px;align-items:center}
+#wiz .t223-dots button{position:relative;width:14px;height:24px;padding:0;border:0;background:none;cursor:pointer}
+#wiz .t223-dots button::before{content:"";position:absolute;left:3px;right:3px;top:8px;height:8px;border-radius:999px;background:#ddd3bd;transition:background-color .15s}
+#wiz .t223-dots button.done::before{background:#9fae97}
+#wiz .t223-dots button.on{width:26px;cursor:default}
+#wiz .t223-dots button.on::before{background:#23412a}
+#wiz .t223-dots button:not(.on):hover::before{background:#23412a}
+#wiz .t223-dots button:focus-visible{outline:2px solid #23412a;outline-offset:1px;border-radius:6px}
+#wiz .t223-skip{border:0;background:none;padding:6px 0;font:inherit;font-size:.88rem;font-weight:700;color:#23412a;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+#wiz .t223-box{margin:0;padding:14px;gap:8px}
+#wiz .t223-box .fx-help{font-size:.95rem;line-height:1.4}
+#wiz .t223-box .mmgrid{margin-top:2px;gap:8px}
+#wiz .t223-box .mmc{grid-template-columns:100px minmax(0,1fr);padding:8px;gap:12px}
+#wiz .t223-box .mmc .ph{min-height:78px}
+#wiz .t223-box .mmc-b{gap:1px;padding:1px 2px 0 0}
+#wiz .t223-box .mmc-b b{font-size:1.14rem}
+#wiz .t223-box .mmc-b small{font-size:.86rem;line-height:1.35}
+#wiz .t223-box .mmc-add{height:30px;margin-top:5px}
+#wiz .t223-box .mmc>.ibtn{right:8px;bottom:8px}
+#wiz .t223-help{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:5px 5px 5px 16px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1px #e6dfcf}
+#wiz .t223-help span{font-size:.95rem;color:#4a554d}
+#wiz .t223-help button{flex:none;display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:999px;border:0;background:#fff;box-shadow:inset 0 0 0 1.5px #23412a;color:#23412a;font:inherit;font-weight:700;font-size:.92rem;cursor:pointer;transition:background-color .15s,color .15s}
+#wiz .t223-help button svg{color:#b08d3c}
+#wiz .t223-help button:hover{background:#23412a;color:#fff}
+#wiz .t223-q{display:grid;gap:8px;padding:10px 12px 12px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px #23412a}
+#wiz .t223-q .qh{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#wiz .t223-q .qh b{font-size:.98rem;color:#23412a;display:inline-flex;align-items:center;gap:7px}
+#wiz .t223-q .qh b svg{color:#b08d3c;flex:none}
+#wiz .t223-q .qx{flex:none;width:28px;height:28px;padding:0;border-radius:50%;border:0;background:#f1ece1;color:#23412a;display:grid;place-items:center;cursor:pointer}
+#wiz .t223-q .qx:hover{background:#23412a;color:#fff}
+#wiz .t223-q>.seg{display:flex!important;flex-wrap:wrap;gap:6px}
+#wiz .t223-q>.seg .opt{flex:0 0 auto!important;width:auto!important;min-height:36px!important;height:36px;padding:0 12px!important;font-size:.87rem!important;border-radius:999px}
+#wiz .t223-q.vent .vguide{display:grid;gap:8px}
+#wiz .t223-q.vent .gq{padding:10px;gap:8px;box-shadow:inset 0 0 0 1px #e6dfcf}
+#wiz .t223-q.vent .gq .mq-t{font-size:.95rem}
+#wiz .t223-q.vent .gq .seg{display:flex;flex-wrap:wrap;gap:6px}
+#wiz .t223-q.vent .gq .seg .opt{flex:0 0 auto;width:auto;min-height:36px;height:36px;padding:0 12px;font-size:.87rem;border-radius:999px}
+#wiz .t223-q.vent .vrec{margin:0}
+#wiz .t223-done{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:.93rem;color:#23412a}
+#wiz .t223-done svg{flex:none;margin-top:3px}
+#wiz .t223-again{justify-self:start;border:0;background:none;padding:2px 0;font:inherit;font-size:.88rem;font-weight:700;color:#23412a;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+#wiz .t223-rec{position:absolute;left:14px;top:-11px;display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 10px;border-radius:999px;background:#c9a24e;color:#1e3932;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;z-index:3}
+#wiz .mmc.rec223{box-shadow:inset 0 0 0 2px #c9a24e,0 6px 18px -10px rgba(30,57,50,.35);margin-top:8px;overflow:visible}
+#wiz .t223-tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px}
+#wiz .t223-tile{position:relative;display:grid;gap:1px;align-content:start;text-align:left;padding:7px 7px 8px;border:0;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1px #e6dfcf;cursor:pointer;font:inherit;color:inherit;transition:box-shadow .15s,transform .12s}
+#wiz .t223-tile:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 1.5px #23412a}
+#wiz .t223-tile .ph{display:block;height:84px;border-radius:10px;background:#efe7d6 center/cover;margin-bottom:5px}
+#wiz .t223-tile b{font-family:var(--f-display);font-weight:500;font-size:1.14rem;line-height:1.15;padding:0 4px;color:#1e3932}
+#wiz .t223-tile small{font-size:.84rem;color:#5c665e;padding:0 4px;line-height:1.3}
+#wiz .t223-tile .go{display:inline-flex;align-items:center;gap:4px;margin:3px 4px 0;font-size:.84rem;font-weight:700;color:#23412a}
+#wiz .t223-tile .n{position:absolute;right:14px;top:14px;height:24px;padding:0 10px;border-radius:999px;background:#23412a;color:#fff;font-size:.76rem;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+#wiz .t223-back{justify-self:start;display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:4px 0;font:inherit;font-size:.9rem;font-weight:700;color:#23412a;cursor:pointer}
+#wiz #q-m-mer:has(>.t223-back) .ydbox{margin:0}
+/* lägre skärmar: lite tätare, så att tre kort fortfarande ryms */
+@media (max-height:790px){
+#wiz .wiz-scroll:has(#q-m-mer>.t223-top),#wiz .wiz-scroll:has(#q-m-mer>.t223-back){padding-top:18px;padding-bottom:12px}
+#wiz #q-m-mer:has(>.t223-top)>h2,#wiz #q-m-mer:has(>.t223-back)>h2{font-size:1.9rem}
+#wiz .t223-box{padding:12px}
+#wiz .t223-box .mmc .ph{min-height:70px}
+#wiz .t223-box .mmc-add{height:28px;margin-top:3px}
+#wiz .t223-tile .ph{height:70px}
+}
+
 </style>
 
 <div class="app">
@@ -3896,7 +3967,7 @@ function wizScreens(){
    
    
    ]),
-   {id:"m-mer",pg:"mer",sec:"Mer till gården",html:()=>`<h2>${stall?"Något mer till gården?":"Vad är du intresserad av?"}</h2><p class="lead">Vi hjälper dig att plocka ihop resten. Svara på några frågor så föreslår vi det som passar. Allt är valfritt.</p>
+   {id:"m-mer",pg:"mer",sec:"Mer till gården",html:()=>tv223On()?tv223HTML():`<h2>${stall?"Något mer till gården?":"Vad är du intresserad av?"}</h2><p class="lead">Vi hjälper dig att plocka ihop resten. Svara på några frågor så föreslår vi det som passar. Allt är valfritt.</p>
      ${stall&&dr?(()=>{const n=allWins(dr).length;return `<div class="dbox winrem"><p class="mbox-h">${svg("star",16)} ${n?`Det finns ${n} fönster i ritningen`:"Inga fönster i stallet?"}</p><p class="fx-help">${n?"Gamla fönster släpper in kyla och drag, och galler inuti skyddar glaset från hästarna. Myrbys stålfönster har termoglas, invändigt galler och 10 års garanti. Vill du byta samtidigt som inredningen monteras?":"Dagsljus gör stallet trivsammare för både hästar och människor. Ett fönster per box är en vanlig standard. Lägg till, så placerar vi ett fönster mitt i varje box i ritningen. Du kan sedan flytta dem som du vill."}</p><div class="mmgrid">${mmCard("stalfonster")}${mmCard("trafonster")}</div></div>`})():""}
      <div class="gview seg fx-mode"><button type="button" class="opt" data-gview="guide" aria-pressed="${D.ui.gview!=="all"}">${svg("star",16)} Hjälp mig välja</button><button type="button" class="opt" data-gview="all" aria-pressed="${D.ui.gview==="all"}">Visa alla produkter</button></div>
      <p class="hintline mcathint">Gummimattor, krubbor, vattenkoppar och ventilation finns under <b>Stall- &amp; boxtillbehör</b>.</p>
@@ -3904,7 +3975,7 @@ function wizScreens(){
      <p class="catintro">${esc(CAT_INTRO[wizCat]||"")}</p>${D.ui.gview!=="all"?guideHTML(wizCat):""}${D.items.filter(i=>MORE_CATS.includes(prod(i.product)?.cat)).length?`<div class="mmsel"><p class="mbox-h">${svg("check",16)} Valt till gården</p><div class="mmchips">${D.items.filter(i=>MORE_CATS.includes(prod(i.product)?.cat)).map(i=>`<button type="button" class="mmchip" data-wpick="${i.product}">${esc(prodName(i.product))} <span aria-hidden="true">×</span></button>`).join("")}</div></div>`:""}
      ${D.ui.gview==="all"?`<div class="mmgrid">${P.filter(p=>p.cat===wizCat).map(p=>mmCard(p.id)).join("")}</div>`:""}
      ${dr&&D.items.some(i=>YD_IDS.includes(i.product))?(()=>{const bx=layout(dr).filter(o=>o.m.t==="box"&&(o.k==="N"||o.k==="S")).sort((a,b)=>a.nr-b.nr);return `<div class="dbox ydbox"><p class="mbox-h">${svg("check",16)} Boxytterdörrar</p><p class="fx-help">Tryck på de boxar som ska ha en ytterdörr ut mot hagen.</p><div class="ydchips">${bx.map(o=>`<button type="button" class="opt" data-ydbox="${o.nr}" aria-pressed="${!!o.m.yd}">Box ${o.nr}</button>`).join("")}</div></div>`})():""}`},
-   ...(stall?[{id:"s-vent",pg:"mer",sec:"Mer till gården",html:()=>`<h3 class="subh sub183">Ventilation i stallet?</h3>
+   ...(stall&&!tv223On()?[{id:"s-vent",pg:"mer",sec:"Mer till gården",html:()=>`<h3 class="subh sub183">Ventilation i stallet?</h3>
      <details class="more3 big opt3" data-more="vent" ${D.ui.more?.vent?"open":""}><summary><span class="o3-ic">${svg("star",18)}</span><span class="o3-t"><small>Valfritt</small><b>Ventilation</b><em>Friskluftsintag och fläktar</em></span><span class="o3-chev">${svg("chev",18)}</span></summary><p class="lead" style="margin-top:8px">Frisk luft håller hästarna friska. Syns i ritningen.</p>
      <div class="seg fx-mode"><button type="button" class="opt" data-vgmode="guide" aria-pressed="${ventGuideOn()}">${svg("star",16)} Hjälp mig välja</button><button type="button" class="opt" data-vgmode="self" aria-pressed="${!ventGuideOn()}">Jag vet vad jag vill ha</button></div>
      ${ventGuideOn()?ventGuide(dr):`<div class="xlist">${D.ui.vg?.done?`<p class="vdone">${svg("check",14)} Förslaget efter dina svar ligger i ritningen. Ändra fritt här.</p>`:""}<div class="xrow ${dr.intag?"on":""}"><button type="button" class="xtog" data-vint="1" aria-pressed="${!!dr.intag}"><span class="tick">${svg("check",14)}</span><b>Friskluftsintag i varje box</b></button>${ib("vent:intag",1)}<span class="xdef">${layout(dr).filter(o=>o.m.t==="box").length} st${SHOW_PRICES?" · offereras":""}</span></div>
@@ -4036,9 +4107,9 @@ function renderWiz(){
   const adv=["rum","rumx","rumy"].includes(pg.key)&&dr&&D.ui.adv;
   const secs=D.ui.kind?[...new Set(PG.map(p=>p.sec))]:WSECS.map(x=>x[0]),curSec=pg.sec,secIdx=secs.indexOf(curSec);
   const step=`<div class="cfg-steps">${secs.map((x,i)=>{const first=PG.findIndex(p=>p.sec===x),ok=first>=0&&first<=D.ui.reach;return `<button type="button" class="cstep ${x===curSec?"cur":i<secIdx?"done":""}" ${ok?`data-wgo="${first}"`:"disabled"}><span class="cn">${i<secIdx?svg("check",12):i+1}</span><span class="cl">${esc(x)}</span></button>`}).join("")}</div>`;
-  const nextLbl=last?"":pg.key==="start"?"Börja rita ditt stall":"Nästa: "+(PG[s+1].sec===pg.sec?(PG[s+1].list[0].sub||"nästa fråga"):PG[s+1].sec);
+  const nextLbl=last?"":tv223Lbl(pg)?tv223Lbl(pg):pg.key==="start"?"Börja rita ditt stall":"Nästa: "+(PG[s+1].sec===pg.sec?(PG[s+1].list[0].sub||"nästa fråga"):PG[s+1].sec);
   const foot=`<div class="wiz-foot"><div class="in">${priceFoot(lvl)}${s>0?`<button class="btn ghost lg" data-wprev aria-label="Tillbaka">${svg("back",20)}</button>`:""}
-    ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min ritning till Myrby":S.role==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund")?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
+    ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min ritning till Myrby":S.role==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund"&&!tv223Mid(pg))?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
   const keepP=$("#cfgplan")?.scrollTop||0,prevLvl=+($("#cfgcanvas")?.dataset.lvl??-1),prevSet=new Set([...($("#cfgcanvas svg")?.querySelectorAll(INK_SEL)||[])].map(e=>e.outerHTML)),dirCls=renderWiz.dir>0?"in-r":renderWiz.dir<0?"in-l":"";renderWiz.dir=0;
   $("#wiz").innerHTML=`<div class="wiz-top cfg-top">${isPublic()?`<span class="logo publogo" role="img" aria-label="Myrby"></span>`:`<button class="icon-btn" data-wclose aria-label="Stäng">${svg("close")}</button>`}${step}<span class="cfg-count faint small">${D.ui.kind?`Steg ${secIdx+1} av ${secs.length}`:""}</span>${isPublic()?(D.ui.kind&&s>0?pubResetBtn():"")+(D.ui.kind?pubSaveBtn():"")+pubCloseBtn():""}${D.ui.kind&&!isPublic()?`<button type="button" class="btn sm ghost wsave" data-wsave title="Spara och fortsätt senare">${svg("doc",16)}<span>${D.ui.code?"Sparad":"Spara & fortsätt senare"}</span></button>`:""}</div><div class="cfg-prog"><i style="width:${(s+1)/PG.length*100}%"></i></div>
    ${adv?`<div class="wiz-scroll" id="wizscroll"><div class="wiz-step q1 wide"><div class="qblock" id="q-s-klar"><h2>Finjustera skissen</h2><p class="lead">Ändra enskilda boxar, dörrar och fönster, eller dra delarna i ritningen.</p>${drwEditor3(dr)}<button type="button" class="btn ghost" data-wadv="0" style="justify-self:start">${svg("back",18)} Tillbaka</button></div></div></div>${foot}`:
@@ -4054,7 +4125,7 @@ function cfgPanelRefresh(){const cp=$("#cfgplan");if(!cp)return;const PG=wizPage
 function wizGo(delta){const n=wizPages().length;renderWiz.dir=delta;S.wizStep=Math.max(0,Math.min(n-1,(S.wizStep||0)+delta));renderWiz();$("#wizscroll").scrollTop=0}
 function wizAuto(){clearTimeout(wizAuto.t);const PG=wizPages(),pg=PG[S.wizStep];if(!pg||!pg.auto||S.wizStep>=PG.length-1)return;if(!pg.list.every(x=>!x.done||x.done()))return;wizAuto.t=setTimeout(()=>{if(!$("#wiz").hidden&&wizPages()[S.wizStep]?.key===pg.key)wizGo(1)},420)}
 function wizJump(id){if(!$("#sheet").hidden)closeSheet();const PG=wizPages();const i=PG.findIndex(p=>p.list.some(x=>x.id===id));if(i<0)return;renderWiz.dir=i>S.wizStep?1:-1;S.wizStep=i;D.ui.adv=false;renderWiz();const el=$("#q-"+id),sc=$("#wizscroll");sc.scrollTop=0;if(el)sc.scrollTop=Math.max(0,el.offsetTop-12)}
-function wizFoot(){const PG=wizPages(),pg=PG[S.wizStep],b=$("[data-wnext]");const sb=$("[data-wsend]");if(sb){sb.disabled=false;const r=$("#q-r-skicka"),sc=pg.list.find(x=>x.id==="r-skicka");if(r&&sc)r.innerHTML=sc.html()}if(!b||!pg)return;const sk=pageSkip(pg);b.disabled=false;b.classList.toggle("skip",sk);const nx=PG[S.wizStep+1];b.innerHTML=sk?`Hoppa över ${svg("chev",20)}`:`Nästa: ${esc(nx.sec===pg.sec?(nx.list[0].sub||"nästa fråga"):nx.sec)} ${svg("chev",20)}`}
+function wizFoot(){const PG=wizPages(),pg=PG[S.wizStep],b=$("[data-wnext]");const sb=$("[data-wsend]");if(sb){sb.disabled=false;const r=$("#q-r-skicka"),sc=pg.list.find(x=>x.id==="r-skicka");if(r&&sc)r.innerHTML=sc.html()}if(!b||!pg)return;const sk=pageSkip(pg);b.disabled=false;b.classList.toggle("skip",sk);const nx=PG[S.wizStep+1];b.innerHTML=tv223Lbl(pg)?`${esc(tv223Lbl(pg))} ${svg("chev",20)}`:sk?`Hoppa över ${svg("chev",20)}`:`Nästa: ${esc(nx.sec===pg.sec?(nx.list[0].sub||"nästa fråga"):nx.sec)} ${svg("chev",20)}`}
 function wizRefresh(){const y=$("#wizscroll").scrollTop;renderWiz();$("#wizscroll").scrollTop=y}
 
 function pickedItem(it,i){const p=prod(it.product);return `<div class="pitem" data-i="${i}"><div class="pitem-top"><span class="thumb" ${ph(img(it.product))}></span><span class="grow">${esc(p?.name||"Annat")}<small>${esc(catName(p?.cat))}</small></span><button type="button" class="icon-btn" data-wrm="${i}" aria-label="Ta bort">${svg("close",18)}</button></div>
@@ -6659,6 +6730,78 @@ function matFloor222(c){const {pr,near,L,W,zA,zB,camX,FOC}=c,TX=818,TZ=1209,P=10
   xs.forEach((x,i)=>{const d=x-camX,sg=i%2?1:-1,dd=x<far?teeth(0,W,(z,t)=>fl(x+sg*t,z)):`M${fl(x,0)}L${fl(x,W)}`;lines+=`<path d="${dd}" stroke-width="${f(sw(d))}" opacity="${op(d)}"/>`});
   zs.forEach((z,j)=>{const cut=[Math.max(near,0),...xs,L],sg=j%2?1:-1;for(let i=0;i<cut.length-1;i++){const a=cut[i],b=cut[i+1];if(b-a<30)continue;const d=(a+b)/2-camX,dd=a<far?teeth(a,b,(x,t)=>fl(x,z+sg*t)):`M${fl(a,z)}L${fl(b,z)}`;lines+=`<path d="${dd}" stroke-width="${f(sw(d))}" opacity="${op(d)}"/>`}});
   return s+`<g fill="none" stroke="#2a2e2a" stroke-linejoin="round" stroke-linecap="round" pointer-events="none">${lines}</g>`}
+
+
+/* ===== v223 (Carl 15/11): tillvalen i steget "Mer till gården" som produktkort, ett tema per sida =====
+   I verktyget på hemsidan blir steget fem korta sidor som alla ser ut som fönsterkortet: stjärna, en rad förklaring, kort med bild, Lägg till och Läs mer.
+   Den som är osäker trycker på "Hjälp mig välja". Säljportalen behåller sin sida med alla produkter.
+   Sidorna ligger inne i samma steg (nyckeln "mer"), så stegräkningen, ritningsnivån och allt annat i guiden är orört. */
+{const B223="https://myrby1972.github.io/myrby-konfigurator/gal/";
+ Object.assign(GAL,{krubbor:[B223+"krubbor__0.jpg",B223+"krubbor__1.jpg"],spolspilta:[B223+"spolspilta__0.jpg",B223+"spolspilta__1.jpg"],solarium:[B223+"solarium__0.jpg",B223+"solarium__1.jpg"],vaggbekladnad:[B223+"vaggbekladnad__0.jpg"]})}
+/* korta rader som ryms på en rad i korten */
+const TAG223={gummimattor:"Mjukt, varmt och halksäkert underlag",krubbor:"Foder och alltid färskt vatten",vaggbekladnad:"Skyddar väggarna mot sparkar",ventilation:"Friskare luft för både häst och människa",spolspilta:"Säker plats för tvätt och skötsel",solarium:"Torr och varm häst på några minuter",staldorr:"Tål stallmiljön år efter år",tradorr:"Isolerade, håller värmen inne",branddorr:"Brandklassad, till sadelkammare och torkrum","bd-rak":"Hästen går rakt ut i hagen","bd-valvd":"Välvd överdel, exklusivt uttryck","utebox-35":"Vår populäraste utebox","ligghall-tra":"Klassisk ligghall för lösdrift","ligghall-stal":"Robust stålstomme för större flockar",vindskydd:"Skydd mot väder och vind i hagen",staket:"Svensk fura som står i årtionden",spilta:"Säker hantering vid veterinärbesök",speglar:"Se din sits och din häst","skritt-10-20":"Motionerar 3 till 8 hästar samtidigt",skywalker:"Skritta och longera under samma tak",railgliding:"Ingen mittmast, rund eller oval bana",hundskritt:"Motion för hundarna, med lägre torn"};
+const nBox223=()=>layout(D.drawing).filter(o=>o.m.t==="box").length;
+const room223=re=>Object.values(D.drawing.walls||{}).flat().some(m=>m.t==="room"&&re.test(m.name||""));
+const TV223P=[
+ {nav:"Fönster",h:"Vill du byta fönster?",star:()=>{const n=allWins(D.drawing).length;return n?`Det finns ${n} fönster i ritningen`:"Inga fönster i stallet?"},txt:()=>allWins(D.drawing).length?"Myrbys fönster har galler inuti som skyddar glaset.":"Lägg till, så ritar vi in ett fönster i varje box.",ids:["stalfonster","trafonster","kompositfonster"],
+  q:{q:"Vad är viktigast med fönstren?",o:[["Robust och underhållsfritt",["stalfonster","kompositfonster"]],["Klassiskt trä",["trafonster"]]]}},
+ {nav:"Boxarna",h:"Något till boxarna?",star:()=>{const n=nBox223();return n?`Du har ritat ${n} ${n===1?"box":"boxar"}`:"Det som gör boxen komplett"},txt:()=>{const n=nBox223();return n>1?`Det här lägger många till. Vi räknar på alla ${n} boxar.`:"Det här lägger många till i boxen."},ids:["gummimattor","krubbor","vaggbekladnad"],
+  q:{q:"Vad är viktigast i boxarna?",o:[["Mjukt underlag",["gummimattor"]],["Foder och vatten",["krubbor"]],["Skydda väggarna",["vaggbekladnad"]]]}},
+ {nav:"Luft och skötsel",h:"Frisk luft och enkel skötsel?",star:()=>"För hästarna och för dig",txt:"Bättre luft för hästarna och snabbare skötsel för dig.",ids:["ventilation","spolspilta","solarium"],vent:true},
+ {nav:"Dörrar",h:"Nya dörrar till stallet?",star:()=>room223(/sadel/i)?"Du har ritat en sadelkammare":"Dörrar som tål stallmiljön",txt:()=>room223(/sadel/i)?"Till sadelkammaren finns brandklassade dörrar.":"Dörrar till ingångar, sadelkammare och torkrum.",ids:["staldorr","tradorr","branddorr"],
+  q:{q:"Vad ska dörrarna klara?",o:[["Tåla stallmiljön länge",["staldorr"]],["Hålla värmen inne",["tradorr"]],["Skydda sadelkammaren",["branddorr"]]]}},
+ {nav:"Gården",h:"Något mer till gården?",star:()=>"Myrby har också det som finns utanför stallet",txt:"Tryck på det du är nyfiken på. Annars går du bara vidare.",
+  tiles:[{k:"hage",t:"Rakt ut i hagen",s:"Boxdörrar ut mot hagen",img:"bd-rak",ids:["bd-rak","bd-valvd"],star:"Hästen går själv ut i hagen",txt:"En boxytterdörr sparar många steg varje dag."},
+   {k:"ute",t:"Utestall och lösdrift",s:"Uteboxar, ligghallar, vindskydd",img:"utebox-35",ids:["utebox-3x3","utebox-35","utebox-4x3","utestall","ligghall-tra","ligghall-stal","vindskydd"],star:"Hästarnas liv utanför stallet",txt:"Byggt för nordiskt klimat och levererat komplett ovan grund."},
+   {k:"skritt",t:"Skrittmaskiner",s:"Motion medan du gör annat",img:"skywalker",ids:["skritt-10-20","skywalker","railgliding","hundskritt"],star:"Motion medan du gör annat",txt:"Myrby levererar, monterar och servar."},
+   {k:"ridhus",t:"Staket och ridhus",s:"Staket, harvar, speglar och mer",img:"staket",ids:["staket","harvar","speglar","spilta","vattenvagn"],star:"Allt runt omkring",txt:"Staket i svensk fura och utrustning till ridbanan."}]}];
+const TV223={open:null,help:false,ans:{},last:undefined,via:false};
+function tv223On(){try{return isPublic()&&D.ui.kind==="stall"&&!!D.drawing}catch(_){return false}}
+function tv223Pg(){const n=+(D.ui&&D.ui.tv223)||0;return Math.max(0,Math.min(TV223P.length-1,n))}
+function tv223Set(n){D.ui.tv223=Math.max(0,Math.min(TV223P.length-1,n));TV223.open=null;TV223.help=false}
+/* mitt i tillvalen: det finns fler sidor kvar i steget, eller en grupp är öppen */
+function tv223Mid(pg){try{return tv223On()&&pg&&pg.key==="mer"&&(!!TV223.open||tv223Pg()<TV223P.length-1)}catch(_){return false}}
+function tv223Lbl(pg){try{if(!tv223On()||!pg||pg.key!=="mer")return "";if(TV223.open)return "Klar, tillbaka till gården";const i=tv223Pg();return i<TV223P.length-1?"Nästa: "+TV223P[i+1].nav:""}catch(_){return ""}}
+const tv223Chev=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>`;
+function tvCard223(id,rec){const p=prod(id);if(!p)return "";const has=inDrawing(id),on=has||D.items.some(i=>i.product===id),u=img(id);
+  const act=has?(id==="ventilation"?`data-tv223help="1"`:`data-wjump="s-extra"`)+` title="Finns redan i ritningen"`:`data-wpick="${id}"`;
+  return `<button type="button" class="mmc${rec?" rec223":""}" ${act} aria-pressed="${on}"><span class="ph" ${ph(u)}>${fallback(u)}${badge(id)}</span><span class="mmc-b"><b>${esc(p.name)}</b><small>${esc(TAG223[id]||USP[id]||p.tag||"")}</small><span class="mmc-add">${has?svg("check",14)+" Finns i ritningen":on?svg("check",14)+" Tillagd":"+ Lägg till"}</span></span>${ib(id)}${rec?`<span class="t223-rec">${svg("star",12)} Vårt förslag</span>`:""}</button>`}
+function tvVent223(){const dr=D.drawing,vg=D.ui.vg||{};
+  if(vg.done&&!ventGuideOn())return `<p class="t223-done">${svg("check",14)} Förslaget ligger i ritningen. Du ändrar det under Ventilation ovanför ritningen.</p><button type="button" class="t223-again" data-vgmode="guide">Svara på frågorna igen</button>`;
+  return ventGuide(dr)}
+function tv223HTML(){const i=tv223Pg(),p=TV223P[i],val=v=>typeof v==="function"?v():v,box=(star,txt,body)=>`<div class="dbox winrem t223-box"><p class="mbox-h">${svg("star",16)} ${esc(star)}</p>${txt}${body}</div>`;
+  if(p.tiles&&TV223.open){const t=p.tiles.find(x=>x.k===TV223.open)||p.tiles[0],dr=D.drawing;
+    const yd=t.k==="hage"&&D.items.some(x=>YD_IDS.includes(x.product))?(()=>{const bx=layout(dr).filter(o=>o.m.t==="box"&&(o.k==="N"||o.k==="S")).sort((a,b)=>a.nr-b.nr);return bx.length?`<div class="dbox ydbox"><p class="mbox-h">${svg("check",16)} Vilka boxar ska ha en ytterdörr?</p><div class="ydchips">${bx.map(o=>`<button type="button" class="opt" data-ydbox="${o.nr}" aria-pressed="${!!o.m.yd}">Box ${o.nr}</button>`).join("")}</div></div>`:""})():"";
+    return `<button type="button" class="t223-back" data-tv223back>${svg("back",16)} Något mer till gården</button><h2>${esc(t.t)}</h2>${box(t.star,`<p class="fx-help">${esc(t.txt)}</p>`,`<div class="mmgrid">${t.ids.map(id=>tvCard223(id)).join("")}</div>`)}${yd}`}
+  const top=`<div class="t223-top"><span class="t223-eye">Tillval ${i+1} av ${TV223P.length}<span class="t223-dots">${TV223P.map((x,j)=>`<button type="button" class="${j===i?"on":j<i?"done":""}" data-tv223dot="${j}" aria-label="${esc(x.nav)}"${j===i?` aria-current="step"`:""}></button>`).join("")}</span></span><button type="button" class="t223-skip" data-tv223skip>${D.ui.fromSum?"Tillbaka till summeringen":"Hoppa över tillvalen"}</button></div><h2>${esc(p.h)}</h2>`;
+  if(p.tiles)return top+box(val(p.star),`<p class="fx-help">${esc(val(p.txt))}</p>`,`<div class="t223-tiles">${p.tiles.map(t=>{const n=D.items.filter(x=>t.ids.includes(x.product)).length;return `<button type="button" class="t223-tile" data-tv223tile="${t.k}"><span class="ph" ${ph(img(t.img))}></span>${n?`<span class="n">${svg("check",12)} ${n} ${n>1?"valda":"vald"}</span>`:""}<b>${esc(t.t)}</b><small>${esc(t.s)}</small><span class="go">Visa ${t.ids.length} produkter ${tv223Chev}</span></button>`}).join("")}</div>`);
+  const a=TV223.ans[i],rec=TV223.help&&p.q&&a!=null?(p.q.o[a]||[0,[]])[1]:[],ids=[...p.ids].sort((x,y)=>rec.includes(y)-rec.includes(x));
+  const qh=t=>`<div class="qh"><b>${svg("star",16)} ${esc(t)}</b><button type="button" class="qx" data-tv223x aria-label="Stäng hjälpen">${svg("close",14)}</button></div>`;
+  const help=!TV223.help?`<p class="fx-help">${esc(val(p.txt))}</p>`:p.vent?`<div class="t223-q vent">${qh("Vi räknar ut vad stallet behöver")}${tvVent223()}</div>`:`<div class="t223-q">${qh(p.q.q)}<div class="seg">${p.q.o.map((o,j)=>`<button type="button" class="opt" data-tv223a="${j}" aria-pressed="${a===j}">${esc(o[0])}</button>`).join("")}</div></div>`;
+  return top+box(val(p.star),help,`<div class="mmgrid">${ids.map(id=>tvCard223(id,rec.includes(id))).join("")}</div>`)+(TV223.help?"":`<div class="t223-help"><span>Osäker på vad du behöver?</span><button type="button" data-tv223help="1">${svg("star",16)} Hjälp mig välja</button></div>`)}
+function tv223Show(){const y=0;renderWiz();const sc=$("#wizscroll");if(sc)sc.scrollTop=y}
+/* Nästa och Tillbaka går mellan tillvalssidorna innan de lämnar steget. */
+{const _g223=wizGo;wizGo=function(delta){try{if(tv223On()){const PG=wizPages(),s=S.wizStep||0;
+    if(PG[s]&&PG[s].key==="mer"){if(TV223.open){TV223.open=null;TV223.via=true;tv223Show();return}
+      const i=tv223Pg();if(delta>0&&i<TV223P.length-1){tv223Set(i+1);saveD();TV223.via=true;renderWiz.dir=1;tv223Show();return}
+      if(delta<0&&i>0){tv223Set(i-1);saveD();TV223.via=true;renderWiz.dir=-1;tv223Show();return}}
+    const t=Math.max(0,Math.min(PG.length-1,s+delta));if(t!==s&&PG[t]&&PG[t].key==="mer"){tv223Set(delta>0?0:TV223P.length-1);TV223.via=true}}}catch(_){}
+  return _g223.apply(this,arguments)}}
+{const _j223=wizJump;wizJump=function(id){try{if(tv223On()){if(id==="s-vent"){tv223Set(2);TV223.help=true;D.ui.more={...(D.ui.more||{}),vent:true};TV223.via=true;id="m-mer"}else if(id==="m-mer"){if(cfgPgKey()!=="mer")tv223Set(0);TV223.via=true}}}catch(_){}
+  return _j223.call(this,id)}}
+/* Kommer man in i steget på annat sätt (stegraden högst upp) börjar man på första sidan. */
+{const _r223=renderWiz;renderWiz=function(){try{const k=cfgPgKey();if(tv223On()){if(k==="mer"&&TV223.last!==undefined&&TV223.last!=="mer"&&!TV223.via)tv223Set(0);if(k!=="mer"){TV223.open=null;TV223.help=false}}TV223.via=false;TV223.last=k}catch(_){}
+  return _r223.apply(this,arguments)};Object.keys(_r223).forEach(k=>{try{renderWiz[k]=_r223[k]}catch(_){}})}
+document.addEventListener("click",e=>{const t=e.target&&e.target.closest?e.target.closest("[data-tv223skip],[data-tv223help],[data-tv223x],[data-tv223a],[data-tv223tile],[data-tv223back],[data-tv223dot]"):null;if(!t)return;
+  try{if(!tv223On()||cfgPgKey()!=="mer")return;const d=t.dataset,keep=()=>{const sc=$("#wizscroll"),y=sc?sc.scrollTop:0;TV223.via=true;renderWiz();const s2=$("#wizscroll");if(s2)s2.scrollTop=y};
+    if(d.tv223skip!==undefined){if(D.ui.fromSum){wizJump("sum");return}tv223Set(TV223P.length-1);saveD();wizGo(1);return}
+    if(d.tv223help!==undefined){TV223.help=true;if(TV223P[tv223Pg()].vent){D.ui.more={...(D.ui.more||{}),vent:true};saveD()}keep();return}
+    if(d.tv223x!==undefined){TV223.help=false;keep();return}
+    if(d.tv223a!==undefined){const i=tv223Pg(),n=+d.tv223a;TV223.ans[i]=TV223.ans[i]===n?null:n;keep();return}
+    if(d.tv223tile){TV223.open=d.tv223tile;TV223.via=true;tv223Show();return}
+    if(d.tv223back!==undefined){TV223.open=null;TV223.via=true;tv223Show();return}
+    if(d.tv223dot!==undefined){const n=+d.tv223dot;if(n!==tv223Pg()){renderWiz.dir=n>tv223Pg()?1:-1;tv223Set(n);saveD();TV223.via=true;tv223Show()}return}
+  }catch(_){}});
 
 </script>
 
