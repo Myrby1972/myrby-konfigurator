@@ -3404,8 +3404,9 @@ function walk3d(dr,pos,lvl=9){const L=dr.L,W=dr.W,dN=depthMax(dr,"N"),dS=depthMa
   const G=[`<rect width="1000" height="560" fill="#f3ede1"/>`],PH=1300,near=camX+900;
   G.push(poly([[near,CEIL,0],[L,CEIL,0],[L,CEIL,W],[near,CEIL,W]],`fill="#ede5d3"`));
   G.push(poly([[near,0,0],[L,0,0],[L,CEIL,0],[near,CEIL,0]],`fill="${wallC(dr)[0]}" stroke="${ink}" stroke-width=".8"`)+poly([[near,0,W],[L,0,W],[L,CEIL,W],[near,CEIL,W]],`fill="${wallC(dr)[0]}" stroke="${ink}" stroke-width=".8"`)+ln([near,900,0],[L,900,0],`stroke="#d6cdb8" stroke-width="1"`)+ln([near,900,W],[L,900,W],`stroke="#d6cdb8" stroke-width="1"`));
-  G.push(poly([[near,0,zA],[L,0,zA],[L,0,zB],[near,0,zB]],`fill="#e3dccd"`));
-  for(let x=Math.ceil(near/600)*600;x<L;x+=600){if(Math.round(x/600)%2)G.push(ln([x,0,zA],[x,0,zB],`stroke="#d6cdb8" stroke-width="1"`))}
+  const mat222=matOn222();
+  if(mat222)G.push(matFloor222({pr,near,L,W,zA,zB,camX,FOC}));else{G.push(poly([[near,0,zA],[L,0,zA],[L,0,zB],[near,0,zB]],`fill="#e3dccd"`));
+  for(let x=Math.ceil(near/600)*600;x<L;x+=600){if(Math.round(x/600)%2)G.push(ln([x,0,zA],[x,0,zB],`stroke="#d6cdb8" stroke-width="1"`))}}
   /* v106: halm på golvet inne i boxarna (syns i de närmaste boxarna vid sidan av fronterna), inget i stallgången (Carl) */
   if(bedOn(lvl)){layout(dr).filter(o=>(o.k==="N"||o.k==="S")&&o.m.t==="box"&&o.start+(+o.m.w)>near+60).forEach(o=>{const w=+o.m.w+(o.cx0||0)+(o.cx1||0),d=+o.m.d,x0=o.start-(o.cx0||0),X=x=>x0+x,Z=y=>o.k==="N"?y:W-y,xa=Math.max(near+40,x0);
       G.push(poly([[xa,0,Z(0)],[x0+w,0,Z(0)],[x0+w,0,Z(d)],[xa,0,Z(d)]],`fill="#d9bd7c"`));
@@ -6640,6 +6641,24 @@ try{new MutationObserver(()=>{HELP218.mut=true}).observe(document.body,{subtree:
 ["pointerdown","keydown","wheel","touchstart","input"].forEach(ev=>document.addEventListener(ev,()=>{HELP218.last=Date.now();HELP218.idled=false},{capture:true,passive:true}));
 setInterval(()=>{try{if(document.visibilityState==="visible"&&helpOk218()&&Date.now()-HELP218.last>=9e4&&!HELP218.idled){HELP218.idled=true;helpSign218("idle")}}catch(_){}},10000);
 try{if(document.getElementById("wiz")&&typeof renderWiz==="function"&&document.querySelector("#wiz .cfg-steps"))after218()}catch(_){}
+
+
+/* v222 (Carl 15/11): har kunden lagt till Gummimatta Animat Standard ligger mattorna i stallgången, 1 209 × 818 mm med pusselkant.
+   Mattorna täcker hela det öppna golvet, vägg till vägg. Boxar och rum ritas ovanpå, så där syns halmen och rummens egna golv som förut. */
+function matOn222(){try{return !!(D&&Array.isArray(D.items)&&D.items.some(i=>i.product==="gummimattor"))}catch(_){return false}}
+function matFloor222(c){const {pr,near,L,W,zA,zB,camX,FOC}=c,TX=818,TZ=1209,P=104,T=30,mid=(zA+zB)/2,f=v=>v.toFixed(1),far=camX+10500,fl=(x,z)=>pr(x,0,z).map(f).join(" ");
+  const hz=pr(L,0,mid)[1];
+  let s=`<defs><linearGradient id="wkmat" gradientUnits="userSpaceOnUse" x1="0" y1="${f(hz)}" x2="0" y2="560"><stop offset="0" stop-color="#70746e"/><stop offset=".3" stop-color="#585c57"/><stop offset="1" stop-color="#434742"/></linearGradient></defs>`;
+  s+=`<polygon points="${[[near,0],[L,0],[L,W],[near,W]].map(q=>pr(q[0],0,q[1]).map(f).join(",")).join(" ")}" fill="url(#wkmat)"/>`;
+  const zs=[];for(let z=mid-TZ/2;z>150;z-=TZ)zs.push(z);for(let z=mid+TZ/2;z<W-150;z+=TZ)zs.push(z);
+  const xs=[];for(let x=Math.ceil((near+1)/TX)*TX;x<L-80;x+=TX)xs.push(x);
+  const sw=d=>Math.max(.45,Math.min(4.2,FOC*9/Math.max(300,d))),op=d=>d>14000?.45:d>8000?.65:.9;
+  /* pusselkant: laxstjärtsformade tänder längs skarven, bara nära betraktaren */
+  const teeth=(a,b,at)=>{const n=Math.max(1,Math.round((b-a)/P)),st=(b-a)/n,o=[at(a,0)];for(let i=0;i<n;i++){const u=a+i*st;o.push(at(u+st*.28,0),at(u+st*.2,T),at(u+st*.8,T),at(u+st*.72,0),at(u+st,0))}return "M"+o.join("L")};
+  let lines="";
+  xs.forEach((x,i)=>{const d=x-camX,sg=i%2?1:-1,dd=x<far?teeth(0,W,(z,t)=>fl(x+sg*t,z)):`M${fl(x,0)}L${fl(x,W)}`;lines+=`<path d="${dd}" stroke-width="${f(sw(d))}" opacity="${op(d)}"/>`});
+  zs.forEach((z,j)=>{const cut=[Math.max(near,0),...xs,L],sg=j%2?1:-1;for(let i=0;i<cut.length-1;i++){const a=cut[i],b=cut[i+1];if(b-a<30)continue;const d=(a+b)/2-camX,dd=a<far?teeth(a,b,(x,t)=>fl(x,z+sg*t)):`M${fl(a,z)}L${fl(b,z)}`;lines+=`<path d="${dd}" stroke-width="${f(sw(d))}" opacity="${op(d)}"/>`}});
+  return s+`<g fill="none" stroke="#2a2e2a" stroke-linejoin="round" stroke-linecap="round" pointer-events="none">${lines}</g>`}
 
 </script>
 
