@@ -2413,6 +2413,7 @@ html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
 #wiz .wiz-foot .sn218{display:flex;align-items:center;gap:6px;margin:0;padding:0 2px}
 #wiz .wiz-foot .sn218 p{flex:1;min-width:0;margin:0;font-size:.94rem;line-height:1.35;color:#3d4a40;text-align:center;text-wrap:balance}
 #wiz .wiz-foot .sn218 p button{display:inline;border:0;background:none;padding:0;font:inherit;font-weight:700;color:#23412a;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+#wiz .wiz-foot .sn218-nw{white-space:nowrap}
 #wiz .wiz-foot .sn218-x{flex:none;display:grid;place-items:center;width:40px;height:36px;margin:-4px -10px -4px 0;border:0;border-radius:999px;background:transparent;color:#4d5f56;cursor:pointer}
 #wiz .wiz-foot .sn218-x:hover{background:#eee8db}
 #wiz .wiz-foot .sn218.in{animation:sn218in .5s ease both}
@@ -6549,7 +6550,7 @@ function helpCheck218(){if(HELP218.off||HELP218.shown||!helpOk218()||cfgPgKey()=
 function helpRecent218(a,ms,n){const now=Date.now();a.push(now);while(a.length&&now-a[0]>ms)a.shift();return a.length>=n}
 function helpRow218(){try{const f=document.querySelector("#wiz .wiz-foot");if(!f)return;const old=f.querySelector(".sn218"),want=HELP218.shown&&!HELP218.off&&helpOk218()&&cfgPgKey()!=="kund";
   if(!want){if(old)old.remove();f.classList.remove("has-sn218");return}if(old)return;f.classList.add("has-sn218");
-  f.insertAdjacentHTML("beforeend",`<div class="sn218${HELP218.fresh?" in":""}" role="status"><p>Behöver du en hand? <button type="button" data-sn218>Skicka ritningen som den är</button>, så hjälper vi dig med resten.</p><button type="button" class="sn218-x" data-sn218x aria-label="Stäng">${svg("close",14)}</button></div>`);HELP218.fresh=false}catch(_){}}
+  f.insertAdjacentHTML("beforeend",`<div class="sn218${HELP218.fresh?" in":""}" role="status"><p>Behöver du en hand? <span class="sn218-nw"><button type="button" data-sn218>Skicka ritningen som den är</button>,</span> så hjälper vi dig med resten.</p><button type="button" class="sn218-x" data-sn218x aria-label="Stäng">${svg("close",14)}</button></div>`);HELP218.fresh=false}catch(_){}}
 function helpModal218(why){try{const c=D.customer||{},dr=D.drawing,sp=D.spec||{},ch=D.ui.chosen||{},pol=esc((window.MYRBY_PUBLIC||{}).policy||"https://myrby.com/");
   let l1="",l2="";try{const n=drwMaterials2(dr).boxes,fn=sp.front&&prod(sp.front)?prod(sp.front).name:"";l1=`${n} ${n===1?"box":"boxar"}${fn?` med front ${fn}`:""}`;
     const rooms=[];["N","S","W","E"].forEach(k=>((dr.walls||{})[k]||[]).forEach(m=>{if(m.t!=="box"&&m.name&&!rooms.includes(m.name))rooms.push(m.name)}));
