@@ -2407,6 +2407,39 @@ body{margin:0}
 html body #wiz .fgal .fgi>.ibtn{top:auto!important;left:auto!important;right:10px!important;bottom:10px!important}
 html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
 
+
+/* v218 (Carl 15/11): hjälpraden när kunden kört fast, rutan Skicka ritningen, tipset i Stallgången */
+#wiz .wiz-foot.has-sn218{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+#wiz .wiz-foot .sn218{display:flex;align-items:center;gap:6px;margin:0;padding:0 2px}
+#wiz .wiz-foot .sn218 p{flex:1;min-width:0;margin:0;font-size:.94rem;line-height:1.35;color:#3d4a40;text-align:center;text-wrap:balance}
+#wiz .wiz-foot .sn218 p button{display:inline;border:0;background:none;padding:0;font:inherit;font-weight:700;color:#23412a;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+#wiz .wiz-foot .sn218-x{flex:none;display:grid;place-items:center;width:40px;height:36px;margin:-4px -10px -4px 0;border:0;border-radius:999px;background:transparent;color:#4d5f56;cursor:pointer}
+#wiz .wiz-foot .sn218-x:hover{background:#eee8db}
+#wiz .wiz-foot .sn218.in{animation:sn218in .5s ease both}
+@keyframes sn218in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#wiz .wiz-foot .sn218.in{animation:none}}
+.pubmodal .pm-card.sn{width:min(540px,100%);gap:11px;padding:24px 26px 18px}
+.pubmodal .sn-sum{display:flex;gap:14px;align-items:center;background:#f1ebde;border-radius:14px;padding:12px 14px}
+.pubmodal .sn-sum .th{flex:none;width:112px;height:84px;border-radius:10px;background:#fdfcfb;box-shadow:inset 0 0 0 1px #ddd3bd;overflow:hidden;display:grid;place-items:center}
+.pubmodal .sn-sum .th svg{width:112px;height:84px;display:block}
+.pubmodal .sn-sum b{display:block;font-size:1.02rem;color:#1f3328}
+.pubmodal .sn-sum span{display:block;color:#4d5f56;font-size:.95rem;line-height:1.4}
+.pubmodal .sn-f{display:grid;gap:6px}
+.pubmodal .sn-f label{font-weight:700;font-size:.95rem;color:#1f3328}
+.pubmodal .sn-f .input{max-width:none!important;min-height:48px!important;height:48px!important;background:#fdfcfb!important;box-shadow:inset 0 0 0 1.5px #23412a!important}
+.pubmodal .sn-rest{font-size:.95rem;color:#3d4a40;line-height:1.5}
+.pubmodal .sn-rest i{font-style:normal;display:inline-block;background:#ebe3d0;border-radius:999px;padding:2px 10px;margin:4px 4px 0 0;color:#1f3328;font-weight:600;font-size:.88rem}
+.pubmodal .sn-h{display:flex;align-items:center;gap:14px;padding-right:40px}
+.pubmodal .sn-h .pm-ic{flex:none;width:44px;height:44px}
+.pubmodal .sn-h h2{min-width:0}
+.pubmodal .sn-c{display:flex;gap:12px;align-items:flex-start;cursor:pointer;margin:0;padding:10px 14px;border-radius:14px;box-shadow:inset 0 0 0 1.5px #23412a;background:#fff}
+.pubmodal .sn-c input{width:22px;height:22px;flex:none;margin:1px 0 0;accent-color:#23412a}
+.pubmodal .sn-c span{font-size:.92rem;line-height:1.45;color:#3d4a40}
+.pubmodal .sn-c a{color:#23412a;font-weight:700}
+.pubmodal .sn-err{margin:0;padding:10px 14px;border-radius:12px;background:#f6e0dc;color:#8f2d21;font-weight:700;font-size:.95rem}
+.pubmodal .sn-fine{font-size:.88rem!important;color:#5d6a61!important;text-align:center}
+@media (max-width:1279px){#wiz .htip .t218b{display:none}}
+
 </style>
 
 <div class="app">
@@ -3010,8 +3043,8 @@ function ensureCfg(){D.ui=D.ui||{};D.spec=D.spec||{};if(!D.ui.kind&&D.drawing&&D
   if(D.ui.kind==="stall"&&(!D.drawing||D.drawing.v!==2)){const dr=D.drawing=newDrawing3();dr.walls.S=[];dr.walls.W=[];dr.walls.E=[];dr.doors=[];D.ui.touchedN=false;syncSpec(true);suggestCounts(dr)}
   if(D.ui.kind==="stall"){D.ui.measured=true;D.ui.mchoice="ja"}if(D.ui.kind==="stall"&&!D.ui.defaulted){D.ui.defaulted=true;const sp=D.spec;sp.wall=sp.wall||"mv-galler";sp.fill=sp.fill||"Gran";sp.finish=sp.finish||"Varmförzinkad";sp.post=sp.post||"stal";sp.decor=sp.decor||"utan";syncSpec(true)}}
 function syncSpec(init){const sp=D.spec||{},dr=D.drawing;if(!dr)return;
-  if(sp.front&&dr.front!==sp.front){dr.front=sp.front;onFrontChange(dr)}
-  const postChanged=(sp.post||"")!==(dr.post||"");["wall","post","decor","fill","finish","ral"].forEach(k=>dr[k]=sp[k]||"");if(postChanged){for(const k of ["N","S","W","E"]){const c=dr.cfg?.[k];if(c&&c.auto){if(c.std&&sizeRule(dr.front).type==="fixed")c.std=nearestSize(c.std,dr.front);continue}(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"&&!sizeOK(m.w,dr.front))m.w=nearestSize(m.w,dr.front)})}}dr.cornerPost=dr.post;dr.egenMat=sp.egenMat||"";dr.egenTh=sp.egenTh||"";dr.wallNote=sp.wallNote||"";if(sp.front&&sp.fill&&!fillsFor(sp.front).includes(sp.fill)){sp.fill="";dr.fill=""}autoAll(dr)}
+  if(sp.front&&dr.front!==sp.front){dr.front=sp.front;onFrontChange.wiz218=true;try{onFrontChange(dr)}finally{onFrontChange.wiz218=false}}
+  const postChanged=(sp.post||"")!==(dr.post||"");["wall","post","decor","fill","finish","ral"].forEach(k=>dr[k]=sp[k]||"");if(postChanged){for(const k of ["N","S","W","E"]){const c=dr.cfg?.[k];if(c&&c.auto){if(c.std&&sizeRule(dr.front).type==="fixed")c.std=nearestSize(c.std,dr.front);continue}(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"&&!sizeOK(m.w,dr.front))m.w=nearestSize(m.w,dr.front)})}}dr.cornerPost=dr.post;dr.egenMat=sp.egenMat||"";dr.egenTh=sp.egenTh||"";dr.wallNote=sp.wallNote||"";if(sp.front){const fl218=fillsFor(sp.front),ui218=D.ui||{},ch218=!!(ui218.chosen&&ui218.chosen.fill);if(sp.fill&&!fl218.includes(sp.fill)){const old218=sp.fill;sp.fill=fl218[0];dr.fill=fl218[0];if(ch218){ui218.chosen.fill=false;if(!init)fillGone218(old218,sp.fill,sp.front)}ui218.fillAuto218=old218}else if(ui218.fillAuto218&&!ch218&&fl218.includes(ui218.fillAuto218)){sp.fill=ui218.fillAuto218;dr.fill=sp.fill;delete ui218.fillAuto218}else if(ch218&&ui218.fillAuto218)delete ui218.fillAuto218}autoAll(dr)}
 function specFromDrawing(){const dr=D.drawing;if(!dr)return;D.spec=D.spec||{};SPEC_KEYS.forEach(k=>{D.spec[k]=dr[k]||""});D.spec.wallNote=dr.wallNote||""}
 function specRows(sp,dr){sp=sp||{};const v=k=>sp[k]||dr?.[k]||"";const pl=k=>POST_SHORT[v(k)]?(v(k)==="tra"||v(k)==="ingen"?POST_SHORT[v(k)]:POST_SHORT[v(k)]+" mm"):"";
   return [["Mellanvägg",dr&&dr.wmix&&Object.keys(dr.wmix).length?"Blandade, se materiallistan":wallLabelId(dr||{},v("wall"))],["Stolpar",pl("post")],["Dekorbräda",v("decor")==="med"?"Med":v("decor")==="utan"?"Utan":""],["Fyllning",v("fill")],["Ytbehandling",v("finish")+(v("ral")&&/ulverlack/.test(v("finish"))?" · "+v("ral")+" "+(RALC[v("ral")]||[""])[0].toLowerCase():"")],["Antal fronter",D.ui?.mchoice==="nej"&&D.ui.nej?`${D.ui.nej.n} st, ${D.ui.nej.len?mm(D.ui.nej.len)+" mm":"längd okänd"} (utan ritning)`:""],["Ingångar",dr?doors(dr).map(d=>`${WALL_NAME[d.k]} ${mm(d.w)} mm`).join(", "):""],["Fönster",dr&&allWins(dr).length?`${allWins(dr).length} st (${["N","S","W","E"].map(k=>[k,allWins(dr).filter(x=>x.k===k).length]).filter(x=>x[1]).map(([k,n])=>`${n} på ${WALL_NAME[k].charAt(0).toLowerCase()+WALL_NAME[k].slice(1)}`).join(", ")})`:""],["Ventilation, kundens svar",dr?.ventInfo||""],["Hästnamn",dr&&dr.names?Object.keys(dr.names).sort((a,b)=>a-b).map(n=>`Box ${n}: ${dr.names[n]}`).join(", "):""]].filter(r=>r[1])}
@@ -4959,7 +4992,7 @@ const _autoFill2=autoFill;autoFill=function(dr,k){const ms=dr.walls[k]=dr.walls[
 function gableRecenter(dr){const mid=(depthMax(dr,"N")+dr.W-depthMax(dr,"S"))/2;doors(dr).forEach(d=>{if(d.ctr&&(d.k==="W"||d.k==="E"))d.p=doorClamp(dr,d.k,mid-(+d.w||0)/2,d.w);else d.p=doorClamp(dr,d.k,+d.p||0,d.w)})}
 function onFrontChange(dr){let snapped=0;
   for(const k of ["N","S","W","E"]){const c=dr.cfg?.[k];if(c&&c.auto)continue;(dr.walls[k]||[]).forEach(m=>{if(m.t==="box"&&!sizeOK(m.w,dr.front)){m.w=nearestSize(m.w,dr.front);snapped++}})}
-  autoAll(dr);const fl=fillsFor(dr.front);let msg="";if(dr.fill&&!fl.includes(dr.fill)){dr.fill=fl[0];msg=` Fyllningen ändrades till ${fl[0]}.`}
+  autoAll(dr);const fl=fillsFor(dr.front);let msg="";if(dr.fill&&!fl.includes(dr.fill)){dr.fill=fl[0];if(!onFrontChange.wiz218)msg=` Fyllningen ändrades till ${fl[0]}.`}
   if(snapped||msg)toast(`${snapped?snapped+" boxar justerades till storlekar som tillverkas.":""}${msg}`.trim());
 }
 function newDrawing3(q){
@@ -6406,7 +6439,7 @@ async function fqToQuote(f,btn){if(!S.db){toast("Ingen anslutning");return}if(fq
   try{await sendQuote()}catch(e){}
   dummy.remove();D=prev;try{saveD()}catch(_){}
   let qid=null;for(let i=0;i<40&&!qid;i++){const q=S.quotes.find(q=>!before.has(q.id)&&q.fqId===f.id);if(q)qid=q.id;else await new Promise(r=>setTimeout(r,150))}
-  fqToQuote.busy=false;if(qid){f.status="affar";f.quoteId=qid;await fqUpd(f.id,{status:"affar",quoteId:qid,quoteAt:Date.now()});const now=Date.now(),M=S.db.collection(`quotes/${qid}/messages`);const chg=f.cur?fqDiff(f.orig,f.cur):[];try{await M.add({at:now+1,by:S.role,uid:S.uid||null,sys:true,text:"Kom in via Rita din stallinredning på hemsidan"});if(chg.length)await M.add({at:now+2,by:f.editedBy||S.role,uid:null,text:"Ändrat mot kundens ritning:\n"+chg.map(c=>"• "+c.k+": "+(c.from||"–")+" → "+(c.to||"–")).join("\n")});let k=3;for(const n of (f.notes||[]).slice().sort((a,b)=>a.at-b.at))await M.add({at:now+(k++),by:n.by||S.role,uid:null,text:(n.pin?"📌 ":"")+n.text})}catch(_){}}else if(btn){btn.disabled=false;btn.textContent="Gör till affärsmöjlighet"}}
+  fqToQuote.busy=false;if(qid){f.status="affar";f.quoteId=qid;await fqUpd(f.id,{status:"affar",quoteId:qid,quoteAt:Date.now()});const now=Date.now(),M=S.db.collection(`quotes/${qid}/messages`);const chg=f.cur?fqDiff(f.orig,f.cur):[];try{await M.add({at:now+1,by:S.role,uid:S.uid||null,sys:true,text:"Kom in via Rita din stallinredning på hemsidan"+(()=>{try{const e=f.orig&&f.orig.ui&&f.orig.ui.early218;return e?". Kunden skickade ritningen i förtid"+(e.sec?" från steget "+e.sec:"")+" och vill ha hjälp med resten.":""}catch(_){return ""}})()});if(chg.length)await M.add({at:now+2,by:f.editedBy||S.role,uid:null,text:"Ändrat mot kundens ritning:\n"+chg.map(c=>"• "+c.k+": "+(c.from||"–")+" → "+(c.to||"–")).join("\n")});let k=3;for(const n of (f.notes||[]).slice().sort((a,b)=>a.at-b.at))await M.add({at:now+(k++),by:n.by||S.role,uid:null,text:(n.pin?"📌 ":"")+n.text})}catch(_){}}else if(btn){btn.disabled=false;btn.textContent="Gör till affärsmöjlighet"}}
 try{if(typeof render==="function"&&!$("#wiz")?.classList.contains("on"))render()}catch(_){}
 }
 
@@ -6464,6 +6497,138 @@ function toastOff214(){const t=document.getElementById("toast");if(t&&t.classLis
     if(h)h.call(w,e)}}catch(_){}return r}}
 /* v215: första steget får också en plats i historiken, så att bakåt från steg 2 landar på steg 1 och inte lämnar sidan. */
 if(isPublic()){try{if(!(history.state&&history.state.wiz214!=null))history.replaceState(Object.assign({},history.state||{},{wiz214:S.wizStep||0}),"")}catch(_){}NAV214.last=S.wizStep||0}
+
+
+/* ================= v218 (Carl 15/11) =================
+   1) Fyllningen följer fronten på riktigt, och meddelandet visas bara när kunden själv hade valt en fyllning (se fix218.py + fillGone218).
+   2) Stallgången visas direkt första gången kunden väljer front (bara på hemsidan).
+   3) Knapparna för vänster- och högerhängd rullas fram när fronten är vald.
+   4) Etiketten i Stallgången ligger i bildens hörn även när rutan är högre än bilden (iPad).
+   5) Hjälpraden: visas bara när verktyget ser att kunden kört fast. En gång per besök. */
+
+/* 1) Kunden hade valt en fyllning som inte finns till den nya fronten: säg vad som hände. Var fyllningen bara standard byts den tyst. */
+function fillGone218(old,now,front){try{const nm=(typeof prod==="function"&&prod(front)&&prod(front).name)||"den fronten";
+  setTimeout(()=>toast(`${old} finns inte till ${nm}. Fyllningen blev ${now}.`),document.querySelector("#toast.on")?2500:0)}catch(_){}}
+
+/* 2) Stallgången direkt. Gäller stegen där man väljer utseende. Väljer kunden själv en vy gäller den. */
+const LOOK218=["front","vagg","fyll","yta","stolp","dekor"];
+{const _ht218=hangTip;hangTip=function(lvl){try{if(isPublic()&&viewMode()==="walk"&&!D.ui.tipWalk218&&lvl>=3&&cfgPgKey()==="front"&&(D.spec||{}).front&&!(typeof fmixOn==="function"&&fmixOn())){
+    const nm=(prod(D.spec.front)||{}).name||"fronten";
+    return `<div class="htip" data-w218 role="note"><span class="htip-i">${svg("star",16)}</span><p><b>Så här blir ${esc(nm)} i ditt stall.</b><span class="t218b"> Byt front till höger så ändras bilden direkt.</span></p><button type="button" class="htip-x" data-tipwalk218 aria-label="Stäng tipset">${svg("close",14)}</button></div>`}}catch(_){}
+  return _ht218.apply(this,arguments)}}
+function autoWalk218(){try{if(!isPublic()||!D.ui||D.ui.walkAuto218||!(D.spec||{}).front||viewMode()!=="plan"||cfgPgKey()!=="front"||drawLvl(wizPages())<3)return;
+  /* Bara där vyväljaren syns (inte i mobilläget), så att kunden alltid kan gå tillbaka till ritningen. */
+  const vb=document.querySelector('#wiz [data-view="walk"]');if(!vb||vb.offsetParent===null)return;
+  D.ui.view="walk";D.ui.viewSeen=true;D.ui.walkAuto218=true;D.ui.viewAuto218=true;ls.set("myrby.draft2",D);cfgPanelRefresh()}catch(_){}}
+
+/* Rutan om dörrarna: i Stallgången och 3D går det inte att trycka på en dörr, så texten säger var man gör det. */
+const DT218_PLAN='Välj hängning för alla, eller <b>tryck på en dörr i ritningen</b> för att vända just den.',DT218_VIEW='Välj hängning för alla här. Vill du vända en enskild dörr trycker du på den i <b>Ritning</b>.';
+function doorText218(){try{const plan=viewMode()==="plan";document.querySelectorAll("#wiz .dbox p").forEach(p=>{const h=p.innerHTML;if(plan&&h.includes(DT218_VIEW))p.innerHTML=h.replace(DT218_VIEW,DT218_PLAN);else if(!plan&&h.includes(DT218_PLAN))p.innerHTML=h.replace(DT218_PLAN,DT218_VIEW)})}catch(_){}}
+
+/* 3) Hängningsknapparna syns utan att kunden behöver rulla. */
+function doorsInView218(){try{const sc=document.getElementById("wizscroll"),bx=document.querySelector("#wiz .dbox.dpop");if(!sc||!bx)return;
+  const s=sc.getBoundingClientRect(),b=bx.getBoundingClientRect();let d=b.bottom-(s.bottom-10);if(d<=0)return;d=Math.min(d,Math.max(0,b.top-s.top-10));if(d<=0)return;
+  const calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;sc.scrollTo({top:sc.scrollTop+d,behavior:calm?"auto":"smooth"})}catch(_){}}
+
+/* 4) Etiketten "Stallgången · Baryard" ligger i rutans övre vänstra hörn, oavsett rutans form. */
+function walkLabel218(){try{const sv=document.querySelector("#cfgcanvas svg.vwalk");if(!sv)return;const t=[...sv.querySelectorAll("text")].find(x=>/^STALLGÅNGEN/.test(x.textContent||""));if(!t)return;
+  const r=sv.getBoundingClientRect();if(!r.width||!r.height)return;const sc=Math.min(r.width/1000,r.height/560),ox=(r.width/sc-1000)/2,oy=(r.height/sc-560)/2;
+  t.setAttribute("x",(20-ox).toFixed(1));t.setAttribute("y",(34-oy).toFixed(1))}catch(_){}}
+
+/* 5) Hjälpraden. Tecken på att kunden kört fast: går bakåt flera gånger, ångrar flera gånger, går vidare trots en varning,
+      trycker flera gånger utan att något händer, sitter stilla länge, eller trycker Börja om. Två olika tecken inom fem minuter visar raden.
+      Trycker hon Stäng med en påbörjad ritning ställs frågan en gång i en ruta. Raden eller rutan visas en gång per besök. */
+const HELP218={signs:{},shown:false,off:false,fresh:false,step:null,back:[],undo:[],dead:[],last:Date.now(),mut:false};
+try{if(sessionStorage.getItem("myrby.help218")==="x")HELP218.off=true}catch(_){}
+function helpOk218(){try{return isPublic()&&!S.pubDone&&!!D&&!!D.ui&&D.ui.kind==="stall"&&!!D.drawing&&!!document.querySelector("#wiz .wiz-foot")}catch(_){return false}}
+function helpBegun218(){try{return !!((D.spec||{}).front)||(D.ui.reach||0)>=2||(S.wizStep||0)>=2}catch(_){return false}}
+function helpOff218(){HELP218.off=true;try{sessionStorage.setItem("myrby.help218","x")}catch(_){}helpRow218()}
+function helpSign218(k,w){if(HELP218.off||HELP218.shown)return;try{if(!isPublic())return}catch(_){return}HELP218.signs[k]={at:Date.now(),w:w||1};helpCheck218()}
+function helpCheck218(){if(HELP218.off||HELP218.shown||!helpOk218()||cfgPgKey()==="kund")return;const now=Date.now();let n=0;for(const k in HELP218.signs){const s=HELP218.signs[k];if(now-s.at<3e5)n+=s.w}
+  if(n>=2){HELP218.shown=true;HELP218.fresh=true;helpRow218()}}
+function helpRecent218(a,ms,n){const now=Date.now();a.push(now);while(a.length&&now-a[0]>ms)a.shift();return a.length>=n}
+function helpRow218(){try{const f=document.querySelector("#wiz .wiz-foot");if(!f)return;const old=f.querySelector(".sn218"),want=HELP218.shown&&!HELP218.off&&helpOk218()&&cfgPgKey()!=="kund";
+  if(!want){if(old)old.remove();f.classList.remove("has-sn218");return}if(old)return;f.classList.add("has-sn218");
+  f.insertAdjacentHTML("beforeend",`<div class="sn218${HELP218.fresh?" in":""}" role="status"><p>Behöver du en hand? <button type="button" data-sn218>Skicka ritningen som den är</button>, så hjälper vi dig med resten.</p><button type="button" class="sn218-x" data-sn218x aria-label="Stäng">${svg("close",14)}</button></div>`);HELP218.fresh=false}catch(_){}}
+function helpModal218(why){try{const c=D.customer||{},dr=D.drawing,sp=D.spec||{},ch=D.ui.chosen||{},pol=esc((window.MYRBY_PUBLIC||{}).policy||"https://myrby.com/");
+  let l1="",l2="";try{const n=drwMaterials2(dr).boxes,fn=sp.front&&prod(sp.front)?prod(sp.front).name:"";l1=`${n} ${n===1?"box":"boxar"}${fn?` med front ${fn}`:""}`;
+    const rooms=[];["N","S","W","E"].forEach(k=>((dr.walls||{})[k]||[]).forEach(m=>{if(m.t!=="box"&&m.name&&!rooms.includes(m.name))rooms.push(m.name)}));
+    l2=`${(dr.L/1000).toLocaleString("sv-SE")} × ${(dr.W/1000).toLocaleString("sv-SE")} m${rooms.length?", "+rooms.join(" och ").toLowerCase():""}`}catch(_){}
+  const rest=[];if(!sp.front)rest.push("Front");if(!ch.wall)rest.push("Mellanväggar");if(!ch.fill||!ch.finish)rest.push("Fyllning och färg");if(!ch.post)rest.push("Stolpar");if(!(D.project||{}).mount)rest.push("Montering");
+  const quit=why==="close";
+  const m=pubModal(`<button type="button" class="pm-x" data-pmclose aria-label="Stäng rutan">${svg("close",18)}</button>
+   <div class="sn-h"><div class="pm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></div>
+   <h2>${quit?"Vill du att vi tar över härifrån?":"Skicka ritningen till Myrby"}</h2></div>
+   <p>${quit?"Din ritning är sparad i den här webbläsaren. Skicka den som den är, så går vi igenom resten tillsammans.":"Du behöver inte välja allt själv. Skicka ritningen som den är, så går vi igenom resten tillsammans."} Vi hör av oss inom en arbetsdag. Inget är bindande.</p>
+   <div class="sn-sum"><div class="th" aria-hidden="true"></div><div><b>Ditt stall hittills</b><span>${esc(l1)}</span><span>${esc(l2)}</span></div></div>
+   <div class="sn-f"><label for="sn218-n">Ditt namn</label><input class="input" id="sn218-n" autocomplete="name" value="${esc(c.name||"")}"></div>
+   <div class="sn-f"><label for="sn218-k">Telefon eller e-post</label><input class="input" id="sn218-k" inputmode="email" autocomplete="off" value="${esc(c.phone||c.email||"")}"></div>
+   ${rest.length?`<div class="sn-rest">Det här går vi igenom när vi hörs:<br>${rest.map(x=>`<i>${esc(x)}</i>`).join("")}</div>`:""}
+   <label class="sn-c"><input type="checkbox" id="sn218-c" ${D.ui.consent?"checked":""}><span>Jag godkänner att mina personuppgifter hanteras enligt <a href="${pol}" target="_blank" rel="noopener">Myrbys dataskyddspolicy</a>.</span></label>
+   <p class="sn-err" role="alert" hidden></p>
+   <div class="pm-btns"><button type="button" class="btn gold lg" data-sn218go>Skicka till Myrby ${svg("chev",18)}</button><button type="button" class="btn ghost lg" ${quit?"data-sn218quit":"data-pmclose"}>${quit?"Nej tack, stäng":"Fortsätt rita"}</button></div>
+   <p class="sn-fine">Ritningen sparas, så du kan fortsätta senare om du vill.</p>`);
+  m.querySelector(".pm-card").classList.add("sn");
+  try{const sv=[...document.querySelectorAll("#cfgcanvas svg")].sort((a,b)=>b.getBoundingClientRect().width-a.getBoundingClientRect().width)[0];if(sv){const th=sv.cloneNode(true);th.removeAttribute("style");th.removeAttribute("id");th.setAttribute("aria-hidden","true");m.querySelector(".th").appendChild(th)}}catch(_){}
+  const nI=m.querySelector("#sn218-n"),kI=m.querySelector("#sn218-k"),cI=m.querySelector("#sn218-c"),er=m.querySelector(".sn-err"),go=m.querySelector("[data-sn218go]");
+  const err=(t,el)=>{er.textContent=t||"";er.hidden=!t;if(t&&el){try{el.focus()}catch(_){}}return false};
+  const send=async()=>{const name=nI.value.trim(),k=kI.value.trim(),mail=k.includes("@");err("");
+    if(!name)return err("Skriv ditt namn så vet vi vem vi pratar med.",nI);
+    if(!k)return err("Fyll i telefon eller e-post så hör vi av oss.",kI);
+    if(mail){if(!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(k))return err("E-postadressen ser inte rätt ut.",kI)}else if(phoneDigits174(k).length<6)return err("Telefonnumret ser för kort ut.",kI);
+    if(!cI.checked)return err("Kryssa i rutan om personuppgifter för att skicka.",cI);
+    D.customer=D.customer||{};D.customer.name=name;if(mail){D.customer.email=k;if(D.customer.phone&&phoneDigits174(D.customer.phone).length<6)D.customer.phone=""}else{D.customer.phone=k;if(D.customer.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(D.customer.email))D.customer.email=""}
+    D.ui.consent=true;D.ui.early218={key:cfgPgKey()||"",sec:(wizPages()[S.wizStep||0]||{}).sec||"",why:why||"row"};try{ls.set("myrby.draft2",D)}catch(_){}
+    go.disabled=true;go.textContent="Skickar…";
+    try{await publicSend()}catch(_){}
+    if(document.querySelector("#wiz .thero")){pubModalClose()}else{try{delete D.ui.early218}catch(_){}go.disabled=false;go.innerHTML=`Skicka till Myrby ${svg("chev",18)}`}};
+  go.addEventListener("click",send);
+  m.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"&&e.target.type!=="checkbox"){e.preventDefault();send()}if(e.key==="Escape")pubModalClose()});
+  const q=m.querySelector("[data-sn218quit]");if(q)q.addEventListener("click",()=>{pubModalClose();try{publicClose()}catch(_){}});
+  setTimeout(()=>{try{(nI.value?(kI.value?go:kI):nI).focus()}catch(_){}},60)}catch(e){console.warn("help218",e)}}
+
+/* Börjar kunden om, eller har skickat, börjar också räkningen om. Börja om räknas som ett tecken i nästa försök. */
+{const _pr218=pubReset;pubReset=function(){const r=_pr218.apply(this,arguments);try{HELP218.shown=false;HELP218.signs=HELP218.off?{}:{reset:{at:Date.now(),w:1}};HELP218.back=[];HELP218.undo=[];HELP218.dead=[];HELP218.step=S.wizStep||0;helpRow218()}catch(_){}return r}}
+{const _th218=publicThanks;publicThanks=function(o){const r=_th218.apply(this,arguments);try{if(o&&o.sent){HELP218.shown=false;HELP218.signs={};HELP218.back=[];HELP218.undo=[];HELP218.dead=[]}}catch(_){}return r}}
+
+/* Säljaren ser i mejlet att kunden skickade i förtid och vill ha hjälp. */
+{const _pt218=publicText;publicText=function(d){let t=_pt218.apply(this,arguments);try{const e=d&&d.ui&&d.ui.early218;if(e&&typeof t==="string"){
+    const note=`KUNDEN SKICKADE RITNINGEN I FÖRTID${e.sec?" FRÅN STEGET "+String(e.sec).toUpperCase():""} OCH VILL HA HJÄLP MED RESTEN`,k=" — ÖPPNA FÖRFRÅGAN";
+    t=t.includes(k)?t.replace(k," — "+note+k):t+"\n\n"+note}}catch(_){}return t}}
+
+/* Efter varje omritning: text i dörr-rutan, etiketten, hjälpraden. Före: en automatiskt vald Stallgång släpper när kunden lämnar utseendestegen. */
+function after218(){doorText218();walkLabel218();helpRow218()}
+{const _rw218=renderWiz;renderWiz=function(){try{if(D&&D.ui&&D.ui.viewAuto218&&!LOOK218.includes(cfgPgKey())){D.ui.viewAuto218=false;if(viewMode()==="walk")D.ui.view="plan"}}catch(_){}
+  const r=_rw218.apply(this,arguments);try{const st=S.wizStep||0;if(HELP218.step!=null&&st<HELP218.step&&!S.pubDone&&helpRecent218(HELP218.back,18e4,2))helpSign218("nav");HELP218.step=st}catch(_){}
+  after218();requestAnimationFrame(after218);return r};Object.keys(_rw218).forEach(k=>{try{renderWiz[k]=_rw218[k]}catch(_){}})}
+{const _cp218=cfgPanelRefresh;cfgPanelRefresh=function(){const r=_cp218.apply(this,arguments);after218();requestAnimationFrame(walkLabel218);setTimeout(walkLabel218,200);return r}}
+window.addEventListener("resize",()=>{clearTimeout(walkLabel218.t);walkLabel218.t=setTimeout(walkLabel218,140)});
+document.addEventListener("input",e=>{if(e.target&&e.target.id==="walkpos"){walkLabel218();requestAnimationFrame(walkLabel218)}});
+
+document.addEventListener("click",e=>{const t=e.target&&e.target.closest?e.target:null;if(!t)return;
+  try{
+    if(t.closest("[data-view]")&&D&&D.ui)D.ui.viewAuto218=false;
+    if(t.closest("[data-pubclose]")&&isPublic()&&!S.pubDone&&!HELP218.off&&!HELP218.shown&&helpOk218()&&helpBegun218()&&cfgPgKey()!=="kund"&&!document.getElementById("pubmodal")){e.preventDefault();e.stopPropagation();helpOff218();helpModal218("close");return}
+    const rs=t.closest("[data-pubreset]");if(rs&&!rs.dataset.armed&&helpBegun218())helpSign218("reset",2);
+    if(t.closest("[data-hundo]")&&helpRecent218(HELP218.undo,9e4,3))helpSign218("undo");
+    if(t.closest("[data-wnext]")&&D&&D.drawing&&drwWarnings(D.drawing).length)helpSign218("warn");
+  }catch(_){}},true);
+document.addEventListener("click",e=>{const t=e.target&&e.target.closest?e.target:null;if(!t)return;
+  try{
+    if(t.closest("[data-sn218x]")){helpOff218();return}
+    if(t.closest("[data-sn218]")){helpModal218("row");return}
+    if(t.closest("[data-tipwalk218]")){D.ui.tipWalk218=true;ls.set("myrby.draft2",D);cfgPanelRefresh();return}
+    if(t.closest("[data-pubback214]")&&D&&D.ui)delete D.ui.early218;
+    if(t.closest('[data-pick1="spec.front"]')){setTimeout(autoWalk218,0);setTimeout(doorsInView218,120)}
+  }catch(_){}
+  /* Tryck som inte ger något: inget i sidan ändrades efter trycket. */
+  try{if(HELP218.off||HELP218.shown||!isPublic()||!t.closest("#wiz")||t.closest("input,textarea,select,label,a[href],[contenteditable]"))return;
+    setTimeout(()=>{if(!HELP218.mut&&helpRecent218(HELP218.dead,3e4,4))helpSign218("dead")},450)}catch(_){}});
+window.addEventListener("pointerdown",()=>{HELP218.mut=false},true);
+try{new MutationObserver(()=>{HELP218.mut=true}).observe(document.body,{subtree:true,childList:true,attributes:true,characterData:true})}catch(_){}
+["pointerdown","keydown","wheel","touchstart","input"].forEach(ev=>document.addEventListener(ev,()=>{HELP218.last=Date.now()},{capture:true,passive:true}));
+setInterval(()=>{try{if(document.visibilityState==="visible"&&helpOk218()&&Date.now()-HELP218.last>=9e4)helpSign218("idle")}catch(_){}},10000);
+try{if(document.getElementById("wiz")&&typeof renderWiz==="function"&&document.querySelector("#wiz .cfg-steps"))after218()}catch(_){}
 
 </script>
 
