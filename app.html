@@ -2523,6 +2523,16 @@ html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
 .vseg.vnew.vp226,.vseg.vnew.vp226 button:not([aria-pressed="true"]){animation-delay:var(--vd226,0s)}
 @media (prefers-reduced-motion:reduce){.vseg.vnew.vp226,.vseg.vnew.vp226 button{animation:none!important}}
 
+
+/* v229: listan i kortet Tillval */
+#wiz .vm-tv229{min-width:320px}
+#wiz .vm-tv229 .tv229-it{cursor:default;padding:6px 6px 6px 8px}
+#wiz .vm-tv229 .tv229-it:hover{background:none}
+#wiz .vm-tv229 .tv229-it .cth{flex:none;width:44px;height:44px;border-radius:9px;background-color:#efe7d6;background-size:cover;background-position:center}
+#wiz .vm-tv229 .tv229-it .vm-tx b{font-size:.95rem}
+#wiz .vm-tv229 .tv229-it .cx{flex:none;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:#f1ece1;color:#23412a;display:grid;place-items:center;cursor:pointer;transition:background-color .15s,color .15s}
+#wiz .vm-tv229 .tv229-it .cx:hover,#wiz .vm-tv229 .tv229-it .cx:focus-visible{background:#23412a;color:#fff}
+
 </style>
 
 <div class="app">
@@ -6853,6 +6863,23 @@ const VP226=4800;
 function vp226On(){try{return !!(S.vp226&&Date.now()-S.vp226<VP226&&viewMode()==="walk")}catch(_){return false}}
 function vp226Start(){try{S.vp226=Date.now();setTimeout(()=>{try{document.querySelectorAll(".vseg.vp226").forEach(e=>{e.classList.remove("vnew","vp226");e.style.removeProperty("--vd226")})}catch(_){}},VP226+60)}catch(_){}}
 {const _vb226=viewBar;viewBar=function(lvl){let h=_vb226.apply(this,arguments);try{if(vp226On()&&h.indexOf("vseg vnew")<0){const d=((Date.now()-S.vp226)/1000).toFixed(2);h=h.replace('class="vseg ',`style="--vd226:-${d}s" class="vseg vnew vp226 `)}}catch(_){}return h}}
+
+
+/* v229 (Carl 16/11): många tillval gav rad efter rad ovanför ritningen, och ritningen krympte.
+   Från tre tillval samlas de i ett kort, "Tillval: Träfönster + 7 till", med en lista där varje tillval kan tas bort.
+   Ett eller två tillval visas som förut, som egna kort med kryss. Samma mönster som kortet Rum ("Spolspilta + 2 till"). */
+const TV229_MIN=3;
+function tvPop229(ids){return `<div class="vm-pop vm-tv229" role="list"><p class="vm-h">Dina tillval</p>${ids.map(id=>`<div class="vm-it tv229-it" role="listitem"><i class="cth" ${ph(img(id))}></i><span class="vm-tx"><b>${esc(prodName(id))}</b><small>${esc(catName(prod(id).cat))}</small></span><button type="button" class="cx" data-wpick="${id}" aria-label="Ta bort ${esc(prodName(id))}">${svg("close",14)}</button></div>`).join("")}</div>`}
+{const _tc229=topChips194;topChips194=function(lvl){let h=_tc229.apply(this,arguments);try{if(!h)return h;const t=document.createElement("template");t.innerHTML=h;
+  const vms=[...t.content.querySelectorAll(".vm")].filter(v=>v.querySelector(":scope>.cchip.prod .cx[data-wpick]"));
+  if(vms.length<TV229_MIN){if(S.vmenu==="tv229")S.vmenu="";return h}
+  const ids=vms.map(v=>v.querySelector(".cx[data-wpick]").getAttribute("data-wpick")),open=S.vmenu==="tv229";
+  const chip=`<span class="vm"><button type="button" class="cchip pick ichip194 tv229" data-vm="tv229" aria-haspopup="true" aria-expanded="${open}"><i class="cth" ${ph(img(ids[0]))}></i><span><small>Tillval</small><b>${esc(prodName(ids[0]))} + ${ids.length-1} till</b></span><i class="vm-car"></i></button>${open?tvPop229(ids):""}</span>`;
+  vms[0].insertAdjacentHTML("beforebegin",chip);vms.forEach(v=>v.remove());h=t.innerHTML}catch(_){}return h}}
+/* Listor under korten får inte sticka in under högerpanelen: ryms listan inte flyttas den åt vänster tills den gör det. */
+function popFit229(){try{document.querySelectorAll("#wiz .ichips194 .vm-pop").forEach(p=>{p.style.left="";const bar=p.closest(".cfg-head")||p.closest(".cfg-plan");if(!bar)return;const r=p.getBoundingClientRect(),b=bar.getBoundingClientRect(),over=r.right-b.right,room=r.left-b.left;if(over>0)p.style.left=-Math.min(over,Math.max(0,room))+"px"})}catch(_){}}
+{const _cr229=cfgPanelRefresh;cfgPanelRefresh=function(){const r=_cr229.apply(this,arguments);popFit229();return r}}
+{const _rw229=renderWiz;renderWiz=function(){const r=_rw229.apply(this,arguments);popFit229();return r}}
 
 </script>
 
