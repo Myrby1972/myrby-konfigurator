@@ -2533,6 +2533,77 @@ html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
 #wiz .vm-tv229 .tv229-it .cx{flex:none;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:#f1ece1;color:#23412a;display:grid;place-items:center;cursor:pointer;transition:background-color .15s,color .15s}
 #wiz .vm-tv229 .tv229-it .cx:hover,#wiz .vm-tv229 .tv229-it .cx:focus-visible{background:#23412a;color:#fff}
 
+
+/* v230: monteringsfrågorna, en i taget */
+#wiz .mq230{gap:12px;padding:18px 18px 16px}
+#wiz .mq230-h{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#wiz .mq230-h .mbox-h svg{color:#b08d3c}
+#wiz .mq230-n{flex:none;font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7a5f1e}
+#wiz .mq230-lead{margin:-4px 0 2px;font-size:1rem;line-height:1.45;color:#4a554d}
+#wiz .mq230-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+#wiz .mq230-list li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px #e6dfcf}
+#wiz .mq230-list .nr{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem;background:#f1ece1;color:#6b7a70}
+#wiz .mq230-list .t{display:grid;flex:1;min-width:0}
+#wiz .mq230-list .t small{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b7a70}
+#wiz .mq230-list .t b{font-size:1.02rem;color:#1e3932}
+#wiz .mq230-list li.done .nr{background:#23412a;color:#fff}
+#wiz .mq230-list li.wait{background:transparent;box-shadow:inset 0 0 0 1px #e6dfcf;padding-top:8px;padding-bottom:8px}
+#wiz .mq230-list li.wait .t{font-size:1rem;color:#7b857e}
+#wiz .mq230-list .chg{flex:none;border:0;background:none;padding:8px 4px;font:inherit;font-size:.9rem;font-weight:700;color:#23412a;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+#wiz .mq230-list li.open{align-items:flex-start;padding:16px 14px 16px 12px;box-shadow:inset 0 0 0 2px #23412a,0 8px 22px -14px rgba(30,57,50,.45);animation:qin .3s var(--ease) both}
+#wiz .mq230-list li.open .nr{background:#c9a24e;color:#1e3932;margin-top:1px}
+#wiz .mq230-list .b{display:grid;gap:6px;flex:1;min-width:0}
+#wiz .mq230-list .q{font-family:var(--f-display);font-weight:500;font-size:1.5rem;line-height:1.15;color:#1e3932}
+#wiz .mq230-list .why{margin:0 0 4px;font-size:.98rem;color:#4a554d}
+#wiz .mq230-list .ans{display:grid;grid-template-columns:1fr;gap:8px}
+#wiz .mq230-list .a{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 14px;border:0;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1.5px #cfc6b2;font:inherit;font-weight:700;font-size:1.02rem;color:#1e3932;text-align:left;cursor:pointer;transition:box-shadow .15s,background-color .15s}
+#wiz .mq230-list .a i{flex:none;width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1.5px #9fae97;background:#fff}
+#wiz .mq230-list .a:hover{box-shadow:inset 0 0 0 2px #23412a}
+#wiz .mq230-list .a:focus-visible{outline:2px solid #23412a;outline-offset:2px}
+#wiz .mq230-list .a[aria-pressed="true"]{background:#23412a;color:#fff;box-shadow:none}
+#wiz .mq230-list .a[aria-pressed="true"] i{background:#c9a24e;box-shadow:inset 0 0 0 5px #23412a,0 0 0 1.5px #c9a24e}
+#wiz .mq230-list .a.vet{background:transparent;box-shadow:inset 0 0 0 1.5px #d9ceb8;font-weight:600;color:#4a554d}
+#wiz .mq230-list .a.vet[aria-pressed="true"]{background:#23412a;color:#fff}
+#wiz .mq230-done{display:flex;gap:8px;align-items:flex-start;margin:2px 0 0;font-weight:700;color:#23412a}
+#wiz .mq230-done svg{flex:none;margin-top:3px}
+#wiz .mq230.one .mq230-list li.open .nr{display:none}
+@media (max-width:560px){#wiz .mq230-list .q{font-size:1.3rem}}
+#wiz .mt230-sel{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px #e6dfcf}
+#wiz .mt230-sel .nr{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#23412a;color:#fff}
+#wiz .mt230-sel .t{display:grid;flex:1;min-width:0}
+#wiz .mt230-sel .t small{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b7a70}
+#wiz .mt230-sel .t b{font-size:1.02rem;color:#1e3932}
+#wiz .mt230-sel .chg{flex:none;border:0;background:none;padding:8px 4px;font:inherit;font-size:.9rem;font-weight:700;color:#23412a;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+
+/* v232: säljare i rummets rubrik, ansvarig i förfrågningarna */
+.rep232{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:13px;color:var(--ink-2)}
+.rep232 select{font:inherit;font-size:13px;padding:5px 26px 5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--raised);color:var(--ink)}
+.chat-head:has(.rep232) .faces{margin-left:10px}
+.fq-own232{font-size:12.5px;color:var(--ink-2);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.own232{align-self:center}
+
+
+/* v233: spegelvänd, tipsrutan, platsbesök, högt tryck */
+#wiz .mir233{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:4px 0 14px;padding:10px 12px;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1px #e6dfcf;font-size:.98rem;color:#4a554d}
+#wiz .mir233 .btn{flex:none}
+#wiz .mir233 .btn[aria-pressed="true"]{background:#23412a;color:#fff}
+#wiz .tip233{position:relative;margin-top:12px;padding:14px 40px 12px 16px;border-radius:14px;background:#fbf6e8;box-shadow:inset 0 0 0 1px #e8d9ad}
+#wiz .tip233 .mbox-h{margin:0 0 6px;color:#7a5f1e}
+#wiz .tip233 ul{margin:0;padding:0 0 0 18px;display:grid;gap:6px;font-size:.98rem;line-height:1.45;color:#3b463f}
+#wiz .tip233-x{position:absolute;top:6px;right:8px;width:30px;height:30px;border:0;border-radius:50%;background:none;font-size:20px;line-height:1;color:#7a5f1e;cursor:pointer}
+#wiz .tip233-x:hover{background:#f1e6c6}
+#wiz .visit233{margin-top:14px}
+#wiz .visit233-b{display:flex;align-items:flex-start;gap:12px;width:100%;padding:14px;border:0;border-radius:14px;background:#fff;box-shadow:inset 0 0 0 1.5px #cfc6b2;font:inherit;text-align:left;color:#1e3932;cursor:pointer}
+#wiz .visit233-b i{flex:none;width:24px;height:24px;margin-top:1px;border-radius:6px;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px #9fae97;background:#fff;color:#fff}
+#wiz .visit233-b span{display:grid;gap:3px}
+#wiz .visit233-b b{font-size:1.02rem}
+#wiz .visit233-b small{font-size:.92rem;color:#4a554d;line-height:1.4}
+#wiz .visit233-b[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #23412a}
+#wiz .visit233-b[aria-pressed="true"] i{background:#23412a;box-shadow:none}
+.sv233{display:flex;align-items:center;gap:8px;margin:10px 0 0;padding:10px 12px;border-radius:12px;background:#fbf6e8;color:#6b5418;font-size:.95rem}
+.sv233 svg{flex:none}
+
 </style>
 
 <div class="app">
@@ -2764,8 +2835,10 @@ const I = {
 const svg = (k,w=24) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
 
 /* ============ STATE ============ */
-const ROLES = {christian:{name:"Christian",sub:"Sälj Skåne & Danmark"},nikki:{name:"Nikki",sub:"Offert & order"},carl:{name:"Carl",sub:"Ledning"}};
-const S = {role:ls.get("myrby.role","christian"),quotes:[],leads:[],prices:{},priceMeta:null,db:null,uid:null,assets:null,dbReady:false,prefs:ls.get("myrby.prefs",{checks:{}}),
+const ROLES = {christian:{name:"Christian",sub:"Sälj Skåne & Danmark",kind:"christian"},karro:{name:"Karro",sub:"Sälj",kind:"christian"},nikki:{name:"Nikki",sub:"Kontoret, offert & order",kind:"nikki"},niklas:{name:"Niklas",sub:"Kontoret",kind:"nikki"},carl:{name:"Carl",sub:"Ledning",kind:"carl"}};
+/* v232: kind styr vad rollen ser (christian = säljare, nikki = kontoret, carl = ledning). S.role är personen. */
+const RK=()=>(ROLES[S.role]||{}).kind||"christian";const gen232=n=>/s$/i.test(n)?n:n+"s";
+const S = {role:(r=>ROLES[r]?r:"christian")(ls.get("myrby.role","christian")),quotes:[],leads:[],prices:{},priceMeta:null,db:null,uid:null,assets:null,dbReady:false,prefs:ls.get("myrby.prefs",{checks:{}}),
   pCat:"alla",qTab:null,lTab:"att-ringa",kTab:"faq",faqCat:FAQ_CATS[0],sheet:null,wizStep:0};
 const STATUS = {
   ny:{label:"Ny",chip:"info",owner:"nikki"},pagar:{label:"Nikki arbetar",chip:"warn",owner:"nikki"},
@@ -2778,7 +2851,7 @@ const catName = id => (CATS.find(c=>c.id===id)||{}).name||"";
 
 /* ============ NAV ============ */
 const NAV = [["hem","Hem","home"],["sortiment","Sortiment","range"],["offerter","Affärsmöjligheter","quote"],["leads","Leads","lead"],["kunskap","Kunskap","know"]];
-function todoCount(){const r=S.role;if(r==="nikki")return S.quotes.filter(q=>q.status==="ny"||q.status==="pagar").length;if(r==="christian")return S.quotes.filter(q=>q.status==="klar").length;return 0}
+function todoCount(){const r=RK();if(r==="nikki")return S.quotes.filter(q=>q.status==="ny"||q.status==="pagar").length;if(r==="christian")return S.quotes.filter(q=>q.status==="klar").length;return 0}
 function view(){const h=(location.hash||"#hem").slice(1);if(h.startsWith("a-"))return S.lastView||"offerter";const v=NAV.some(n=>n[0]===h)||(h==="formular"&&canForm())?h:"hem";S.lastView=v;return v}
 function renderNav(){
   const v=view(),n=todoCount();
@@ -2791,7 +2864,7 @@ function renderNav(){
 /* ============ HEM ============ */
 function hello(){const h=new Date().getHours();return h<10?"God morgon":h<18?"Hej":"God kväll"}
 function nextAction(){
-  const r=S.role,Q=S.quotes,L=S.leads;
+  const r=RK(),Q=S.quotes,L=S.leads;
   if(r==="nikki"){const q=Q.find(q=>q.status==="ny")||Q.find(q=>q.status==="pagar");
     if(q)return{eyebrow:q.status==="ny"?"Ny affärsmöjlighet väntar":"Pågår",title:`Offert till ${qName(q)}`,text:qLine(q)||"Öppna för detaljer.",act:`<button class="btn gold lg" data-q="${q.id}">Öppna</button>`,photo:img(q.items?.find(i=>i.product)?.product)};
     return{eyebrow:"Allt klart",title:"Inga nya affärsmöjligheter",text:"När Christian skapar en affärsmöjlighet dyker den upp här direkt.",act:`<a class="btn gold lg" href="#offerter">Se alla affärsmöjligheter</a>`,photo:img("hero-home")};}
@@ -2806,13 +2879,13 @@ function nextAction(){
 }
 function ring(pct){const r=22,c=2*Math.PI*r;return `<svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="${r}" fill="none" stroke="var(--sand)" stroke-width="6"/><circle cx="28" cy="28" r="${r}" fill="none" stroke="var(--green-2)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct)}" transform="rotate(-90 28 28)"/></svg>`}
 const CAT_IMG={fronter:"faro",mellan:"mv-galler",dorrbox:"bd-optimal",tillbeh:"solarium",ute:"utebox-35",dorrfon:"tradorr",skritt:"skywalker",garden:"staket"};
-function homeAlert(){const r=S.role,Q=S.quotes;
+function homeAlert(){const r=RK(),Q=S.quotes;
   if(r==="nikki"){const n=Q.filter(q=>q.status==="ny").length;return n?{t:`${n} ny${n>1?"a":""} affärsmöjlighet${n>1?"er":""} väntar på dig`,q:Q.find(q=>q.status==="ny").id}:null}
   const k=Q.find(q=>q.status==="klar");if(k)return {t:`Offerten till ${qName(k)} är klar, skicka den`,q:k.id};
   const u=Q.find(q=>isUnread(q));if(u)return {t:`Nytt meddelande från ${ROLES[u.lastMsgBy]?.name||"Nikki"} om ${qName(u)}`,q:u.id};
   return null}
 function vHome(){
-  const r=S.role,R=ROLES[r],Q=S.quotes,L=S.leads;
+  const r=RK(),R=ROLES[S.role],Q=S.quotes,L=S.leads;
   const open=Q.filter(q=>!["vunnen","forlorad"].includes(q.status)).length,toCall=L.filter(l=>!l.status||l.status==="ny").length,al=homeAlert();
   const tile=(cls,attrs,photo,icon,label,badge)=>`<a class="tile ${cls}" ${attrs}>${photo?`<span class="tph" ${ph(img(photo))}></span>`:""}<span class="tic">${icon}</span><b>${label}</b>${badge!==undefined&&badge!==""?`<span class="tbadge num">${badge}</span>`:""}</a>`;
   return `<div class="page home2">
@@ -2871,7 +2944,7 @@ function openProduct(id){
 const prodName = id => id==="annat"?"Annat":(prod(id)?.name||"");
 const qName = q => esc(q.customer?.company||q.customer?.name||"Okänd kund");
 const qLine = q => esc([(q.items||[]).filter(i=>i.product).map(i=>prodName(i.product)).slice(0,2).join(", "),q.customer?.city,q.customer?.country==="Danmark"?"DK":""].filter(Boolean).join(" · "));
-function qTabs(){const r=S.role,Q=S.quotes;
+function qTabs(){const r=RK(),Q=S.quotes;
   const mine=r==="nikki"?["ny","pagar"]:r==="christian"?["klar","skickad"]:["ny","pagar","klar","skickad"];
   return [["att-gora",r==="carl"?"Öppna":"Att göra",Q.filter(q=>mine.includes(q.status))],["pagar","Hos Nikki",Q.filter(q=>q.status==="ny"||q.status==="pagar")],["kund","Hos kunden",Q.filter(q=>q.status==="skickad"||q.status==="klar")],["klara","Avslutade",Q.filter(q=>q.status==="vunnen"||q.status==="forlorad")]]}
 const PAY_TERMS=["30 dagar netto","20 dagar netto","10 dagar netto","Förskott","Delbetalning enligt avtal","Klarna","Leasing (Finanslaget)"];
@@ -2880,8 +2953,8 @@ function okList(q){const c=q.customer||{};return [["Adress",!!(c.street&&c.city)
 const okDone=q=>okList(q).every(x=>x[1]);
 function vQuotes(){
   const F=S.qf||(S.qf={q:"",st:"oppna",sort:"senast"});
-  const mine=S.role==="nikki"?["ny","pagar"]:S.role==="christian"?["klar","skickad"]:["ny","pagar","klar","skickad"];
-  const groups=[["att-gora",S.role==="carl"?"Öppna":"Att göra",q=>mine.includes(q.status)],["oppna","Alla öppna",q=>!["vunnen","forlorad"].includes(q.status)],["ny","Nya",q=>q.status==="ny"],["pagar","Hos Nikki",q=>q.status==="pagar"],["kund","Hos kunden",q=>q.status==="klar"||q.status==="skickad"],["vunnen","Vunna",q=>q.status==="vunnen"],["forlorad","Förlorade",q=>q.status==="forlorad"],["alla","Alla",q=>true]];
+  const mine=RK()==="nikki"?["ny","pagar"]:RK()==="christian"?["klar","skickad"]:["ny","pagar","klar","skickad"];
+  const groups=[["att-gora",RK()==="carl"?"Öppna":"Att göra",q=>mine.includes(q.status)],["oppna","Alla öppna",q=>!["vunnen","forlorad"].includes(q.status)],["ny","Nya",q=>q.status==="ny"],["pagar","Hos Nikki",q=>q.status==="pagar"],["kund","Hos kunden",q=>q.status==="klar"||q.status==="skickad"],["vunnen","Vunna",q=>q.status==="vunnen"],["forlorad","Förlorade",q=>q.status==="forlorad"],["alla","Alla",q=>true]];
   const g=groups.find(x=>x[0]===F.st)||groups[1],ql=F.q.trim().toLowerCase();
   let list=S.quotes.filter(g[2]).filter(q=>!ql||JSON.stringify([q.customer,q.monitorNo,q.notes,(q.items||[]).map(i=>prodName(i.product))]).toLowerCase().includes(ql));
   const key={senast:q=>-(q.lastMsgAt||q.updatedAt||q.createdAt),kund:q=>(q.customer?.company||q.customer?.name||"").toLowerCase(),skapad:q=>-q.createdAt,status:q=>Object.keys(STATUS).indexOf(q.status)}[F.sort];
@@ -2894,7 +2967,7 @@ function vQuotes(){
       <button class="btn desk-only" data-new style="margin-left:auto">${svg("plus",20)} Ny affärsmöjlighet</button></div>
     <div class="pills">${groups.map(([id,l,f])=>`<button class="pill" data-qst="${id}" aria-pressed="${g[0]===id}">${l} <span class="n num">${S.quotes.filter(f).length}</span></button>`).join("")}</div>
     ${!S.dbReady?`<div class="empty">${svg("quote")}<b>Ansluter…</b><span>Listan delas mellan Christian, Nikki och Carl.</span></div>`:
-      !list.length?`<div class="empty">${svg("check")}<b>${ql?"Inga träffar":"Tomt här"}</b><span>${ql?"Prova ett annat sökord.":S.role==="nikki"?"Nya affärsmöjligheter dyker upp här direkt.":"Skapa en affärsmöjlighet när kunden vill ha pris."}</span></div>`:
+      !list.length?`<div class="empty">${svg("check")}<b>${ql?"Inga träffar":"Tomt här"}</b><span>${ql?"Prova ett annat sökord.":RK()==="nikki"?"Nya affärsmöjligheter dyker upp här direkt.":"Skapa en affärsmöjlighet när kunden vill ha pris."}</span></div>`:
       `<div class="oktable desk-only"><table><thead><tr><th>Kund</th><th>Produkter</th><th>Status</th><th>Offert</th><th>Komplett för order</th><th>Senaste i chatten</th></tr></thead><tbody>${list.map(q=>{const st=STATUS[q.status]||STATUS.ny,ok=okList(q),miss=ok.filter(x=>!x[1]).map(x=>x[0]);return `<tr data-q="${q.id}">
         <td class="k"><b>${isUnread(q)?'<span class="unread" style="display:inline-block;margin-right:6px"></span>':""}${qName(q)}</b><span>${esc([q.customer?.city,q.customer?.country==="Danmark"?"DK":""].filter(Boolean).join(" · "))}${q.prio==="Brådskande"?' · <b style="color:var(--crit);display:inline">Brådskande</b>':""}</span></td>
         <td>${esc((q.items||[]).filter(i=>i.product).map(i=>prodName(i.product)).join(", ")||"Inga produkter")}${q.drawing?' <span class="chip plain">Skiss</span>':""}${q.noMeasure?' <span class="chip warn">Mått saknas</span>':""}</td>
@@ -3826,7 +3899,7 @@ function sumHTML(){const dr=D.drawing,sp=D.spec||{},pr=D.project||{},stall=D.ui.
   const more=(D.items||[]).filter(i=>!stall||!["fronter","mellan"].includes(prod(i.product)?.cat)).map(i=>prodName(i.product)).filter(Boolean);
   C.push(card("Mer till gården",[row("Produkter",more.join(", "),"m-mer")]));
   C.push(card("Detaljer",[row("Montering",[pr.mount,pr.floor].filter(Boolean).join(" · "),"d-mont"),row("När",pr.when||"","d-nar"),row("Övrigt",D.notes?D.notes.slice(0,80)+(D.notes.length>80?"…":""):"","d-mer")]));
-  return `<h2>Så här blir ditt stall</h2><p class="lead">Gå igenom dina val i lugn och ro. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit.</p><div class="sm-list">${C.join("")}</div><div class="sm-done"><span class="sm-dico">${svg("check",20)}</span><div class="sm-dtx"><b>Ser allt bra ut?</b><span>I nästa steg skickar du förslaget till oss. Inget är bindande, vi hör av oss inom en arbetsdag.</span></div><div class="sm-dact"><button type="button" class="btn sm ghost" data-view="iso">Se stallet i 3D</button><button type="button" class="btn sm" data-wskip>Ja, gå vidare ${svg("chev",16)}</button></div></div>`}
+  return `<h2>Så här blir ditt stall</h2><p class="lead">Gå igenom dina val i lugn och ro. Tryck på det du vill ändra, så kommer du direkt dit och sedan tillbaka hit.</p><div class="sm-list">${C.join("")}</div><div class="sm-done"><span class="sm-dico">${svg("check",20)}</span><div class="sm-dtx"><b>Ser allt bra ut?</b><span>I nästa steg skickar du förslaget till oss. Inget är bindande, ${isPublic()?"vi återkopplar "+sv233()+".":"vi hör av oss inom en arbetsdag."}</span></div><div class="sm-dact"><button type="button" class="btn sm ghost" data-view="iso">Se stallet i 3D</button><button type="button" class="btn sm" data-wskip>Ja, gå vidare ${svg("chev",16)}</button></div></div>`}
 function mmCard(id){const p=prod(id),has=inDrawing(id),on=has||D.items.some(i=>i.product===id),u=img(id);return `<button type="button" class="mmc" ${has?`data-wjump="s-extra" title="Finns redan i ritningen"`:`data-wpick="${id}"`} aria-pressed="${on}"><span class="ph" ${ph(u)}>${fallback(u)}${badge(id)}</span><span class="mmc-b"><b>${esc(p.name)}</b><small>${esc(USP[id]||p.tag||"")}</small><span class="mmc-add">${has?svg("check",14)+" Finns i ritningen":on?svg("check",14)+" Tillagd":"+ Lägg till"}</span></span>${ib(id)}</button>`}
 function guideHTML(cat){const G=GUIDE[cat]||[];D.ui.guide=D.ui.guide||{};const st=D.ui.guide[cat]||{};let recs=[];
   let vis=0;const qs=G.map((g,qi)=>{if(g.hideIf&&g.hideIf())return "";vis++;const sel=st[qi]||[];sel.forEach(oi=>recs.push(...(g.o[oi]?.[1]||[])));return `<div class="gq"><b class="mq-t"><span class="gnum">${vis}</span>${esc(g.q)}${g.m?` <small class="faint">Välj gärna flera</small>`:""}</b><div class="seg">${g.o.map((o,oi)=>`<button type="button" class="opt" data-gopt="${cat}:${qi}:${oi}" aria-pressed="${sel.includes(oi)}">${esc(o[0])}</button>`).join("")}</div></div>`}).join("");
@@ -3960,7 +4033,7 @@ function wizScreens(){
   const big=(v,t,s,ic,path,cur)=>`<button type="button" class="bigopt" data-pick1="${path}" data-v="${esc(v)}" aria-pressed="${cur===v}"><span class="bo-ic">${ic}</span><span class="bo-t"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="bo-ck">${svg("check",18)}</span></button>`;
   const L=[
    ...(isPublic()?[]:[{id:"s-fraga",pg:"start",sec:"Start",html:()=>`<p class="kick">Myrby · handbyggt i Enköping sedan 1972</p><h2 class="h-start">Bygg din stallinredning</h2>
-     <ol class="st-steps"><li><span>1</span><div><b>Ange stallets mått</b><small>Längd och bredd på insidan. Ett ungefär räcker.</small></div></li><li><span>2</span><div><b>Välj front, material och rum</b><small>Du ser allt växa fram i ritning och 3D.</small></div></li><li><span>3</span><div><b>Skicka din ritning</b><small>${NK("Nikki","Vi")} återkommer inom en arbetsdag med ett skräddarsytt förslag. Inget är bindande.</small></div></li></ol>
+     <ol class="st-steps"><li><span>1</span><div><b>Ange stallets mått</b><small>Längd och bredd på insidan. Ett ungefär räcker.</small></div></li><li><span>2</span><div><b>Välj front, material och rum</b><small>Du ser allt växa fram i ritning och 3D.</small></div></li><li><span>3</span><div><b>Skicka din ritning</b><small>${isPublic()?"Vi återkopplar med skissförslag "+sv233()+". Inget är bindande.":"Nikki återkommer inom en arbetsdag med ett skräddarsytt förslag. Inget är bindande."}</small></div></li></ol>
      <div class="st-kv"><div><b>3 min</b><small>från tomma väggar till färdig ritning</small></div><div><b>1 mm</b><small>så noga måttanpassar vi</small></div><div><b>0 kr</b><small>inget är bindande</small></div></div>
      ${S.db?`<details class="resumecode st-code"><summary>Har du en kod? Fortsätt där du slutade</summary><div class="rc-in"><div class="mf"><label for="wcodein">Kod</label><input id="wcodein" type="text" autocomplete="off" placeholder="T.ex. K7P 2QM" style="text-transform:uppercase"></div><button type="button" class="btn" data-wcode>Fortsätt</button></div></details>`:""}
      ${!isPublic()?`<p class="more st-more">Bara andra produkter, utan stallinredning? <button type="button" class="linkbtn" data-pick1="ui.kind" data-v="ovrigt">Välj produkter ›</button></p>`:""}`}]),
@@ -4017,7 +4090,7 @@ function wizScreens(){
        ${+dr.fans?`<div class="xfields"><div class="xf wide"><span>Var sitter fläktarna?</span><div class="seg"><button type="button" class="opt" data-vftype="tak" aria-pressed="${dr.fanType!=="vagg"}">I taket</button><button type="button" class="opt" data-vftype="vagg" aria-pressed="${dr.fanType==="vagg"}">På väggen</button></div></div>
        ${dr.fanType==="vagg"?`<div class="xf wide"><span>Placering</span><div class="seg"><button type="button" class="opt" data-vfplace="auto" aria-pressed="${dr.fanPlace!=="egen"}">Placera åt mig</button><button type="button" class="opt" data-vfplace="egen" aria-pressed="${dr.fanPlace==="egen"}">Jag väljer i ritningen</button></div><small class="faint">${dr.fanPlace==="egen"?"Dra de rosa fläktarna längs väggarna i ritningen dit du vill ha dem.":"Vår säljare placerar fläktarna där de gör mest nytta."}</small></div>`:""}</div>`:""}</div></div>`}
      <p class="hintline">Tumregel: en fläkt per 6 till 8 boxar. Vi dimensionerar exakt åt er.</p></details>`}]:[]),
-   {id:"d-mont",pg:"mont",sec:"Detaljer",sub:"Montering",html:()=>`<h2>Vill du ha hjälp med monteringen?</h2><p class="lead">Vill ni att Myrbys montörer bygger inredningen på plats?</p>${choice("project.mount",[{v:"Ja",t:"Ja, Myrby monterar",s:"Våra montörer kommer ut och bygger allt färdigt"},{v:"Nej",t:"Nej, vi monterar själva",s:"Ni får monteringsanvisning och support"},{v:"Vet ej",t:"Vet inte än",s:"Vi pratar om det i offerten"}],pr.mount)}${montQs()}`},
+   {id:"d-mont",pg:"mont",sec:"Detaljer",sub:"Montering",html:()=>`<h2>Vill du ha hjälp med monteringen?</h2><p class="lead">Vill ni att Myrbys montörer bygger inredningen på plats?</p>${montTop230(choice("project.mount",[{v:"Ja",t:"Ja, Myrby monterar",s:"Våra montörer kommer ut och bygger allt färdigt"},{v:"Nej",t:"Nej, vi monterar själva",s:"Ni får monteringsanvisning och support"},{v:"Vet ej",t:"Vet inte än",s:"Vi pratar om det i offerten"}],pr.mount))}${montQs()}`},
    {id:"d-nar",pg:"mont",sec:"Detaljer",html:()=>`<h3 class="subh sub183">När ska stallet vara klart?</h3><p class="lead">Leveranstiden är normalt 4 till 6 veckor från order.</p>${choice("project.when",[{v:"Så snart som möjligt"},{v:"Inom 3 månader"},{v:"Inom 6 månader"},{v:"Vet inte än"}],pr.when)}`},
    {id:"d-mer",pg:"tankar",sec:"Detaljer",sub:"Dina tankar",html:()=>`<h2>Berätta om dina tankar</h2><p class="lead">Skriv precis som du tänker: idéer, önskemål, budget eller frågor. Har du foton på stallet idag, en egen skiss eller en ritning? Lägg till dem här, så blir förslaget bättre.</p>
      <label class="field tankar206"><span>Dina tankar och idéer</span><textarea class="input" id="w-notes" data-dpath="notes" rows="8" placeholder="T.ex. vi vill ha ljusa boxar, budget runt …, hur gör vi med vattnet?">${esc(D.notes)}</textarea></label>
@@ -4029,7 +4102,7 @@ function wizScreens(){
    {id:"k-typ",pg:"kund",sec:"Kund",html:()=>`<p class="kopt-h">Bra att veta <small>frivilligt</small></p><p class="flab">Privat eller företag?</p>
      <div class="bigopts two">${big("Privat","Privatperson","För dig och dina hästar",svg("home",26),"customer.type",c.type)}${big("Företag","Företag","Gård, ridskola eller anläggning",svg("quote",26),"customer.type",c.type)}${(S.noOv?[]:(FM().extraOpts||{})["customer.type"]||[]).map(v=>big(v,v,"",svg("people",26),"customer.type",c.type)).join("")}</div>`},
    {id:"k-adress",pg:"kund",sec:"Kund",html:()=>`<p class="flab">Var finns stallet?</p><label class="field"><span>Land</span><select class="input" data-dpath="customer.country"><option value="" ${c.country?"":"selected"} disabled>Välj land</option>${COUNTRIES.map((x,i)=>`${i===TOP_C?'<option disabled>──────────</option>':""}<option ${c.country===x?"selected":""}>${esc(x)}</option>`).join("")}</select></label>${inp("customer.street","Gårdens adress (valfritt)",{ph:"Gatuadress eller gårdens namn"})}<div class="fgrid">${inp("customer.zip","Postnummer")}${inp("customer.city","Ort")}</div>`},
-   {id:"r-skicka",pg:"kund",sec:"Kund",html:()=>{const m=wizMissing();return `<div class="sendbox"><p class="sb-t">${m?`${NK(`Allt går att skicka som det är. Fyll gärna i ${esc(m)} så kan vi återkomma.`,`Fyll i ${esc(m)} så kan vi svara dig.`)}`:`${svg("check",16)} Allt är klart att skicka`}</p><ul class="sure"><li>Inget är bindande</li><li>Du kan ändra allt efteråt</li><li>${NK("Nikki hör av sig inom en arbetsdag","Vi hör av oss inom en arbetsdag")}</li></ul></div>${xReview()}${isPublic()?`<label class="pubgdpr pubconsent"><input type="checkbox" data-pubconsent ${D.ui.consent?"checked":""}><span>Jag godkänner att mina personuppgifter hanteras enligt <a href="${esc((window.MYRBY_PUBLIC||{}).policy||"https://myrby.com/")}" target="_blank" rel="noopener">Myrbys dataskyddspolicy</a>.</span></label>`:""}`}}
+   {id:"r-skicka",pg:"kund",sec:"Kund",html:()=>{const m=wizMissing();return `<div class="sendbox"><p class="sb-t">${m?`${NK(`Allt går att skicka som det är. Fyll gärna i ${esc(m)} så kan vi återkomma.`,`Fyll i ${esc(m)} så kan vi svara dig.`)}`:`${svg("check",16)} Allt är klart att skicka`}</p><ul class="sure"><li>Inget är bindande</li><li>Du kan ändra allt efteråt</li><li>${NK("Nikki hör av sig inom en arbetsdag","Vi återkopplar med skissförslag "+sv233())}</li></ul></div>${xReview()}${isPublic()?`<label class="pubgdpr pubconsent"><input type="checkbox" data-pubconsent ${D.ui.consent?"checked":""}><span>Jag godkänner att mina personuppgifter hanteras enligt <a href="${esc((window.MYRBY_PUBLIC||{}).policy||"https://myrby.com/")}" target="_blank" rel="noopener">Myrbys dataskyddspolicy</a>.</span></label>`:""}`}}
   ];
   return applyForm(L);
 }
@@ -4142,7 +4215,7 @@ function renderWiz(){
   const step=`<div class="cfg-steps">${secs.map((x,i)=>{const first=PG.findIndex(p=>p.sec===x),ok=first>=0&&first<=D.ui.reach;return `<button type="button" class="cstep ${x===curSec?"cur":i<secIdx?"done":""}" ${ok?`data-wgo="${first}"`:"disabled"}><span class="cn">${i<secIdx?svg("check",12):i+1}</span><span class="cl">${esc(x)}</span></button>`}).join("")}</div>`;
   const nextLbl=last?"":tv223Lbl(pg)?tv223Lbl(pg):pg.key==="start"?"Börja rita ditt stall":"Nästa: "+(PG[s+1].sec===pg.sec?(PG[s+1].list[0].sub||"nästa fråga"):PG[s+1].sec);
   const foot=`<div class="wiz-foot"><div class="in">${priceFoot(lvl)}${s>0?`<button class="btn ghost lg" data-wprev aria-label="Tillbaka">${svg("back",20)}</button>`:""}
-    ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min ritning till Myrby":S.role==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund"&&!tv223Mid(pg))?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
+    ${last?`<button class="btn gold lg grow" data-wsend>${isPublic()?"Skicka min ritning till Myrby":RK()==="christian"?"Skicka till Nikki":"Skapa affärsmöjlighet"}</button>`:false?``:(D.ui.fromSum&&pg.key!=="sum"&&pg.key!=="kund"&&!tv223Mid(pg))?`<button class="btn lg grow" data-wjump="sum">${svg("check",20)} Klar, tillbaka till summeringen</button>`:`<button class="btn lg grow ${pageSkip(pg)?"skip":""}" data-wnext>${pageSkip(pg)?`Hoppa över ${svg("chev",20)}`:`${esc(nextLbl)} ${svg("chev",20)}`}</button>`}</div></div>`;
   const keepP=$("#cfgplan")?.scrollTop||0,prevLvl=+($("#cfgcanvas")?.dataset.lvl??-1),prevSet=new Set([...($("#cfgcanvas svg")?.querySelectorAll(INK_SEL)||[])].map(e=>e.outerHTML)),dirCls=renderWiz.dir>0?"in-r":renderWiz.dir<0?"in-l":"";renderWiz.dir=0;
   $("#wiz").innerHTML=`<div class="wiz-top cfg-top">${isPublic()?`<span class="logo publogo" role="img" aria-label="Myrby"></span>`:`<button class="icon-btn" data-wclose aria-label="Stäng">${svg("close")}</button>`}${step}<span class="cfg-count faint small">${D.ui.kind?`Steg ${secIdx+1} av ${secs.length}`:""}</span>${isPublic()?(D.ui.kind&&s>0?pubResetBtn():"")+(D.ui.kind?pubSaveBtn():"")+pubCloseBtn():""}${D.ui.kind&&!isPublic()?`<button type="button" class="btn sm ghost wsave" data-wsave title="Spara och fortsätt senare">${svg("doc",16)}<span>${D.ui.code?"Sparad":"Spara & fortsätt senare"}</span></button>`:""}</div><div class="cfg-prog"><i style="width:${(s+1)/PG.length*100}%"></i></div>
    ${adv?`<div class="wiz-scroll" id="wizscroll"><div class="wiz-step q1 wide"><div class="qblock" id="q-s-klar"><h2>Finjustera skissen</h2><p class="lead">Ändra enskilda boxar, dörrar och fönster, eller dra delarna i ritningen.</p>${drwEditor3(dr)}<button type="button" class="btn ghost" data-wadv="0" style="justify-self:start">${svg("back",18)} Tillbaka</button></div></div></div>${foot}`:
@@ -4278,7 +4351,7 @@ function bindDrawing(get,onChange){
 }
 
 /* ============ RUM: affärsmöjlighet + chatt ============ */
-const ROLE_COLOR={christian:"#a8862f",nikki:"#3b7248",carl:"#2d5f7a"};
+const ROLE_COLOR={christian:"#a8862f",karro:"#9a5b3c",nikki:"#3b7248",niklas:"#4f6f8f",carl:"#2d5f7a"};
 const EMOJIS=["👍","👎","✅","❌","👀","🙏","🎉","❤️","😄","😂","🤔","😅","🙌","💪","🔥","⭐","👏","🤝","📞","📧","📐","📏","🏠","🐴","🐎","🌾","🛠️","🚚","💰","📅","⏰","❓","❗","💡","📎","📷","✍️","👌","😊","😬"];
 const QUICK_REACT=["👍","✅","👀","🙏","😄"];
 let R={id:null,unsub:null,msgs:[],tab:"info",pending:[]};
@@ -4287,7 +4360,7 @@ function roomIdFromHash(){const h=location.hash.slice(1);return h.startsWith("a-
 function syncRoom(){
   const id=roomIdFromHash(),el=$("#room");
   if(!id){if(R.unsub){R.unsub();R.unsub=null}R.id=null;el.hidden=true;document.body.style.overflow="";return}
-  if(R.id!==id){if(R.unsub)R.unsub();R={id,unsub:null,msgs:[],tab:innerWidth<=900?(S.role==="nikki"?"info":"chat"):"info",pending:[]};
+  if(R.id!==id){if(R.unsub)R.unsub();R={id,unsub:null,msgs:[],tab:innerWidth<=900?(RK()==="nikki"?"info":"chat"):"info",pending:[]};
     if(S.db)R.unsub=S.db.collection(`quotes/${id}/messages`).orderBy("at","asc").limit(1000).onSnapshot(s=>{R.msgs=s.docs.map(d=>({id:d.id,...d.data()}));renderMsgs();markRead()},()=>{});
     el.hidden=false;document.body.style.overflow="hidden";renderRoom();markRead();setTimeout(()=>$("#composer-in")&&innerWidth>900&&$("#composer-in").focus(),100);return}
   if(!R.unsub&&S.db){R.unsub=S.db.collection(`quotes/${id}/messages`).orderBy("at","asc").limit(1000).onSnapshot(s=>{R.msgs=s.docs.map(d=>({id:d.id,...d.data()}));renderMsgs();markRead()},()=>{})}
@@ -4300,9 +4373,9 @@ function renderRoom(){
   el.innerHTML=`<div class="room-top" id="roomtop"></div>
    <div class="room-tabs"><button class="pill" data-rtab="info" aria-pressed="${R.tab==="info"}">Underlag</button><button class="pill" data-rtab="chat" aria-pressed="${R.tab==="chat"}">Chatt <span class="n num" id="msgcount">${R.msgs.filter(m=>!m.sys).length||""}</span></button></div>
    <div class="room-body"><div class="room-left" id="roomleft"></div>
-    <div class="room-right"><div class="chat-head"><b># ${q?qName(q):"affärsmöjlighet"}</b><span class="faces">${["christian","nikki"].map(r=>`<span style="background:${ROLE_COLOR[r]}" title="${ROLES[r].name}">${ROLES[r].name[0]}</span>`).join("")}</span></div>
+    <div class="room-right"><div class="chat-head"><b># ${q?qName(q):"affärsmöjlighet"}</b><span class="faces">${[...new Set([(q&&(q.salesRep||q.createdRole))||"christian","nikki"])].filter(r=>ROLES[r]).map(r=>`<span style="background:${ROLE_COLOR[r]}" title="${ROLES[r].name}">${ROLES[r].name[0]}</span>`).join("")}</span>${rep232(q)}</div>
      <div class="msgs" id="msgs" aria-live="polite"></div>
-     <div class="composer"><div class="composer-box"><div class="pending" id="pending"></div><textarea id="composer-in" rows="1" placeholder="Skriv till ${S.role==="nikki"?"Christian":"Nikki"}…" aria-label="Meddelande"></textarea>
+     <div class="composer"><div class="composer-box"><div class="pending" id="pending"></div><textarea id="composer-in" rows="1" placeholder="Skriv till ${RK()==="christian"?"kontoret":((ROLES[q&&(q.salesRep||q.createdRole)]||{}).kind==="christian"?ROLES[q.salesRep||q.createdRole].name:"säljaren")}…" aria-label="Meddelande"></textarea>
       <div class="composer-bar"><button class="icon-btn" data-emoji="compose" aria-label="Emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></svg></button>
       ${S.assets?`<label class="icon-btn" aria-label="Bifoga bild" style="cursor:pointer">${svg("cam",22)}<input type="file" id="chatfile" accept="image/*,application/pdf" multiple class="sr"></label>`:""}
       <span class="faint small" style="margin-left:6px" id="chathint">Enter skickar · Shift+Enter ny rad</span>
@@ -4344,7 +4417,7 @@ function renderRoomLeft(){
   const st=el.scrollTop;
   el.innerHTML=`<div>${statusBox(q)}
    <section class="sec"><h3 class="sech">Produkter ${edBtn("prod")}</h3>${R.edit==="prod"?prodEdit(q):`<div class="list">${(q.items||[]).filter(i=>i.product||i.extra).map(i=>`<div class="li" style="cursor:default"><span class="thumb" ${ph(img(i.product))}></span><span class="grow"><span class="t">${esc(prodName(i.product))}${i.qty?` · ${esc(i.qty)}`:""}</span><span class="s" style="white-space:normal">${esc([i.finish,i.fill,i.extra].filter(Boolean).join(" · "))||"Inga detaljer"}</span></span></div>`).join("")||'<div class="li">Inga produkter valda</div>'}</div>${specRows(q.spec,q.drawing).length?`<div class="card-plain"><p class="eyebrow" style="margin-bottom:8px">Utförande</p><dl class="specs">${specRows(q.spec,q.drawing).map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>`:""}`}</section>
-   <section class="sec"><h3 class="sech">Skiss av stallet</h3>${q.drawing?(q.drawing.v===2?`<div class="drw-svg cad">${planSVG(q.drawing)}</div>${q.drawing.note?`<div class="note">${esc(q.drawing.note)}</div>`:""}<div class="matlist"><p class="eyebrow">Materiallista</p>${drwMaterials2(q.drawing).rows.map(([c,x,n])=>`<div><span>${c?`<b style="display:inline-block;min-width:30px">${esc(c)}</b>`:""}${esc(x)}</span><b>${n} st</b></div>`).join("")}</div>`:`<div class="drw-svg">${drwSVG(q.drawing,false)}</div>`):`<div class="card-plain noskiss"><b>Ingen skiss än</b><span class="muted small">${S.role==="nikki"?"Christian hoppade över skissen. Du kan rita den här. Alla i rummet ser den direkt.":"Ingen skiss bifogad. Du eller Nikki kan rita den här."}</span><button class="btn gold sm" data-editdraw style="justify-self:start">${svg("plus",16)} Skapa skiss</button></div>`}
+   <section class="sec"><h3 class="sech">Skiss av stallet</h3>${q.drawing?(q.drawing.v===2?`<div class="drw-svg cad">${planSVG(q.drawing)}</div>${q.drawing.note?`<div class="note">${esc(q.drawing.note)}</div>`:""}<div class="matlist"><p class="eyebrow">Materiallista</p>${drwMaterials2(q.drawing).rows.map(([c,x,n])=>`<div><span>${c?`<b style="display:inline-block;min-width:30px">${esc(c)}</b>`:""}${esc(x)}</span><b>${n} st</b></div>`).join("")}</div>`:`<div class="drw-svg">${drwSVG(q.drawing,false)}</div>`):`<div class="card-plain noskiss"><b>Ingen skiss än</b><span class="muted small">${RK()==="nikki"?"Säljaren hoppade över skissen. Du kan rita den här. Alla i rummet ser den direkt.":"Ingen skiss bifogad. Du eller Nikki kan rita den här."}</span><button class="btn gold sm" data-editdraw style="justify-self:start">${svg("plus",16)} Skapa skiss</button></div>`}
      <div style="display:flex;gap:8px;flex-wrap:wrap">${q.drawing?`<button class="btn ghost sm" data-editdraw>Ändra skissen</button>`:""}${q.drawing?.v===2?`<button class="btn ghost sm" data-dlsheet>${svg("doc",16)} Ladda ner PDF (A3)</button>`:""}</div></section>
    <section class="sec"><h3 class="sech">Kund ${R.editCust?"":`<button class="btn ghost sm" data-custedit>Ändra</button>`}</h3>${R.editCust?`<div class="card-plain" style="display:grid;gap:10px"><div class="fgrid">${[["name","Namn"],["company","Företag/gård"],["orgnr",c.country==="Danmark"?"CVR-nr":"Org.nr"],["phone","Telefon"],["email","E-post"],["street","Adress"],["zip","Postnr"],["city","Ort"]].map(([f,l])=>`<label class="field"><span>${l}</span><input class="input" data-cust="${f}" value="${esc(c[f]||"")}"></label>`).join("")}</div><button class="btn sm" data-custdone style="justify-self:start">Klar</button></div>`:`<div class="card-plain"><dl class="specs">${row("Typ",c.type)}${row("Kontakt",c.name)}${row("Företag/gård",c.company)}${row(c.country==="Danmark"?"CVR":"Org.nr",c.orgnr)}${row("Telefon",c.phone)}${row("E-post",c.email)}${row("Adress",[c.street,c.zip,c.city].filter(Boolean).join(", "))}${row("Land",c.country)}</dl></div>`}</section>
    <section class="sec"><h3 class="sech">Projekt ${edBtn("proj")}</h3>${R.edit==="proj"?projEdit(q):`<div class="card-plain"><dl class="specs">${row("Typ",pr.kind)}${row("Montering",pr.mount)}${row("Bygget",pr.build)}${row("Golv",pr.floor)}${row("Ytterväggar",pr.walls)}${row("Takbalkar",pr.ceiling)}${row("Lastbil fram",pr.access)}${row("Montörsinfo",pr.mountNote)}${row("Hjälp vid egen montering",pr.selfhelp)}${row("Hästar",pr.horses)}${row("Hästtyp",pr.horsetype)}${row("Leverans",pr.when)}${row("Budget",pr.budget)}${row("Mått",pr.size)}${row("Konkurrent",pr.competitor)}${row("Prioritet",q.prio)}</dl>${!Object.values(pr).some(Boolean)?'<p class="faint">Inga projektdetaljer.</p>':""}</div>`}</section>
@@ -5236,7 +5309,7 @@ const HIDEABLE=new Set(["k-typ","k-land","k-adress","d-mont","d-nar","d-mer"]);
 const CH_PATH={"k-typ":"customer.type","k-land":"customer.country","d-mont":"project.mount","d-nar":"project.when","p-yta":"spec.finish","p-stolpe":"spec.post","p-horn":"spec.cornerPost"};
 const XTYPES={text:"Fritext",textarea:"Lång text",number:"Tal (t.ex. mm)",choice:"Ett val",multi:"Flera val",yesno:"Ja / Nej"};
 const FM=()=>S.form||{};
-const canForm=()=>S.role==="nikki"||S.role==="carl";
+const canForm=()=>RK()==="nikki"||RK()==="carl";
 function ovHTML(html,o){
   if(o.title)html=html.replace(/<h2>[\s\S]*?<\/h2>/,`<h2>${esc(o.title)}</h2>`);
   if(typeof o.lead==="string"){const lp=/<p class="lead">[\s\S]*?<\/p>/;if(lp.test(html))html=html.replace(lp,o.lead?`<p class="lead">${esc(o.lead)}</p>`:"");else if(o.lead)html=html.replace(/<\/h2>/,`</h2><p class="lead">${esc(o.lead)}</p>`)}
@@ -5358,7 +5431,7 @@ document.addEventListener("click",async e=>{
   if(d.closesearch!==undefined){closeSearch();return}
   if(d.close!==undefined){closeSheet();return}
   if(d.role!==undefined){openRole();return}
-  if(d.setrole){S.role=d.setrole;ls.set("myrby.role",S.role);S.qTab=null;closeSheet();render();toast("Visar som "+ROLES[S.role].name);return}
+  if(d.setrole){S.role=d.setrole;ls.set("myrby.role",S.role);S.quotes=quotesFor232();S.qTab=null;closeSheet();render();toast("Visar som "+ROLES[S.role].name);return}
   if(d.p){if(!$("#search").hidden)closeSearch();openProduct(d.p);return}
   if(d.q){if(!$("#search").hidden)closeSearch();openQuote(d.q);return}
   if(d.lead){if(!$("#search").hidden)closeSearch();openLead(d.lead);return}
@@ -5700,7 +5773,7 @@ function publicLines(d){
   }
   const more=(d.items||[]).filter(i=>d.ui?.kind!=="stall"||!["fronter","mellan"].includes(prod(i.product)?.cat)).map(i=>prodName(i.product)).filter(Boolean);
   if(more.length){L.push(["#","Mer till gården"]);more.forEach(n=>L.push(["•",n]))}
-  L.push(["#","Projektet"]);add("Montering",pr.mount);add("Golv",pr.floor);add("När",pr.when);add("Meddelande",d.notes);
+  L.push(["#","Projektet"]);add("Montering",pr.mount);add("Platsbesök",pr.visit==="Ja"?"Ja, kunden vill att Myrby kommer ut och mäter":"");add("Golv",pr.floor);add("När",pr.when);add("Meddelande",d.notes);
   return L.filter((x,i)=>x[0]!=="#"||(L[i+1]&&L[i+1][0]!=="#"));
 }
 function publicText(d){return publicLines(d).map(([k,v])=>k==="#"?"\n"+v.toUpperCase():k==="•"?"- "+v:k+": "+v).join("\n").trim()}
@@ -5771,12 +5844,12 @@ function publicThanks(o){S.pubDone=!!o.sent;if(o.sent){try{localStorage.removeIt
      <div class="th-l">
       <p class="th-kick">${fail?"Nästan klart":"Förfrågan skickad"}</p>
       <h2>${fail?"Vi fick inte iväg din stallinredning":`Tack${o.first?", "+esc(o.first):""}! Vi har fått din stallinredning`}</h2>
-      <p class="th-lead">${fail?"Något hände på vägen. Försök igen, eller ring oss så tar vi det direkt.":"Vi tittar på din stallinredning och återkopplar med ett skräddarsytt förslag inom en arbetsdag."}</p>
+      <p class="th-lead">${fail?"Något hände på vägen. Försök igen, eller ring oss så tar vi det direkt.":"Vi tittar på din stallinredning och återkopplar med skissförslag "+sv233()+"."}</p>${fail?"":sv233note()}
       <ul class="th-ticks">${tick("Tillverkad i vår verkstad i Enköping")}${tick("Anpassad efter ditt befintliga stall")}${tick("Hjälp från ritning till montering")}</ul>
       <div class="th-acts">${fail?`<button type="button" class="th-btn gold" data-pubretry>${svg("chev",18)} Försök igen</button>`:o.pdf?`<a class="th-btn gold" href="#spara" download="${esc(o.file)}">${svg("doc",18)} Spara min stallinredning</a>`:""}<a class="th-btn line" href="tel:+4617185790">${svg("phone",18)} Ring 0171-857 90</a></div>
      </div>
      <aside class="th-card"><p class="th-kick">Så går det till</p><h3>Det här händer nu</h3>
-      <ol><li><b>Vi går igenom din ritning</b><span>Mått, boxar och alla dina val.</span></li><li><b>Vi hör av oss</b><span>Inom en arbetsdag, för att stämma av detaljerna.</span></li><li><b>Du får ett skräddarsytt förslag</b><span>Med ritning, pris och leveranstid. Inget är bindande.</span></li></ol>
+      <ol><li><b>Vi går igenom din ritning</b><span>Mått, boxar och alla dina val.</span></li><li><b>Vi hör av oss</b><span>${sv233().replace(/^i/,"I")}, för att stämma av detaljerna.</span></li><li><b>Du får ett skräddarsytt förslag</b><span>Med ritning, pris och leveranstid. Inget är bindande.</span></li></ol>
      </aside>
     </div>
     <button type="button" class="th-again" data-pubagain>Börja om med ett nytt stall</button>
@@ -5795,7 +5868,7 @@ if(isPublic())publicBoot();else render();
   S.db=db;S.assets=assets;if(user)S.uid=await user.id();
   {const m=/fortsatt=([A-Z0-9]{6})/i.exec(location.hash+" "+location.search);if(m)setTimeout(()=>loadCode(m[1]),400)}
   if(!db){S.dbReady=true;render();return}
-  db.collection("quotes").orderBy("createdAt","desc").onSnapshot(s=>{S.quotes=s.docs.map(d=>({id:d.id,...d.data()}));S.dbReady=true;render()},()=>{S.dbReady=true;render()});
+  db.collection("quotes").orderBy("createdAt","desc").onSnapshot(s=>{S.allQuotes=s.docs.map(d=>({id:d.id,...d.data()}));S.quotes=quotesFor232();S.dbReady=true;render()},()=>{S.dbReady=true;render()});
   db.doc("config/form").onSnapshot(s=>{S.form=s.exists?s.data():{};if(view()==="formular"&&!document.activeElement?.closest?.(".formpage"))render();if(R.id)renderRoomLeft()},()=>{});
   db.collection("prices").onSnapshot(s=>{S.prices=Object.fromEntries(s.docs.map(d=>[d.id,d.data()]));applyPrices();if(!R.id||view()==="sortiment")render()},()=>{});
   db.doc("config/prices").onSnapshot(s=>{S.priceMeta=s.exists?s.data():null;if(view()==="sortiment")render()},()=>{});
@@ -6109,7 +6182,7 @@ function startEx178(){return isPublic()?D.ui.startEx!==false:!!D.ui.startEx}
 function startPick178(){const ex=startEx178();const big=(on,attr,ic,t,sub)=>`<button type="button" class="bigopt sp-opt" ${attr} aria-pressed="${on}"><span class="bo-ic">${ic}</span><span class="bo-t"><b>${t}</b><small>${sub}</small></span><span class="bo-ck">${svg("check",18)}</span></button>`;
   const head=`<div class="bigopts two sp178">${big(ex,'data-startex="1"',svg("home",24),"Börja från ett exempel","Sex vanliga stall att utgå från")}${big(!ex,'data-startex="0"',svg("move",24),"Rita från början","Fyll i måtten på ditt stall")}</div>`;
   if(!ex)return head;const cur181=D.ui.tplAuto?D.ui.tpl:null,L=tplList178().filter(t=>t.ok).slice().sort((a,b)=>(b.title===cur181)-(a.title===cur181));
-  return head+`<p class="lead tpl-lead">${cur181?`Ritningen visar nu exemplet <b>${esc(cur181)}</b>. Fortsätt med det, eller välj ett annat som liknar ditt stall mer. Sedan ändrar du mått, boxar och rum precis som du vill.`:"Välj det som liknar ditt stall mest. Sedan ändrar du mått, boxar och rum precis som du vill."}</p><div class="tplgrid">${L.map(t=>`<button type="button" class="tplc${D.ui.tplAuto&&D.ui.tpl===t.title?" on":""}" data-tpl="${t.id}"><span class="tplsvg">${tplThumb178(t)}</span><span class="tplt"><b>${esc(t.title)}</b><small>${t.boxes} boxar · ${(t.L/1000).toLocaleString("sv-SE")} × ${(t.W/1000).toLocaleString("sv-SE")} m</small><small>${esc(t.rooms.join(", ")||"Inga rum")}</small></span><span class="tplgo">${D.ui.tplAuto&&D.ui.tpl===t.title?"Visas i ritningen · Fortsätt ›":"Använd det här ›"}</span></button>`).join("")}</div>`}
+  return head+`<p class="lead tpl-lead">${cur181?`Ritningen visar nu exemplet <b>${esc(cur181)}</b>. Fortsätt med det, eller välj ett annat som liknar ditt stall mer. Sedan ändrar du mått, boxar och rum precis som du vill.`:"Välj det som liknar ditt stall mest. Sedan ändrar du mått, boxar och rum precis som du vill."}</p>${mirrorBtn233()}<div class="tplgrid">${L.map(t=>`<button type="button" class="tplc${D.ui.tplAuto&&D.ui.tpl===t.title?" on":""}" data-tpl="${t.id}"><span class="tplsvg">${tplThumb178(t)}</span><span class="tplt"><b>${esc(t.title)}</b><small>${t.boxes} boxar · ${(t.L/1000).toLocaleString("sv-SE")} × ${(t.W/1000).toLocaleString("sv-SE")} m</small><small>${esc(t.rooms.join(", ")||"Inga rum")}</small></span><span class="tplgo">${D.ui.tplAuto&&D.ui.tpl===t.title?"Visas i ritningen · Fortsätt ›":"Använd det här ›"}</span></button>`).join("")}</div>`}
 function tplUse178(id){const t=tplList178().find(x=>x.id===id&&x.ok);if(!t)return;const prev=JSON.stringify({dr:D.drawing,ui:{tpl:D.ui.tpl,startEx:D.ui.startEx,touchedN:D.ui.touchedN,reach:D.ui.reach},step:S.wizStep});
   D.drawing=tplBuild178(t);D.ui.kind="stall";D.ui.measured=true;D.ui.door0=true;D.ui.touchedN=true;D.ui.tpl=t.title;D.ui.tplAuto=false;D.ui.startEx=true;try{syncSpec(true)}catch(_){}autoAll(D.drawing);
   const bi=wizPages().findIndex(p=>p.key==="boxA");D.ui.reach=Math.max(D.ui.reach||0,bi);S.wizStep=bi;saveD();renderWiz.dir=1;renderWiz();const ws=document.getElementById("wizscroll");if(ws)ws.scrollTop=0;
@@ -6454,7 +6527,7 @@ NAV.push(["forfragan","Från hemsidan","lead"]);
 const fqId=()=>{const m=/^#f-([A-Za-z0-9_\-]+)/.exec(location.hash||"");return m?m[1]:""};
 const fqWho=()=>(ROLES[S.role]||{}).name||"Myrby";
 const fqWhen=t=>t?new Date(t).toLocaleString("sv-SE",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
-const FQ_ST={ny:["Ny","info"],oppnad:["Öppnad","plain"],nikki:["Nikkis version","gold"],affar:["Affärsmöjlighet","ok"]};
+const FQ_ST={ny:["Ny","info"],oppnad:["Öppnad","plain"],nikki:["Ändrad","gold"],affar:["Affärsmöjlighet","ok"]};
 function fqLines(d){try{return publicLines(d)}catch(_){return []}}
 function fqDiff(a,b){if(!a||!b)return [];const A=fqLines(a),B=fqLines(b),key=L=>{const m=new Map();L.forEach(([k,v])=>{if(k==="#"||k==="•")return;m.set(k,v)});return m};
   const ma=key(A),mb=key(B),out=[];new Set([...ma.keys(),...mb.keys()]).forEach(k=>{if(["Namn","Telefon","E-post","Meddelande"].includes(k))return;const x=ma.get(k)||"",y=mb.get(k)||"";if(x!==y)out.push({k,from:x,to:y})});
@@ -6476,7 +6549,7 @@ function fqVer(f){return (S.fqView==="orig"||!f.cur)?f.orig:f.cur}
 function fqDraw(d,v){const sv=D;let h="";try{D=structuredClone(d);D.ui=D.ui||{};D.ui.view=v;D.ui.views181=true;h=canvasInner(D.drawing,6,{})}catch(e){h=""}finally{D=sv}
   if(!h){try{h=planSVG(d.drawing)}catch(_){h=""}}return h}
 function vFq(){const id=fqId();if(id)return vFqOne(id);
-  const L=S.fq,row=f=>{const st=FQ_ST[f.status]||FQ_ST.ny;return `<a class="li" href="#f-${esc(f.id)}"><span class="thumb round">${esc((f.name||"?")[0])}</span><span class="grow"><span class="t">${esc(f.name||"Okänd kund")}</span><span class="s">${esc((()=>{try{return fqSummary(f.cur||f.orig)}catch(_){return f.summary||""}})())}${f.cur?` · <b class="fq-nk">${esc(fqWhoOf(f.editedBy))} har ändrat</b>`:""}${(f.notes||[]).length?` · ${(f.notes||[]).length} ${(f.notes||[]).length===1?"anteckning":"anteckningar"}`:""}</span></span><span class="fq-when">${esc(fqWhen(f.createdAt))}</span><span class="chip ${st[1]}">${st[0]}</span><span class="chev">${svg("chev",18)}</span></a>`};
+  const L=S.fq,row=f=>{const st=FQ_ST[f.status]||FQ_ST.ny;return `<a class="li" href="#f-${esc(f.id)}"><span class="thumb round">${esc((f.name||"?")[0])}</span><span class="grow"><span class="t">${esc(f.name||"Okänd kund")}</span><span class="s">${esc((()=>{try{return fqSummary(f.cur||f.orig)}catch(_){return f.summary||""}})())}${f.cur?` · <b class="fq-nk">${esc(fqWhoOf(f.editedBy))} har ändrat</b>`:""}${(f.notes||[]).length?` · ${(f.notes||[]).length} ${(f.notes||[]).length===1?"anteckning":"anteckningar"}`:""}</span></span><span class="fq-when">${esc(fqWhen(f.createdAt))}</span>${f.owner?`<span class="fq-own232">${esc(fqWhoOf(f.owner))}</span>`:""}<span class="chip ${st[1]}">${st[0]}</span><span class="chev">${svg("chev",18)}</span></a>`};
   return `<div class="page fqpage"><div class="page-head"><p class="eyebrow">Rita din stallinredning</p><h1>Från hemsidan</h1><p>Ritningar som kunder har skickat från hemsidan. De ligger här, skilda från affärsmöjligheterna, tills du gör om dem.</p></div>
     <form class="fqx-add" data-fqaddform><label class="field" style="flex:1"><span>Öppnade du förfrågan från mejlet? Klicka här och tryck ⌘ V (Mac) eller Ctrl V (PC)</span><input class="input" name="l" placeholder="Klistra in förfrågan här" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
     ${L.length?`<div class="list">${L.map(row).join("")}</div>`:`<div class="empty">${svg("lead")}<b>Inga förfrågningar än</b><span>När en kund skickar sin ritning kommer ett mejl till info@myrby.com. Öppna länken i mejlet, tryck Lägg in i säljportalen och klistra sedan in här.</span></div>`}</div>`}
@@ -6490,10 +6563,10 @@ function vFqOne(id){const f=S.fq.find(x=>x.id===id);
   const quote=f.quoteId?S.quotes.find(q=>q.id===f.quoteId):null;
   return `<div class="page fqone"><a class="lback" href="#forfragan">${svg("chev",16)} Alla förfrågningar</a>
    <div class="fq-head"><div><p class="eyebrow">Förfrågan · inkom ${esc(fqWhen(f.createdAt))} · via Rita din stallinredning</p><h1>${esc(f.name||"Okänd kund")}</h1><p class="muted">${esc(fqSummary(d))}</p></div>
-    <div class="fq-acts">${c.phone?`<a class="btn" href="tel:${esc(String(c.phone).replace(/[^\d+]/g,""))}">${svg("phone",18)} Ring ${esc(c.phone)}</a>`:""}${c.email?`<a class="btn ghost" href="mailto:${esc(c.email)}?subject=${encodeURIComponent("Din stallinredning från Myrby")}">Svara via mejl</a>`:""}
-     <button class="btn ghost" data-fqedit="${esc(f.id)}">✎ ${f.cur?"Ändra Nikkis version":"Redigera stallet"}</button>
+    <div class="fq-acts">${take232(f)}${c.phone?`<a class="btn" href="tel:${esc(String(c.phone).replace(/[^\d+]/g,""))}">${svg("phone",18)} Ring ${esc(c.phone)}</a>`:""}${c.email?`<a class="btn ghost" href="mailto:${esc(c.email)}?subject=${encodeURIComponent("Din stallinredning från Myrby")}">Svara via mejl</a>`:""}
+     <button class="btn ghost" data-fqedit="${esc(f.id)}">✎ ${f.cur?"Ändra "+gen232(fqWhoOf(f.editedBy))+" version":"Redigera stallet"}</button>
      ${f.status==="affar"&&f.quoteId?`<a class="btn gold" href="#a-${esc(f.quoteId)}">Öppna affärsmöjligheten</a>`:`<button class="btn gold" data-fqquote="${esc(f.id)}">Gör till affärsmöjlighet</button>`}</div></div>
-   ${f.cur?`<div class="fq-tog" role="group" aria-label="Version"><button type="button" data-fqview="orig" aria-pressed="${!showCur}">Kundens original</button><button type="button" data-fqview="cur" aria-pressed="${!!showCur}">Nikkis version · ${chg.length} ${chg.length===1?"ändring":"ändringar"}</button></div>`:""}
+   ${f.cur?`<div class="fq-tog" role="group" aria-label="Version"><button type="button" data-fqview="orig" aria-pressed="${!showCur}">Kundens original</button><button type="button" data-fqview="cur" aria-pressed="${!!showCur}">${esc(gen232(fqWhoOf(f.editedBy)))} version · ${chg.length} ${chg.length===1?"ändring":"ändringar"}</button></div>`:""}
    <div class="fq-grid"><div class="fq-left">
      <div class="fq-views" role="group">${[["plan","Ritning"],["iso","3D"],["walk","Stallgången"]].map(([k,l])=>`<button type="button" data-fqdv="${k}" aria-pressed="${vw===k}">${l}</button>`).join("")}<span class="faint small">${showCur?esc(fqWhoOf(f.editedBy))+"s version":"Exakt det kunden skickade"}</span></div>
      <div class="fq-draw${S.fqPin?" pinning":""}" data-fqdraw>${d.drawing?fqDraw(d,vw):`<div class="empty"><b>Ingen ritning</b></div>`}<div class="fq-pins">${vw==="plan"?pins.map(n=>`<span class="fq-pin" style="left:${n.pin.x}%;top:${n.pin.y}%" title="${esc(n.text)}"><b>${notes.indexOf(n)+1}</b></span>`).join("")+(S.fqPinAt?`<span class="fq-pin new" style="left:${S.fqPinAt.x}%;top:${S.fqPinAt.y}%"><b>+</b></span>`:""):""}</div></div>
@@ -6501,13 +6574,13 @@ function vFqOne(id){const f=S.fq.find(x=>x.id===id);
      ${o.notes?`<div class="fq-quote"><span>”</span><div><p class="eyebrow">Kundens tankar</p><p>${esc(o.notes)}</p></div></div>`:""}
    </div><div class="fq-right">
      <div class="card-plain fq-facts">${secs.filter(s=>s.r.length).map(s=>`<div class="fq-sec"><h4>${esc(s.h||"Övrigt")}</h4><dl>${s.r.map(([k,v])=>`<dt>${k==="•"?"":esc(k)}</dt><dd class="${changedKeys.has(k)?"chg":""}">${esc(v)}</dd>`).join("")}</dl></div>`).join("")}</div>
-     ${chg.length?`<div class="card-plain fq-chg"><div class="fq-ch"><b>Nikkis ändringar</b><span class="faint small">${esc(fqWhen(f.editedAt))}</span></div>${chg.map(x=>`<div class="fq-ci"><span class="fq-av">${esc((f.editedBy?((ROLES[f.editedBy]||{}).name||"N"):"N")[0])}</span><div><b>${esc(x.k)}</b><br><span class="small">${x.from?`<s>${esc(x.from)}</s> → `:"Tillagt: "}${esc(x.to||"borttaget")}</span></div></div>`).join("")}<button class="btn ghost sm" data-fqreset="${esc(f.id)}">Återställ till kundens original</button></div>`:""}
+     ${chg.length?`<div class="card-plain fq-chg"><div class="fq-ch"><b>${esc(gen232(fqWhoOf(f.editedBy)))} ändringar</b><span class="faint small">${esc(fqWhen(f.editedAt))}</span></div>${chg.map(x=>`<div class="fq-ci"><span class="fq-av">${esc((f.editedBy?((ROLES[f.editedBy]||{}).name||"N"):"N")[0])}</span><div><b>${esc(x.k)}</b><br><span class="small">${x.from?`<s>${esc(x.from)}</s> → `:"Tillagt: "}${esc(x.to||"borttaget")}</span></div></div>`).join("")}<button class="btn ghost sm" data-fqreset="${esc(f.id)}">Återställ till kundens original</button></div>`:""}
      <div class="card-plain fq-notes"><div class="fq-ch"><b>Anteckningar</b><span class="faint small">Bara för Myrby</span></div>
       ${notes.map((n,i)=>`<div class="fqx-note"><span class="fq-np${n.pin?"":" free"}">${n.pin?i+1:"✎"}</span><div><p>${esc(n.text)}</p><span class="faint small">${esc(n.who||"")} · ${esc(fqWhen(n.at))}</span></div><button class="icon-btn sm" data-fqdelnote="${esc(n.id)}" aria-label="Ta bort anteckning">${svg("close",14)}</button></div>`).join("")||`<p class="faint small" style="margin:6px 0 10px">Inga anteckningar än.</p>`}
       <form class="fq-compose" data-fqnote="${esc(f.id)}"><textarea class="input" name="t" rows="2" placeholder="Skriv en anteckning…"></textarea><div class="fq-cbar"><button type="button" class="linkbtn" data-fqpin>${S.fqPin||S.fqPinAt?"✓ Fäst på ritningen":"⌖ Fäst på ritningen"}</button><button class="btn sm" type="submit">Spara</button></div></form></div>
    </div></div></div>`}
 function fqPinsDraw(){}
-function fqWhoOf(r){return r==="christian"?"Christian":r==="carl"?"Carl":"Nikki"}
+function fqWhoOf(r){return (ROLES[r]||{}).name||"Nikki"}
 async function fqUpd(id,patch){if(!S.db)return;try{await S.db.doc("forfragningar/"+id).update(patch)}catch(e){toast("Kunde inte spara")}}
 document.addEventListener("submit",async e=>{const a=e.target.closest&&e.target.closest("[data-fqaddform]");if(a){e.preventDefault();const tok=fqToken(a.l.value);if(!tok){toast("Det ser inte ut som en förfrågningslänk");return}fqImport(tok,true);return}
   const n=e.target.closest&&e.target.closest("[data-fqnote]");if(n){e.preventDefault();const t=n.t.value.trim();if(!t)return;const f=S.fq.find(x=>x.id===n.dataset.fqnote);if(!f)return;
@@ -6540,8 +6613,8 @@ async function fqEditEnd(save){const id=S.fqEdit;if(!id)return;const f=S.fq.find
 function fqEditChrome(){const w=$("#wiz");if(!w)return;let b=w.querySelector(".fq-editbar");
   if(!S.fqEdit){if(b)b.remove();return}const f=S.fq.find(x=>x.id===S.fqEdit);
   if(!b){b=document.createElement("div");b.className="fq-editbar";w.insertBefore(b,w.firstChild)}
-  b.innerHTML=`<span>✎ Du ändrar stallet för <b>${esc(f?.name||"kunden")}</b>. Kundens original finns kvar orört.</span><button type="button" class="btn ghost sm" data-fqcancel>Avbryt</button><button type="button" class="btn gold sm" data-fqsave>Spara ${S.role==="nikki"?"Nikkis":"min"} version</button>`;
-  const s=w.querySelector("[data-wsend]");if(s){s.removeAttribute("data-wsend");s.setAttribute("data-fqsave","");s.textContent="Spara "+(S.role==="nikki"?"Nikkis":"min")+" version"}}
+  b.innerHTML=`<span>✎ Du ändrar stallet för <b>${esc(f?.name||"kunden")}</b>. Kundens original finns kvar orört.</span><button type="button" class="btn ghost sm" data-fqcancel>Avbryt</button><button type="button" class="btn gold sm" data-fqsave>Spara ${RK()==="nikki"?gen232(ROLES[S.role].name):"min"} version</button>`;
+  const s=w.querySelector("[data-wsend]");if(s){s.removeAttribute("data-wsend");s.setAttribute("data-fqsave","");s.textContent="Spara "+(RK()==="nikki"?gen232(ROLES[S.role].name):"min")+" version"}}
 
 /* Gör till affärsmöjlighet: samma väg som när Christian skickar till Nikki. Anteckningarna följer med i rummet. */
 async function fqToQuote(f,btn){if(!S.db){toast("Ingen anslutning");return}if(fqToQuote.busy)return;fqToQuote.busy=true;if(btn){btn.disabled=true;btn.textContent="Skapar…"}
@@ -6561,8 +6634,8 @@ const FQ_COPY=[["Bygg din stallinredning","Rita kundens stall"],["Din stallinred
 const FQ_COPYM=new Map(FQ_COPY);
 function fqCopy(){const w=$("#wiz");if(!w)return;const tw=document.createTreeWalker(w,NodeFilter.SHOW_TEXT);let n;while(n=tw.nextNode()){const t=n.nodeValue.trim();if(t&&FQ_COPYM.has(t))n.nodeValue=n.nodeValue.replace(t,FQ_COPYM.get(t))}}
 {let q=0;const mo=new MutationObserver(()=>{if(q)return;q=1;queueMicrotask(()=>{q=0;try{fqCopy()}catch(_){}})});const at=()=>{const w=$("#wiz");if(w){mo.observe(w,{childList:true,subtree:true});fqCopy()}else setTimeout(at,300)};at()}
-{const _rn=renderNav;renderNav=function(){_rn.apply(this,arguments);try{if(S.role==="christian"){const a=$('#sidenav a[href="#forfragan"]');if(a)a.remove()}}catch(_){}}}
-{const _r=render;render=function(){const r=_r.apply(this,arguments);try{if(view()==="hem"&&S.role!=="christian"){const n=(S.fq||[]).filter(f=>f.status==="ny").length,pg=$("#app .page")||$("#app");if(n&&pg&&!pg.querySelector(".fq-homebar"))pg.insertAdjacentHTML("afterbegin",`<a class="fq-homebar" href="#forfragan"><span class="fq-hb-dot">${n}</span><span><b>${n===1?"Ny ritning från hemsidan":n+" nya ritningar från hemsidan"}</b><span class="muted"> · ${esc((S.fq.find(f=>f.status==="ny")||{}).name||"")}${n>1?" m.fl.":""}</span></span><span class="fq-hb-go">Öppna ›</span></a>`)}}catch(_){}return r}}
+{const _rn=renderNav;renderNav=function(){_rn.apply(this,arguments);try{if(RK()==="christian"){const a=$('#sidenav a[href="#forfragan"]');if(a)a.remove()}}catch(_){}}}
+{const _r=render;render=function(){const r=_r.apply(this,arguments);try{if(view()==="hem"&&RK()!=="christian"){const n=(S.fq||[]).filter(f=>f.status==="ny").length,pg=$("#app .page")||$("#app");if(n&&pg&&!pg.querySelector(".fq-homebar"))pg.insertAdjacentHTML("afterbegin",`<a class="fq-homebar" href="#forfragan"><span class="fq-hb-dot">${n}</span><span><b>${n===1?"Ny ritning från hemsidan":n+" nya ritningar från hemsidan"}</b><span class="muted"> · ${esc((S.fq.find(f=>f.status==="ny")||{}).name||"")}${n>1?" m.fl.":""}</span></span><span class="fq-hb-go">Öppna ›</span></a>`)}}catch(_){}return r}}
 try{if(typeof render==="function"&&!$("#wiz")?.classList.contains("on"))render()}catch(_){}
 }
 
@@ -6675,7 +6748,7 @@ function helpModal218(why){try{const c=D.customer||{},dr=D.drawing,sp=D.spec||{}
   const m=pubModal(`<button type="button" class="pm-x" data-pmclose aria-label="Stäng rutan">${svg("close",18)}</button>
    <div class="sn-h"><div class="pm-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></div>
    <h2>${quit?"Vill du att vi tar över härifrån?":"Skicka ritningen till Myrby"}</h2></div>
-   <p>${quit?"Din ritning är sparad i den här webbläsaren. Skicka den som den är, så går vi igenom resten tillsammans.":"Du behöver inte välja allt själv. Skicka ritningen som den är, så går vi igenom resten tillsammans."} Vi hör av oss inom en arbetsdag. Inget är bindande.</p>
+   <p>${quit?"Din ritning är sparad i den här webbläsaren. Skicka den som den är, så går vi igenom resten tillsammans.":"Du behöver inte välja allt själv. Skicka ritningen som den är, så går vi igenom resten tillsammans."} Vi återkopplar ${sv233()}. Inget är bindande.</p>${sv233note()}
    <div class="sn-sum"><div class="th" aria-hidden="true"></div><div><b>Ditt stall hittills</b><span>${esc(l1)}</span><span>${esc(l2)}</span></div></div>
    <div class="sn-f"><label for="sn218-n">Ditt namn</label><input class="input" id="sn218-n" autocomplete="name" value="${esc(c.name||"")}"></div>
    <div class="sn-f"><label for="sn218-k">Telefon eller e-post</label><input class="input" id="sn218-k" inputmode="email" autocomplete="off" value="${esc(c.phone||c.email||"")}"></div>
@@ -6882,6 +6955,41 @@ function popFit229(){try{document.querySelectorAll("#wiz .ichips194 .vm-pop").fo
 {const _rw229=renderWiz;renderWiz=function(){const r=_rw229.apply(this,arguments);popFit229();return r}}
 
 
+/* v230 (Carl 16/11): frågorna om monteringen visades alla på en gång, som en vägg av knappar.
+   Nu en fråga i taget: den aktuella frågan är öppen med stora svar, de besvarade ligger kvar som en kort rad med Ändra,
+   de som återstår syns som en lista. Varje fråga har Vet inte. Värdena som sparas är desamma som förut. Gäller kundens verktyg. */
+const MQ230={
+ Ja:[
+  {p:"project.build",n:"Bygget",q:"Hur långt har bygget kommit?",why:"Då vet vi när montörerna kan komma.",o:[["Stallet står klart","Stallet står klart"],["Under byggnation","Det byggs just nu"],["Planeras","Det planeras"]]},
+  {p:"project.floor",n:"Golvet i boxarna",q:"Vilket golv blir det i boxarna?",why:"Så att montörerna har rätt infästning med sig.",o:[["Gjutet betonggolv","Betong"],["Asfalt","Asfalt"],["Grus/annat","Grus eller annat"],["Vet inte","Vet inte"]]},
+  {p:"project.walls",n:"Ytterväggarna",q:"Vad är ytterväggarna gjorda av?",why:"Så att montörerna har rätt infästning med sig.",o:[["Trä","Trä"],["Betong/murat","Betong eller murat"],["Plåt/stål","Plåt eller stål"],["Vet inte","Vet inte"]]},
+  {p:"project.ceiling",n:"Takbalkar",q:"Finns det takbalkar att fästa stolparna i?",why:"Titta upp i taket ovanför där boxarna ska stå.",o:[["Ja","Ja"],["Nej","Nej"],["Vet inte","Vet inte"]]},
+  {p:"project.access",n:"Vägen fram",q:"Kan en lastbil köra ända fram till stallet?",why:"Så att vi kan lossa inredningen nära stallet.",o:[["Ja","Ja"],["Nej, begränsad åtkomst","Nej, det är trångt"],["Vet inte","Vet inte"]]}],
+ Nej:[
+  {p:"project.selfhelp",n:"Hjälp på vägen",q:"Vilken hjälp vill ni ha när ni monterar?",why:"",o:[["Bara monteringsanvisning","Bara monteringsanvisning"],["Telefonsupport","Telefonsupport"],["En montör några timmar","En montör några timmar"]]}]};
+function mq230Lbl(q,v){const o=q.o.find(x=>x[0]===v);return o?o[1]:v}
+{const _mq230=montQs;montQs=function(){try{const pr=D.project||{},L=isPublic()&&MQ230[pr.mount];if(!L)return _mq230.apply(this,arguments);
+  const done=L.filter(q=>getPath(D,q.p)),re=(D.ui||{}).mq230,open=re&&L.some(q=>q.p===re)?re:((L.find(q=>!getPath(D,q.p))||{}).p||""),all=done.length===L.length,one=L.length===1;
+  const row=(q,i)=>{const v=getPath(D,q.p);
+    if(q.p===open)return `<li class="open"><span class="nr">${i+1}</span><div class="b"><b class="q">${esc(q.q)}</b>${q.why?`<p class="why">${esc(q.why)}</p>`:""}<div class="ans">${q.o.map(o=>`<button type="button" class="a${o[0]==="Vet inte"?" vet":""}" data-mq230="${q.p}" data-v="${esc(o[0])}" aria-pressed="${v===o[0]}"><i></i><span>${esc(o[1])}</span></button>`).join("")}</div></div></li>`;
+    if(v)return `<li class="done"><span class="nr">${svg("check",14)}</span><span class="t"><small>${esc(q.n)}</small><b>${esc(mq230Lbl(q,v))}</b></span><button type="button" class="chg" data-mq230open="${q.p}">Ändra</button></li>`;
+    return `<li class="wait"><span class="nr">${i+1}</span><span class="t">${esc(q.n)}</span></li>`};
+  return `<div class="mbox mq230${one?" one":""}"><div class="mq230-h"><p class="mbox-h">${svg("star",16)} ${one?"En sak till":"Så att vi kan planera monteringen"}</p>${one?"":`<span class="mq230-n">${done.length} av ${L.length} klara</span>`}</div>
+    ${one?"":`<p class="mq230-lead">${L.length===5?"Fem":L.length} korta frågor, en i taget. Är du osäker väljer du Vet inte, så tar vi det när vi hörs.</p>`}
+    <ol class="mq230-list">${L.map(row).join("")}</ol>
+    ${all&&!one?`<p class="mq230-done">${svg("check",16)}<span>Tack, det räcker för att vi ska kunna planera monteringen.</span></p><label class="field"><span>Något mer montören bör veta? (valfritt)</span><input class="input" data-dpath="project.mountNote" value="${esc(pr.mountNote||"")}" placeholder="T.ex. golvvärme, avlopp, smal port"></label>`:""}</div>`}catch(_){return _mq230.apply(this,arguments)}}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-mq230],[data-mq230open]");if(!t)return;e.preventDefault();e.stopPropagation();
+  try{D.ui=D.ui||{};if(t.hasAttribute("data-mq230open"))D.ui.mq230=t.getAttribute("data-mq230open");else{setPath(D,t.getAttribute("data-mq230"),t.getAttribute("data-v"));D.ui.mq230=""}
+    saveD();wizRefresh();requestAnimationFrame(()=>{try{const o=document.querySelector("#wiz .mq230 li.open")||document.querySelector("#wiz .mq230-done");if(o)o.scrollIntoView({block:"nearest",behavior:"smooth"})}catch(_){}})}catch(_){}},true);
+/* När kunden har svarat på huvudfrågan krymper de tre korten till en rad med Ändra, så att frågorna under får plats utan att bläddra. */
+const MT230={Ja:"Ja, Myrby monterar",Nej:"Nej, vi monterar själva","Vet ej":"Vet inte än"};
+function montTop230(cards){try{const v=(D.project||{}).mount;if(!isPublic()||!v||!MT230[v]||(D.ui||{}).mt230edit)return cards;
+  return `<div class="mt230-sel"><span class="nr">${svg("check",14)}</span><span class="t"><small>Montering</small><b>${esc(MT230[v])}</b></span><button type="button" class="chg" data-mt230edit>Ändra</button></div>`}catch(_){return cards}}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest('[data-mt230edit],[data-pick1="project.mount"]');if(!t)return;
+  try{D.ui=D.ui||{};if(t.hasAttribute("data-mt230edit")){e.preventDefault();e.stopPropagation();D.ui.mt230edit=true;saveD();wizRefresh();return}
+    if(D.ui.mt230edit){D.ui.mt230edit=false;setTimeout(()=>{try{saveD();wizRefresh()}catch(_){}},0)}}catch(_){}},true);
+
+
 /* v231 (Carl 17/11): mejlet till Myrby blir lättare att läsa. Webbedit gör om meddelandet till en rad, så raden hålls kort och lugn:
    inga versaler, inga dubbletter av kundens namn, telefon, e-post och ort (de har egna fält i mejlet), länken sist. */
 {const _pt231=publicText;publicText=function(d){if(!isPublic()||!window.__fq)return _pt231.apply(this,arguments);try{
@@ -6897,6 +7005,86 @@ function popFit229(){try{document.querySelectorAll("#wiz .ichips194 .vm-pop").fo
   if(n)out.push(`Kundens tankar: ”${n.length>300?n.slice(0,300).trim()+"…":n}”`);
   out.push("Allt finns i bifogad PDF.","Öppna förfrågan: "+window.__fq.link);
   return out.join(" ")}catch(_){return _pt231.apply(this,arguments)}}}
+
+
+/* v232 (Carl 17/11): förfrågningar från hemsidan är kontorets gemensamma pool, och affärer delas ut till säljarna.
+   Roller: kontoret (Nikki, Niklas) ser hela poolen och alla affärer. Säljarna (Christian, Karro) ser bara affärer som är deras.
+   Kontoret tar alltid emot förfrågan (info@myrby.com), tar fram offerten och delar sedan ut affären till en säljare. */
+function quotesFor232(){const A=S.allQuotes||[];if(RK()!=="christian")return A;
+  return A.filter(q=>{if(q.salesRep)return q.salesRep===S.role;const c=ROLES[q.createdRole];if(c&&c.kind==="christian")return q.createdRole===S.role;if(q.fqId)return false;return S.role==="christian"})}
+function rep232(q){if(!q||isPublic()||RK()==="christian")return "";const reps=Object.entries(ROLES).filter(([k,r])=>r.kind==="christian");
+  return `<label class="rep232" title="Säljaren ser affären först när den är utdelad"><span>Säljare</span><select data-rep232="${esc(q.id)}"><option value="">Ingen än</option>${reps.map(([k,r])=>`<option value="${k}"${q.salesRep===k?" selected":""}>${esc(r.name)}</option>`).join("")}</select></label>`}
+function take232(f){if(!f||RK()==="christian")return "";if(f.owner===S.role)return `<span class="chip ok own232">Du är ansvarig</span>`;
+  return `<button type="button" class="btn ghost" data-take232="${esc(f.id)}">${f.owner?"Ta över från "+esc(fqWhoOf(f.owner)):"Jag tar den"}</button>`}
+if(!isPublic()){
+  document.addEventListener("change",async e=>{const sel=e.target&&e.target.closest&&e.target.closest("select[data-rep232]");if(!sel||!S.db)return;
+    const id=sel.getAttribute("data-rep232"),v=sel.value||null,now=Date.now(),name=v?(ROLES[v]||{}).name||v:"";
+    try{await S.db.doc("quotes/"+id).update({salesRep:v,salesRepAt:now,salesRepBy:S.role,updatedAt:now});
+      await S.db.collection(`quotes/${id}/messages`).add({at:now,by:S.role,uid:S.uid||null,sys:true,text:v?`delade ut affären till ${name}`:"tog tillbaka affären till kontoret"}).catch(()=>{});
+      toast(v?`${name} ser nu affären`:"Affären ligger hos kontoret")}catch(_){toast("Kunde inte spara, försök igen")}});
+  document.addEventListener("click",async e=>{const b=e.target&&e.target.closest&&e.target.closest("[data-take232]");if(!b||!S.db)return;e.preventDefault();
+    const id=b.getAttribute("data-take232");b.disabled=true;try{await S.db.doc("forfragningar/"+id).update({owner:S.role,ownerAt:Date.now()});const f=S.fq.find(x=>x.id===id);if(f){f.owner=S.role}render();toast("Du är ansvarig för förfrågan")}catch(_){b.disabled=false;toast("Kunde inte spara, försök igen")}},true);
+}
+
+
+/* v233 (Carl och Nikki 17/11):
+   1. Exempelstallen går att spegelvända (ingången åt andra hållet), så att de passar fler stall.
+   2. Tipsruta i exemplen: byt hängning genom att klicka på dörren, och blanda fronter genom att rita från början.
+   3. Kunden kan be om platsbesök: Myrby kommer ut och mäter. Syns i mejlet, i PDF:en och i säljportalen.
+   4. Svarstiden kommer från Webbedit (sidan Svarstid), så att kontoret kan ändra den och slå på "högt tryck". */
+
+/* ---------- 1. Spegelvänd ---------- */
+function mirror233(dr){if(!dr||!dr.walls)return dr;const L=+dr.L||0;
+  const nrOf=d=>{const m={};try{layout(d).forEach(o=>{if(o.m&&o.m.t==="box"&&o.nr)m[o.m.id]=o.nr})}catch(_){}return m};const before=nrOf(dr);
+  const sw=(o,a,b)=>{if(!o)return;const t=o[a];o[a]=o[b];o[b]=t;if(o[a]===undefined)delete o[a];if(o[b]===undefined)delete o[b]};
+  sw(dr.walls,"W","E");if(dr.cfg)sw(dr.cfg,"W","E");if(dr.corner){sw(dr.corner,"NW","NE");sw(dr.corner,"SW","SE")}
+  /* Långsidorna läses baklänges. En rad som inte når hela vägen ska efter speglingen sluta mot andra gaveln: då läggs en tom yta (pad233) först. */
+  ["N","S"].forEach(k=>{let ms=(dr.walls[k]||[]).filter(m=>!m.pad233&&!m.autoRest);const had=(dr.walls[k]||[]).some(m=>m.pad233);ms.reverse();ms.forEach(m=>{if(m.t==="box")m.dir=m.dir==="H"?"V":"H"});
+    const c=dr.cfg&&dr.cfg[k];if(c&&c.align)c.align=c.align==="end"?"start":"end";
+    const ro=rowOff(dr),rest=Math.round(L-ro.a-ro.b-ms.reduce((s,m)=>s+(+m.w||0),0));if(!had&&rest>5&&!(c&&c.align))ms.unshift({id:uid2(),t:"gap",w:rest,pad233:true});dr.walls[k]=ms});
+  const flipK=k=>k==="W"?"E":k==="E"?"W":k;
+  (Array.isArray(dr.doors)?dr.doors:[]).forEach(d=>{const w=+d.w||0;if(d.k==="N"||d.k==="S")d.p=Math.round(L-(+d.p||0)-w);else{d.k=flipK(d.k);if(d.xk)d.xk="door-"+d.k}});
+  (Array.isArray(dr.wins)?dr.wins:[]).forEach(x=>{if(x.k==="N"||x.k==="S")x.p=Math.round(L-(+x.p||0));else x.k=flipK(x.k)});
+  (Array.isArray(dr.wfans)?dr.wfans:[]).forEach(x=>{if(x.k==="N"||x.k==="S")x.p=Math.round(L-(+x.p||0));else x.k=flipK(x.k)});
+  const after=nrOf(dr),map={};Object.keys(before).forEach(id=>{if(after[id])map[before[id]]=after[id]});
+  ["names","fmix"].forEach(f=>{if(dr[f]&&typeof dr[f]==="object"){const o={};Object.entries(dr[f]).forEach(([n,v])=>{if(map[n])o[map[n]]=v});dr[f]=o}});
+  dr.mirrored233=!dr.mirrored233;return dr}
+function mirrorOK233(){try{return isPublic()&&D&&D.ui&&D.ui.kind==="stall"&&!!D.ui.tpl&&!!D.drawing}catch(_){return false}}
+function mirrorBtn233(){if(!mirrorOK233())return "";const on=!!(D.drawing&&D.drawing.mirrored233);
+  return `<div class="mir233"><span>Står ingången åt andra hållet i ditt stall?</span><button type="button" class="btn sm ghost" data-mirror233 aria-pressed="${on}">${svg("move",16)} Spegelvänd stallet</button></div>`}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-mirror233]");if(!b)return;e.preventDefault();e.stopPropagation();
+  try{mirror233(D.drawing);try{histPush()}catch(_){}saveD();try{cfgPanelRefresh()}catch(_){}wizRefresh();toast(D.drawing.mirrored233?"Stallet är spegelvänt":"Stallet är tillbaka som exemplet")}catch(_){}},true);
+
+/* ---------- 2. Tipsruta i exemplen ---------- */
+function tip233(){try{if(!isPublic()||!D.ui||!D.ui.tpl||D.ui.tip233off)return "";
+  return `<div class="tip233" role="note"><button type="button" class="tip233-x" data-tip233off aria-label="Stäng tipset">×</button><p class="mbox-h">${svg("star",16)} Tips</p><ul><li><b>Klicka på dörren</b> i ritningen för att byta hängning på just den boxen.</li><li><b>Vill du blanda fronter?</b> Välj Blanda olika fronter här ovanför. Du kan också rita ditt stall från grunden.</li></ul></div>`}catch(_){return ""}}
+{const _db233=doorBox;doorBox=function(){const h=_db233.apply(this,arguments);return h?h+tip233():h}}
+{const _dp233=doorPop;doorPop=function(){const h=_dp233.apply(this,arguments);return String(h||"").replace(/<div class="tip233"[\s\S]*?<\/ul><\/div>/,"")}}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-tip233off]");if(!b)return;e.preventDefault();e.stopPropagation();try{D.ui.tip233off=true;saveD();wizRefresh()}catch(_){}},true);
+
+/* ---------- 3. Platsbesök ---------- */
+function visit233(){try{if(!isPublic())return "";const on=(D.project||{}).visit==="Ja";
+  return `<div class="visit233"><button type="button" class="visit233-b" data-visit233 aria-pressed="${on}"><i>${on?svg("check",14):""}</i><span><b>Jag vill att Myrby kommer ut och mäter</b><small>Vi besöker stallet, mäter och tittar på förutsättningarna innan förslaget blir klart.</small></span></button></div>`}catch(_){return ""}}
+{const _mq233=montQs;montQs=function(){return String(_mq233.apply(this,arguments)||"")+visit233()}}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-visit233]");if(!b)return;e.preventDefault();e.stopPropagation();
+  try{D.project=D.project||{};if(D.project.visit==="Ja")delete D.project.visit;else D.project.visit="Ja";saveD();wizRefresh()}catch(_){}},true);
+{const _pt233=publicText;publicText=function(d){let t=_pt233.apply(this,arguments);try{if(isPublic()&&window.__fq&&(d.project||{}).visit==="Ja"&&typeof t==="string"){const k=" Allt finns i bifogad PDF.";t=t.includes(k)?t.replace(k," Kunden vill att Myrby kommer ut och mäter."+k):t}}catch(_){}return t}}
+
+/* ---------- 4. Svarstid från Webbedit ---------- */
+var SV233={days:"1 till 5 arbetsdagar",busy:false,note:"Just nu har vi högt tryck, det kan ta lite längre tid.",loaded:false};
+function sv233(){return "inom "+SV233.days}
+function sv233note(){return SV233.busy?`<p class="sv233">${svg("info",16)}<span>${esc(SV233.note)}</span></p>`:""}
+function sv233Load(){if(!isPublic()||sv233Load.on)return;sv233Load.on=true;let u="/sv/svarstid/";try{u=pubUrl225(u)}catch(_){}
+  fetch(u,{credentials:"same-origin",cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{if(!t)return;const doc=new DOMParser().parseFromString(t,"text/html");
+    const txt=[...doc.querySelectorAll(".columnTextBlock,.columnContentHeader")].map(e=>e.innerHTML.replace(/<(br|\/p|\/div|\/li|\/h\d)[^>]*>/gi,"\n").replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ")).join("\n");
+    const d=/Svarstid:\s*([^\n\r]+)/i.exec(txt),b=/Högt tryck:\s*(ja|nej)/i.exec(txt),n=/Meddelande:\s*([^\n\r]+)/i.exec(txt);let ch=false;
+    if(d){const v=d[1].trim().replace(/[.\s]+$/,"");if(v&&v.length<60&&v!==SV233.days){SV233.days=v;ch=true}}
+    if(b){const v=/ja/i.test(b[1]);if(v!==SV233.busy){SV233.busy=v;ch=true}}
+    if(n){const v=n[1].trim();if(v&&v.length<200&&v!==SV233.note){SV233.note=v;ch=true}}
+    SV233.loaded=true;if(ch){try{if(document.querySelector("#wiz.on"))wizRefresh()}catch(_){}}}).catch(()=>{})}
+try{sv233Load()}catch(_){}
+/* Spegelvänd även på sidan direkt efter att ett exempel valts (Boxar), överst i panelen. */
+{const _rw233=renderWiz;renderWiz=function(){const r=_rw233.apply(this,arguments);try{if(mirrorOK233()&&cfgPgKey()==="boxA"){const q=document.querySelector("#wiz .cfg-q");if(q&&!q.querySelector(".mir233"))q.insertAdjacentHTML("afterbegin",mirrorBtn233())}}catch(_){}return r};Object.keys(_rw233).forEach(k=>{try{renderWiz[k]=_rw233[k]}catch(_){}})}
 
 </script>
 
