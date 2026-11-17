@@ -7094,11 +7094,11 @@ try{sv233Load()}catch(_){}
 /* v236 (Carl 17/11): mejlet ska gå att läsa på några sekunder. Inga kolon eller tankstreck i vår text,
    i punktlista, en sak per rad (blir en rad med • om Webbedit tar bort radbrytningarna). Länken blir kort när förfrågan kan sparas
    i Myrbys Apps Script (FQ_STORE236); annars används den långa länken som förut. */
-var FQ_STORE236="";
+var FQ_STORE236="https://script.google.com/macros/s/AKfycbxuCGSiWBmftFm2XHgDVMMF7cJ5qULA_YvHZiye_xJRknOWWLHpmfqjog8w9_eWRKw25w/exec";
 function fqId236(){const a="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789",r=new Uint8Array(12);crypto.getRandomValues(r);return Array.from(r,x=>a[x%a.length]).join("")}
 async function fqStore236(tok){if(!FQ_STORE236||!tok)return null;const id=fqId236(),to=ms=>new Promise((_,j)=>setTimeout(()=>j(new Error("tid")),ms));
-  try{await Promise.race([fetch(FQ_STORE236,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({id,tok})}),to(6000)]);
-    const r=await Promise.race([fetch(FQ_STORE236+"?id="+id,{cache:"no-store"}).then(x=>x.json()),to(6000)]);return r&&r.ok&&r.tok===tok?id:null}catch(_){return null}}
+  try{await Promise.race([fetch(FQ_STORE236,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({id,tok}),credentials:"omit"}),to(6000)]);
+    const r=await Promise.race([fetch(FQ_STORE236+"?id="+id,{cache:"no-store",credentials:"omit"}).then(x=>x.json()),to(6000)]);return r&&r.ok&&r.tok===tok?id:null}catch(_){return null}}
 if(isPublic()){const _fe236=fqEncode;fqEncode=async function(){const tok=await _fe236.apply(this,arguments);window.__fqShort=null;try{const id=await fqStore236(tok);if(id)window.__fqShort={id,tok}}catch(_){}return tok}}
 function fqLink236(){const f=window.__fq;if(!f)return "";const s=window.__fqShort;return s&&f.link.endsWith(s.tok)?FQ_RELAY215+"#f="+s.id:f.link}
 {const _pt236=publicText;publicText=function(d){if(!isPublic()||!window.__fq)return _pt236.apply(this,arguments);try{

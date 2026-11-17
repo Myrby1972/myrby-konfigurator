@@ -38,10 +38,10 @@ textarea{position:fixed;left:-9999px;top:0}
   var c=document.getElementById("c");
   function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(x){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]})}
   var PORTAL="https://claude.ai/artifact/BG2TxXDPM31SQhomFmoNSg";
-  var STORE="";
+  var STORE="https://script.google.com/macros/s/AKfycbxuCGSiWBmftFm2XHgDVMMF7cJ5qULA_YvHZiye_xJRknOWWLHpmfqjog8w9_eWRKw25w/exec";
   var m=/forfragan=([A-Za-z0-9_\-]+)/.exec(location.hash||""),k=/[#&]f=([A-Za-z0-9]{6,20})/.exec(location.hash||"");
   if(!m&&k&&STORE){c.innerHTML='<h1>Förfrågan från hemsidan</h1><p>Hämtar förfrågan…</p>';
-    try{var r=await (await fetch(STORE+"?id="+k[1],{cache:"no-store"})).json();if(r&&r.ok&&/^[A-Za-z0-9_\-]+$/.test(r.tok))m=[0,r.tok]}catch(e){}
+    try{var ac=new AbortController();setTimeout(function(){ac.abort()},15000);var r=await (await fetch(STORE+"?id="+k[1],{cache:"no-store",credentials:"omit",signal:ac.signal})).json();if(r&&r.ok&&/^[A-Za-z0-9_\-]+$/.test(r.tok))m=[0,r.tok]}catch(e){}
     if(!m){c.innerHTML='<h1>Förfrågan från hemsidan</h1><p class="err">Förfrågan gick inte att hämta just nu. Försök igen om en stund, eller öppna PDF:en i mejlet.</p>';return}}
   if(!m){c.innerHTML='<h1>Förfrågan från hemsidan</h1><p class="err">Länken är inte hel. Öppna länken direkt från mejlet igen.</p>';return}
   var tok=m[1],o=null;
