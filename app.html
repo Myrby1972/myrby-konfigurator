@@ -6881,6 +6881,23 @@ function popFit229(){try{document.querySelectorAll("#wiz .ichips194 .vm-pop").fo
 {const _cr229=cfgPanelRefresh;cfgPanelRefresh=function(){const r=_cr229.apply(this,arguments);popFit229();return r}}
 {const _rw229=renderWiz;renderWiz=function(){const r=_rw229.apply(this,arguments);popFit229();return r}}
 
+
+/* v231 (Carl 17/11): mejlet till Myrby blir lättare att läsa. Webbedit gör om meddelandet till en rad, så raden hålls kort och lugn:
+   inga versaler, inga dubbletter av kundens namn, telefon, e-post och ort (de har egna fält i mejlet), länken sist. */
+{const _pt231=publicText;publicText=function(d){if(!isPublic()||!window.__fq)return _pt231.apply(this,arguments);try{
+  const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s,dot=s=>/[.!?…]$/.test(s)?s:s+".";
+  const c=d.customer||{},out=["Ritning från Rita din stallinredning."];
+  if(c.company&&c.name)out.push(dot("Företag: "+String(c.company).trim()));
+  const sum=String(fqSummary(d)||"").split(" · ").map(x=>x.trim()).filter(Boolean);
+  if(sum.length>1&&/ m$/.test(sum[1])&&!/ m$/.test(sum[0]))sum.splice(0,2,sum[0]+", "+sum[1]);
+  if(sum.length)out.push(sum.map(x=>dot(cap(x))).join(" "));
+  const e=d.ui&&d.ui.early218;
+  if(e)out.push(`Kunden skickade ritningen i förtid${e.sec?" från steget "+String(e.sec).toLowerCase():""} och vill ha hjälp med resten.`);
+  const n=String(d.notes||"").replace(/\s+/g," ").trim();
+  if(n)out.push(`Kundens tankar: ”${n.length>300?n.slice(0,300).trim()+"…":n}”`);
+  out.push("Allt finns i bifogad PDF.","Öppna förfrågan: "+window.__fq.link);
+  return out.join(" ")}catch(_){return _pt231.apply(this,arguments)}}}
+
 </script>
 
 </html>
