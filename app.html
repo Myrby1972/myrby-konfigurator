@@ -7110,7 +7110,9 @@ function fqLink236(){const f=window.__fq;if(!f)return "";const s=window.__fqShor
   const n=String(d.notes||"").replace(/\s+/g," ").trim(),q=n?`”${n.length>300?n.slice(0,300).trim()+"…":n}”`:"";
   const link=fqLink236(),items=[...head.slice(1),...stall,...(q?["Kundens tankar "+q]:[]),"Öppna förfrågan "+link];
   /* Mellanslag före varje radbrytning: tar Webbedit bort radbrytningen blir det ändå "x • y" på en rad. */
-  return [head[0],...items.map(x=>"• "+x)].join(" \n")}catch(_){return _pt236.apply(this,arguments)}}}
+  /* v238: korta meningar, en per rad. Tar Webbedit bort radbrytningarna blir det ändå lättläst löptext. */
+  const dot=x=>/[.!?…”]$/.test(x)?x:x+".",lines=[...head.slice(1),...stall].map(dot);
+  if(q)lines.push("Kunden skriver "+q);lines.push("Öppna förfrågan här "+link);return lines.join(" \n")}catch(_){return _pt236.apply(this,arguments)}}}
 
 </script>
 
