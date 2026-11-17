@@ -38,7 +38,11 @@ textarea{position:fixed;left:-9999px;top:0}
   var c=document.getElementById("c");
   function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(x){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]})}
   var PORTAL="https://claude.ai/artifact/BG2TxXDPM31SQhomFmoNSg";
-  var m=/forfragan=([A-Za-z0-9_\-]+)/.exec(location.hash||"");
+  var STORE="";
+  var m=/forfragan=([A-Za-z0-9_\-]+)/.exec(location.hash||""),k=/[#&]f=([A-Za-z0-9]{6,20})/.exec(location.hash||"");
+  if(!m&&k&&STORE){c.innerHTML='<h1>Förfrågan från hemsidan</h1><p>Hämtar förfrågan…</p>';
+    try{var r=await (await fetch(STORE+"?id="+k[1],{cache:"no-store"})).json();if(r&&r.ok&&/^[A-Za-z0-9_\-]+$/.test(r.tok))m=[0,r.tok]}catch(e){}
+    if(!m){c.innerHTML='<h1>Förfrågan från hemsidan</h1><p class="err">Förfrågan gick inte att hämta just nu. Försök igen om en stund, eller öppna PDF:en i mejlet.</p>';return}}
   if(!m){c.innerHTML='<h1>Förfrågan från hemsidan</h1><p class="err">Länken är inte hel. Öppna länken direkt från mejlet igen.</p>';return}
   var tok=m[1],o=null;
   try{var t=tok.slice(1).replace(/-/g,"+").replace(/_/g,"/");var s=atob(t);var u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);
@@ -55,7 +59,7 @@ textarea{position:fixed;left:-9999px;top:0}
     (d.notes?'<p class="note">'+esc(d.notes)+'</p>':"")+
     '<ol><li>Tryck på knappen. Förfrågan kopieras och säljportalen öppnas.</li><li>I säljportalen: klicka i rutan under <b>Från hemsidan</b> och tryck <kbd>⌘ V</kbd> på Mac eller <kbd>Ctrl V</kbd> på PC.</li></ol>'+
     '<button type="button" id="go">Lägg in i säljportalen</button><p class="ok" id="ok">Kopierad. Klicka i rutan i säljportalen och tryck ⌘ V (Mac) eller Ctrl V (PC).</p>';
-  document.getElementById("go").onclick=async function(){var link=location.href,ok=false;
+  document.getElementById("go").onclick=async function(){var link=location.origin+location.pathname+"#forfragan="+tok,ok=false;
     try{await navigator.clipboard.writeText(link);ok=true}catch(e){}
     if(!ok){try{var ta=document.createElement("textarea");ta.value=link;document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");ta.remove()}catch(e){}}
     document.getElementById("ok").classList.add("on");

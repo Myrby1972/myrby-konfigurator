@@ -7090,6 +7090,28 @@ try{sv233Load()}catch(_){}
 /* Spegelvänd även på sidan direkt efter att ett exempel valts (Boxar), överst i panelen. */
 {const _rw233=renderWiz;renderWiz=function(){const r=_rw233.apply(this,arguments);try{if(mirrorOK233()&&cfgPgKey()==="boxA"){const q=document.querySelector("#wiz .cfg-q");if(q&&!q.querySelector(".mir233"))q.insertAdjacentHTML("afterbegin",mirrorBtn233())}}catch(_){}return r};Object.keys(_rw233).forEach(k=>{try{renderWiz[k]=_rw233[k]}catch(_){}})}
 
+
+/* v236 (Carl 17/11): mejlet ska gå att läsa på några sekunder. Inga kolon eller tankstreck i vår text,
+   i punktlista, en sak per rad (blir en rad med • om Webbedit tar bort radbrytningarna). Länken blir kort när förfrågan kan sparas
+   i Myrbys Apps Script (FQ_STORE236); annars används den långa länken som förut. */
+var FQ_STORE236="";
+function fqId236(){const a="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789",r=new Uint8Array(12);crypto.getRandomValues(r);return Array.from(r,x=>a[x%a.length]).join("")}
+async function fqStore236(tok){if(!FQ_STORE236||!tok)return null;const id=fqId236(),to=ms=>new Promise((_,j)=>setTimeout(()=>j(new Error("tid")),ms));
+  try{await Promise.race([fetch(FQ_STORE236,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({id,tok})}),to(6000)]);
+    const r=await Promise.race([fetch(FQ_STORE236+"?id="+id,{cache:"no-store"}).then(x=>x.json()),to(6000)]);return r&&r.ok&&r.tok===tok?id:null}catch(_){return null}}
+if(isPublic()){const _fe236=fqEncode;fqEncode=async function(){const tok=await _fe236.apply(this,arguments);window.__fqShort=null;try{const id=await fqStore236(tok);if(id)window.__fqShort={id,tok}}catch(_){}return tok}}
+function fqLink236(){const f=window.__fq;if(!f)return "";const s=window.__fqShort;return s&&f.link.endsWith(s.tok)?FQ_RELAY215+"#f="+s.id:f.link}
+{const _pt236=publicText;publicText=function(d){if(!isPublic()||!window.__fq)return _pt236.apply(this,arguments);try{
+  const c=d.customer||{},pr=d.project||{},cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s,head=[],stall=[],end=[];
+  head.push("Ritning från Rita din stallinredning");if(c.company&&c.name)head.push(String(c.company).trim());
+  const sum=String(fqSummary(d)||"").split(" · ").map(x=>x.trim()).filter(Boolean);if(sum.length>1&&/ m$/.test(sum[1])&&!/ m$/.test(sum[0]))sum.splice(0,2,sum[0]+", "+sum[1]);
+  sum.forEach(x=>stall.push(cap(x)));if(pr.visit==="Ja")stall.push("Vill att Myrby kommer ut och mäter");
+  const e=d.ui&&d.ui.early218;if(e)stall.push(`Skickade i förtid${e.sec?" från steget "+String(e.sec).toLowerCase():""} och vill ha hjälp med resten`);
+  const n=String(d.notes||"").replace(/\s+/g," ").trim(),q=n?`”${n.length>300?n.slice(0,300).trim()+"…":n}”`:"";
+  const link=fqLink236(),items=[...head.slice(1),...stall,...(q?["Kundens tankar "+q]:[]),"Öppna förfrågan "+link];
+  /* Mellanslag före varje radbrytning: tar Webbedit bort radbrytningen blir det ändå "x • y" på en rad. */
+  return [head[0],...items.map(x=>"• "+x)].join(" \n")}catch(_){return _pt236.apply(this,arguments)}}}
+
 </script>
 
 </html>
