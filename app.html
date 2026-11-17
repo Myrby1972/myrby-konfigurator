@@ -5964,15 +5964,19 @@ function winSync(dr,say){if(!dr||!dr.walls)return;const W=wins(dr);let moved=0,d
   const c=[];ds.forEach(d=>c.push((+d.p)-500,(+d.p)+(+d.w)+500));const ok=c.filter(p=>p>=300&&p<=len-300&&!bad(p)).sort((a,b)=>Math.abs(a-fp.p)-Math.abs(b-fp.p));return ok.length?{...fp,p:ok[0]}:fp})}}
 
 /* v169: lucka 9 – ett nytt rum hamnar där det får plats (bredvid ingångar och boxar), helst vid stallgångens ände. */
-{const nBox=dr=>["N","S","W","E"].reduce((a,k)=>a+(dr.walls[k]||[]).filter(m=>m.t==="box").length,0);const _te169=toggleExtra;toggleExtra=function(dr,key){const had=!!extraFind(dr,key),n0=nBox(dr),pre=JSON.stringify({w:dr.walls,c:dr.cfg});const r=_te169(dr,key);if(had||String(key).startsWith("door-"))return r;
+{const nBox=dr=>["N","S","W","E"].reduce((a,k)=>a+(dr.walls[k]||[]).filter(m=>m.t==="box").length,0);const _te169=toggleExtra;toggleExtra=function(dr,key){const had=!!extraFind(dr,key),n0=nBox(dr),pre=JSON.stringify({w:dr.walls,c:dr.cfg}),wn=d=>{try{return drwWarnings(d).length}catch(_){return 0}},w0=wn(dr);const r=_te169(dr,key);if(had||String(key).startsWith("door-"))return r;
   const f=extraFind(dr,key);if(!f||!f.m||f.m.t!=="room")return r;
   /* v171: boxarna blir aldrig smalare än 3 000 mm av ett nytt rum (Carl 13/11). Rummet hamnar där det får plats; annars rött. */
   const minW=w=>Math.min(Infinity,...["N","S","W","E"].flatMap(k=>(w[k]||[]).filter(m=>m.t==="box").map(m=>+m.w||0))),pw=JSON.parse(pre).w,lim=Math.min(3000,minW(pw));
-  const okNow=()=>!ovfInfo(dr).length&&nBox(dr)>=n0&&minW(dr.walls)>=lim;if(okNow())return r;
+  const okNow=()=>!ovfInfo(dr).length&&nBox(dr)>=n0&&minW(dr.walls)>=lim&&wn(dr)<=w0;if(okNow())return r;
   const snap=JSON.stringify({w:dr.walls,c:dr.cfg}),room=f.m,from=f.k,K=["W","E","S","N"].filter(k=>k!==from);
   const tryAt=(k,lika)=>{const S0=JSON.parse(snap);dr.walls=S0.w;dr.cfg=S0.c;if(k!==from){const ms=dr.walls[from]||[],i=ms.findIndex(m=>m.id===room.id);if(i<0)return false;const [m]=ms.splice(i,1);for(let j=ms.length-1;j>=0;j--)if(ms[j].gapRoom===room.id)ms.splice(j,1);dr.walls[k]=dr.walls[k]||[];dr.walls[k].push(m)}
     if(lika){const c=dr.cfg[k];if(!c||!c.auto||c.mode==="lika"||!(dr.walls[k]||[]).some(m=>m.t==="box"))return false;c.mode="lika"}autoAll(dr);return okNow()};
   for(const [k,l] of [[from,true],...K.map(k=>[k,false]),...K.map(k=>[k,true])]){if(tryAt(k,l)){if(k!==from&&typeof toast==="function")setTimeout(()=>toast(`${room.name||"Rummet"} fick plats på ${(WALL_ON[k]||k)}`),40);return r}}
+  /* v234: får rummet inte plats någonstans provas gavlarna med ett smalare rum (minst 2 000 mm). */
+  for(const k of ["E","W"]){const S0=JSON.parse(snap);dr.walls=S0.w;dr.cfg=S0.c;const ms=dr.walls[from]||[],i=ms.findIndex(m=>m.id===room.id);if(i<0)break;const [m]=ms.splice(i,1);for(let j=ms.length-1;j>=0;j--)if(ms[j].gapRoom===room.id)ms.splice(j,1);
+    let gl=0;try{gl=gableSpan(dr,k).len-used(dr,k)}catch(_){gl=0}if(gl<2000)continue;m.w=Math.min(+m.w||0,Math.floor(gl/100)*100);dr.walls[k]=dr.walls[k]||[];dr.walls[k].push(m);autoAll(dr);
+    if(okNow()){if(typeof toast==="function")setTimeout(()=>toast(`${room.name||"Rummet"} fick plats på ${(WALL_ON[k]||k)}, ${mm(m.w)} mm brett`),40);return r}}
   const S1=JSON.parse(snap);dr.walls=S1.w;dr.cfg=S1.c;autoAll(dr);
   if(minW(dr.walls)<lim){const c=dr.cfg[from];if(c){c.mode="per";c.ws=(pw[from]||[]).filter(m=>m.t==="box").map(m=>+m.w);autoAll(dr)}}
   if(ovfInfo(dr).length&&typeof toast==="function")setTimeout(()=>toast(`${room.name||"Rummet"} får inte plats utan att boxarna blir för smala. Se det röda i ritningen.`),40);
