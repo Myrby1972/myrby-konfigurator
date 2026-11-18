@@ -7153,6 +7153,12 @@ async function fqClip240(btn){let t="";try{t=await navigator.clipboard.readText(
   toast(t?"Urklippet innehåller ingen förfrågan. Öppna länken i mejlet och tryck Lägg in i säljportalen igen.":"Tryck ⌘ V (Mac) eller Ctrl V (PC) så läggs förfrågan in");return false}
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-fqclip]");if(!b)return;e.preventDefault();e.stopPropagation();fqClip240(b)},true);
 
+
+/* v241 (Carl 18/11): montering är en enda fråga för kunden (Ja, Nej, Vet inte än) plus platsbesök.
+   De tekniska följdfrågorna (bygget, golv, väggar, takbalkar, vägen fram, egen montering) tar säljaren i telefon eller på plats.
+   Säljportalen har kvar alla fält. */
+{const _mq241=montQs;montQs=function(){if(isPublic())return visit233();return _mq241.apply(this,arguments)}}
+
 </script>
 
 </html>
