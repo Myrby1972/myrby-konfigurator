@@ -2604,6 +2604,16 @@ html body #wiz .fgal .fgi:has(>.ibtn){padding-bottom:46px!important}
 .sv233{display:flex;align-items:center;gap:8px;margin:10px 0 0;padding:10px 12px;border-radius:12px;background:#fbf6e8;color:#6b5418;font-size:.95rem}
 .sv233 svg{flex:none}
 
+
+/* v239: tydligt skick */
+[data-wsend].sending239{display:inline-flex;align-items:center;justify-content:center;gap:12px;opacity:1!important;cursor:progress}
+.spin239{width:20px;height:20px;border:2.5px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin239 .8s linear infinite;flex:none}
+@keyframes spin239{to{transform:rotate(360deg)}}
+html.sending239 .wiz-scroll{pointer-events:none;opacity:.55;transition:opacity .2s}
+html.sending239 .wiz-foot button:not([data-wsend]){pointer-events:none;opacity:.4}
+.sr239{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+@media (prefers-reduced-motion:reduce){.spin239{animation-duration:2.4s}}
+
 </style>
 
 <div class="app">
@@ -7110,9 +7120,23 @@ function fqLink236(){const f=window.__fq;if(!f)return "";const s=window.__fqShor
   const n=String(d.notes||"").replace(/\s+/g," ").trim(),q=n?`”${n.length>300?n.slice(0,300).trim()+"…":n}”`:"";
   const link=fqLink236(),items=[...head.slice(1),...stall,...(q?["Kundens tankar "+q]:[]),"Öppna förfrågan "+link];
   /* Mellanslag före varje radbrytning: tar Webbedit bort radbrytningen blir det ändå "x • y" på en rad. */
-  /* v238: korta meningar, en per rad. Tar Webbedit bort radbrytningarna blir det ändå lättläst löptext. */
-  const dot=x=>/[.!?…”]$/.test(x)?x:x+".",lines=[...head.slice(1),...stall].map(dot);
-  if(q)lines.push("Kunden skriver "+q);lines.push("Öppna förfrågan här "+link);return lines.join(" \n")}catch(_){return _pt236.apply(this,arguments)}}}
+  /* v239: Webbedit behåller nu radbrytningar. Rubrikrad direkt efter "Övrig information:", sedan en punkt per rad. */
+  const lines=[...head.slice(1),...stall].map(x=>String(x).replace(/\.$/,""));
+  if(q)lines.push("Kunden skriver "+q);lines.push("Öppna förfrågan här "+link);return [head[0],...lines.map(x=>"• "+x)].join("\n")}catch(_){return _pt236.apply(this,arguments)}}}
+
+
+/* v239 (Carl 18/11): besökaren ska se direkt att skicket pågår. Knappen visar en snurra och vad som händer
+   (sparar ritningen, skapar PDF, skickar), resten av steget låses. Väntan på kortlänken är kortare (högst 8 s). */
+function sendStep239(t){const b=document.querySelector("[data-wsend]");if(!b)return;b.disabled=true;b.classList.add("sending239");b.innerHTML=`<span class="spin239" aria-hidden="true"></span><span>${t}</span>`;b.setAttribute("aria-busy","true");
+  let s=document.getElementById("sendlive239");if(!s){s=document.createElement("div");s.id="sendlive239";s.className="sr239";s.setAttribute("aria-live","polite");document.body.appendChild(s)}s.textContent=t}
+function sendDone239(){document.documentElement.classList.remove("sending239");const b=document.querySelector("[data-wsend]");if(b){b.classList.remove("sending239");b.removeAttribute("aria-busy")}}
+if(isPublic()){
+  {const _ps239=publicSend;publicSend=async function(){if(!D||!D.ui||!D.ui.consent)return _ps239.apply(this,arguments);
+    document.documentElement.classList.add("sending239");sendStep239("Sparar din ritning…");
+    try{return await _ps239.apply(this,arguments)}finally{sendDone239()}}}
+  {const _pdf239=publicPDF;publicPDF=async function(){sendStep239("Skapar PDF…");try{return await _pdf239.apply(this,arguments)}finally{sendStep239("Skickar till Myrby…")}}}
+  {const _st239=fqStore236;fqStore236=async function(tok){if(!FQ_STORE236||!tok)return null;const t=new Promise(r=>setTimeout(()=>r(null),8000));return Promise.race([_st239.apply(this,arguments).catch(()=>null),t])}}
+}
 
 </script>
 
