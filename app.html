@@ -7157,7 +7157,9 @@ document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest
 /* v241 (Carl 18/11): montering är en enda fråga för kunden (Ja, Nej, Vet inte än) plus platsbesök.
    De tekniska följdfrågorna (bygget, golv, väggar, takbalkar, vägen fram, egen montering) tar säljaren i telefon eller på plats.
    Säljportalen har kvar alla fält. */
-{const _mq241=montQs;montQs=function(){if(isPublic())return visit233();return _mq241.apply(this,arguments)}}
+{const _mq241=montQs;montQs=function(){if(isPublic())return "";return _mq241.apply(this,arguments)}}
+/* v242 (Carl 18/11): rutan om platsbesök stoppade flödet och är borttagen för kunden. Platsbesök tas i nästa steg (säljaren). */
+{try{if(isPublic()&&D&&D.project&&D.project.visit){delete D.project.visit}}catch(_){}}
 
 </script>
 
