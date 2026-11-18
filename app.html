@@ -2614,6 +2614,12 @@ html.sending239 .wiz-foot button:not([data-wsend]){pointer-events:none;opacity:.
 .sr239{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 @media (prefers-reduced-motion:reduce){.spin239{animation-duration:2.4s}}
 
+
+.fqclip240{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:0 0 14px}
+.fqclip240 .btn{font-size:17px;padding:14px 26px}
+.fqclip240 small{color:var(--muted,#6b6b5f);font-size:14px}
+.fqx-add.fqhint240{outline:3px solid #c9a86a;outline-offset:4px;border-radius:14px}
+
 </style>
 
 <div class="app">
@@ -6565,8 +6571,8 @@ function fqDraw(d,v){const sv=D;let h="";try{D=structuredClone(d);D.ui=D.ui||{};
 function vFq(){const id=fqId();if(id)return vFqOne(id);
   const L=S.fq,row=f=>{const st=FQ_ST[f.status]||FQ_ST.ny;return `<a class="li" href="#f-${esc(f.id)}"><span class="thumb round">${esc((f.name||"?")[0])}</span><span class="grow"><span class="t">${esc(f.name||"Okänd kund")}</span><span class="s">${esc((()=>{try{return fqSummary(f.cur||f.orig)}catch(_){return f.summary||""}})())}${f.cur?` · <b class="fq-nk">${esc(fqWhoOf(f.editedBy))} har ändrat</b>`:""}${(f.notes||[]).length?` · ${(f.notes||[]).length} ${(f.notes||[]).length===1?"anteckning":"anteckningar"}`:""}</span></span><span class="fq-when">${esc(fqWhen(f.createdAt))}</span>${f.owner?`<span class="fq-own232">${esc(fqWhoOf(f.owner))}</span>`:""}<span class="chip ${st[1]}">${st[0]}</span><span class="chev">${svg("chev",18)}</span></a>`};
   return `<div class="page fqpage"><div class="page-head"><p class="eyebrow">Rita din stallinredning</p><h1>Från hemsidan</h1><p>Ritningar som kunder har skickat från hemsidan. De ligger här, skilda från affärsmöjligheterna, tills du gör om dem.</p></div>
-    <form class="fqx-add" data-fqaddform><label class="field" style="flex:1"><span>Öppnade du förfrågan från mejlet? Klicka här och tryck ⌘ V (Mac) eller Ctrl V (PC)</span><input class="input" name="l" placeholder="Klistra in förfrågan här" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
-    ${L.length?`<div class="list">${L.map(row).join("")}</div>`:`<div class="empty">${svg("lead")}<b>Inga förfrågningar än</b><span>När en kund skickar sin ritning kommer ett mejl till info@myrby.com. Öppna länken i mejlet, tryck Lägg in i säljportalen och klistra sedan in här.</span></div>`}</div>`}
+    <div class="fqclip240"><button class="btn" type="button" data-fqclip>Lägg in förfrågan från mejlet</button><small>Har du öppnat länken i mejlet och tryckt Lägg in i säljportalen? Klicka på knappen, så läggs förfrågan in.</small></div><form class="fqx-add" data-fqaddform><label class="field" style="flex:1"><span>Fungerar inte knappen? Klicka i rutan och tryck ⌘ V (Mac) eller Ctrl V (PC)</span><input class="input" name="l" placeholder="Klistra in förfrågan här" autocomplete="off"></label><button class="btn" type="submit">Öppna förfrågan</button></form>
+    ${L.length?`<div class="list">${L.map(row).join("")}</div>`:`<div class="empty">${svg("lead")}<b>Inga förfrågningar än</b><span>När en kund skickar sin ritning kommer ett mejl till info@myrby.com. Öppna länken i mejlet, tryck Lägg in i säljportalen och klicka sedan på knappen ovan.</span></div>`}</div>`}
 function vFqOne(id){const f=S.fq.find(x=>x.id===id);
   if(!f)return `<div class="page"><a class="lback" href="#forfragan">${svg("chev",16)} Alla förfrågningar</a><div class="empty"><b>${S.dbReady&&fqBoot.done?"Hittar inte förfrågan":"Laddar…"}</b></div></div>`;
   if(f.status==="ny"&&S.db){S.db.doc("forfragningar/"+f.id).update({status:"oppnad",openedAt:Date.now(),openedBy:S.role}).catch(()=>{})}
@@ -7137,6 +7143,15 @@ if(isPublic()){
   {const _pdf239=publicPDF;publicPDF=async function(){sendStep239("Skapar PDF…");try{return await _pdf239.apply(this,arguments)}finally{sendStep239("Skickar till Myrby…")}}}
   {const _st239=fqStore236;fqStore236=async function(tok){if(!FQ_STORE236||!tok)return null;const t=new Promise(r=>setTimeout(()=>r(null),8000));return Promise.race([_st239.apply(this,arguments).catch(()=>null),t])}}
 }
+
+
+/* v240 (Carl 18/11): lägg in förfrågan med ett klick. Knappen läser urklippet (länken som sidan i mejlet kopierade).
+   Säger webbläsaren nej till urklippet faller den tillbaka på att klistra in med ⌘V / Ctrl V. */
+async function fqClip240(btn){let t="";try{t=await navigator.clipboard.readText()}catch(e){t=""}
+  const tok=fqToken(t);if(tok){try{const dt=new DataTransfer();dt.setData("text/plain",t);document.body.dispatchEvent(new ClipboardEvent("paste",{clipboardData:dt,bubbles:true,cancelable:true}))}catch(_){toast("Tryck ⌘ V (Mac) eller Ctrl V (PC) så läggs förfrågan in")}return true}
+  const inp=document.querySelector("[data-fqaddform] input");if(inp){inp.focus();inp.closest("[data-fqaddform]").classList.add("fqhint240")}
+  toast(t?"Urklippet innehåller ingen förfrågan. Öppna länken i mejlet och tryck Lägg in i säljportalen igen.":"Tryck ⌘ V (Mac) eller Ctrl V (PC) så läggs förfrågan in");return false}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-fqclip]");if(!b)return;e.preventDefault();e.stopPropagation();fqClip240(b)},true);
 
 </script>
 

@@ -58,7 +58,7 @@ textarea{position:fixed;left:-9999px;top:0}
     (rows.length?'<dl>'+rows.map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>'}).join("")+'</dl>':"")+
     (d.notes?'<p class="note">'+esc(d.notes)+'</p>':"")+
     '<ol><li>Tryck på knappen. Förfrågan kopieras och säljportalen öppnas.</li><li>I säljportalen: klicka i rutan under <b>Från hemsidan</b> och tryck <kbd>⌘ V</kbd> på Mac eller <kbd>Ctrl V</kbd> på PC.</li></ol>'+
-    '<button type="button" id="go">Lägg in i säljportalen</button><p class="ok" id="ok">Kopierad. Klicka i rutan i säljportalen och tryck ⌘ V (Mac) eller Ctrl V (PC).</p>';
+    '<button type="button" id="go">Lägg in i säljportalen</button><p class="ok" id="ok">Kopierad. I säljportalen: gå till Från hemsidan och klicka på Lägg in förfrågan från mejlet.</p>';
   document.getElementById("go").onclick=async function(){var link=location.origin+location.pathname+"#forfragan="+tok,ok=false;
     try{await navigator.clipboard.writeText(link);ok=true}catch(e){}
     if(!ok){try{var ta=document.createElement("textarea");ta.value=link;document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");ta.remove()}catch(e){}}
